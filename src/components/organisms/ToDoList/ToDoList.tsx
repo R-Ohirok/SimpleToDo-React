@@ -1,27 +1,18 @@
-import type React from "react";
+import type React from 'react';
 import styles from './ToDoList.module.scss';
-import type { ToDoType } from "../../../types/ToDoType";
-import { ToDoItem } from "../../molecules/ToDoItem";
+import type { ToDoType } from '../../../types/ToDoType';
+import { ToDoItem } from '../../molecules/ToDoItem';
 
 interface Props {
-  todos?: ToDoType[];
-};
+  todos: ToDoType[];
+  deleteToDo: (todoId: string) => void;
+}
 
-const testTodos = [
-  { id:'1', title:'test 1', isCompleted: false },
-  { id:'2', title:'test 2', isCompleted: true },
-  { id:'3', title:'test 3', isCompleted: false },
-  { id:'4', title:'test 4', isCompleted: true },
-  { id:'5', title:'test 5', isCompleted: false }
-];
-
-export const ToDoList: React.FC<Props> = ({
-  todos = testTodos
-}) => {
+export const ToDoList: React.FC<Props> = ({ todos, deleteToDo }) => {
   return (
     <ul className={styles.todoList}>
       {todos.map(todo => (
-        <ToDoItem key={todo.id} todo={todo} />
+        <ToDoItem key={todo.id} todo={todo} deleteToDo={deleteToDo} />
       ))}
     </ul>
   );

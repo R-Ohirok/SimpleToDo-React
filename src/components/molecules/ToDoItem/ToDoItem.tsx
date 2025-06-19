@@ -4,10 +4,11 @@ import cn from 'classnames';
 import type { ToDoType } from '../../../types/ToDoType';
 
 interface Props {
-  todo?: ToDoType;
+  todo: ToDoType;
+  deleteToDo: (todoId: string) => void;
 }
 
-export const ToDoItem: React.FC<Props> = ({ todo = { id:1, title:'test', isCompleted: false } }) => {
+export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo }) => {
   const { id, title, isCompleted } = todo;
   return (
     <li className={styles.todoItem}>
@@ -39,6 +40,7 @@ export const ToDoItem: React.FC<Props> = ({ todo = { id:1, title:'test', isCompl
             styles.todoItemControlBtn,
             styles.todoItemControlBtnDelete,
           )}
+          onClick={() => deleteToDo(todo.id)}
         ></button>
       </div>
     </li>

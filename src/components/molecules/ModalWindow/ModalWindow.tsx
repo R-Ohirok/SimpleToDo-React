@@ -28,6 +28,7 @@ export const ModalWindow: React.FC<Props> = ({ closeModal, addNewTodo }) => {
         <div className={styles.modalContentTop}>
           <h2 className={styles.modalContentTitle}>NEW NOTE</h2>
           <input
+            name="modalContentInput"
             className={styles.modalContentInput}
             type="text"
             placeholder="Input your note..."
