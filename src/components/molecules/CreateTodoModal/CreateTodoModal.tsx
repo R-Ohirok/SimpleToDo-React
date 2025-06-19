@@ -1,20 +1,14 @@
 import type React from 'react';
-import styles from './ModalWindow.module.scss';
+import styles from './CreateTodoModal.module.scss';
 import cn from 'classnames';
 
 interface Props {
-  isVisible: boolean;
-  closeModal: () => void;
+  onClose: () => void;
 }
 
-const ModalWindow: React.FC<Props> = ({ isVisible, closeModal }) => {
+const CreateTodoModal: React.FC<Props> = ({ onClose }) => {
   return (
-    <div
-      id="modal"
-      className={cn(styles.modal, {
-        [styles.hidden]: !isVisible,
-      })}
-    >
+    <div id="modal" className={styles.modal}>
       <div className={styles.modalContent}>
         <div className={styles.modalContentTop}>
           <h2 className={styles.modalContentTitle}>NEW NOTE</h2>
@@ -28,13 +22,13 @@ const ModalWindow: React.FC<Props> = ({ isVisible, closeModal }) => {
         <div className={styles.modalControl}>
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnCancel)}
-            onClick={closeModal}
+            onClick={onClose}
           >
             CANCEL
           </button>
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnApply)}
-            onClick={closeModal}
+            onClick={onClose}
           >
             APPLY
           </button>
@@ -44,4 +38,4 @@ const ModalWindow: React.FC<Props> = ({ isVisible, closeModal }) => {
   );
 };
 
-export default ModalWindow;
+export default CreateTodoModal;

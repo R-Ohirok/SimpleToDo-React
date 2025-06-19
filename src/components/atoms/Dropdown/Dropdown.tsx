@@ -4,15 +4,13 @@ import styles from './Dropdown.module.scss';
 interface Props {
   options: string[] | number[];
   value: string | number;
-  onSelect?: (value: string) => void;
+  onSelect: (value: string) => void;
 }
 
 const Dropdown: React.FC<Props> = ({
   options,
   value,
-  onSelect = value => {
-    console.log(value);
-  },
+  onSelect,
 }) => {
   return (
     <select

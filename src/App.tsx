@@ -1,5 +1,5 @@
 import './App.scss';
-import ModalWindow from './components/molecules/ModalWindow/ModalWindow';
+import CreateTodoModal from './components/molecules/CreateTodoModal/CreateTodoModal';
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
@@ -18,11 +18,9 @@ function App() {
       <main>
         <ToDoList />
       </main>
-      <Footer openModal={changeModalVisibility} />
-      <ModalWindow
-        isVisible={isModalVisible}
-        closeModal={changeModalVisibility}
-      />
+      <Footer onOpenCreatingModal={changeModalVisibility} />
+
+      {isModalVisible && <CreateTodoModal onClose={changeModalVisibility} />}
     </div>
   );
 }

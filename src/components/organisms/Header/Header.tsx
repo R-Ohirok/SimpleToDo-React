@@ -21,7 +21,7 @@ const Header = () => {
           <button className={styles.searchBtn} />
         </div>
 
-        <Dropdown options={filterStatuses} value={active} />
+        <Dropdown options={filterStatuses} value={active} onSelect={() => {}} />
 
         <button className={styles.themeToggle} />
       </div>
