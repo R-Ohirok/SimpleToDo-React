@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 interface Props {
   onClose: () => void;
-  addNewTodo: (newTodo: ToDoType) => void;
+  onCreateNewTodo: (newTodo: ToDoType) => void;
 }
 
 function createTodo(title: string): ToDoType {
@@ -19,8 +19,7 @@ function createTodo(title: string): ToDoType {
   };
 }
 
-  
-const CreateTodoModal: React.FC<Props> = ({ onClose, addNewTodo }) => {
+const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateNewTodo }) => {
   const [query, setQuery] = useState('');
   return (
     <div className={styles.modal}>
@@ -45,7 +44,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, addNewTodo }) => {
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnApply)}
             onClick={() => {
-              addNewTodo(createTodo(query));
+              onCreateNewTodo(createTodo(query));
               onClose();
             }}
           >

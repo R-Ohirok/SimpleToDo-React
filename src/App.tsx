@@ -26,7 +26,7 @@ function App() {
       </main>
       <Footer onOpenCreatingModal={changeModalVisibility} />
 
-      {isModalVisible && <CreateTodoModal onClose={changeModalVisibility} />}
+      {isModalVisible && <CreateTodoModal onClose={changeModalVisibility} onCreateNewTodo={addTodo} />}
     </div>
   );
 }
