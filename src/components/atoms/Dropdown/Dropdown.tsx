@@ -10,7 +10,7 @@ interface Props {
 export const Dropdown: React.FC<Props> = ({
   values,
   activeValue,
-  onSelect = value => {},
+  onSelect = value => {console.log(value)},
 }) => {
   return (
     <select

@@ -1,6 +1,6 @@
 import type React from 'react';
 import styles from './Footer.module.scss';
-import { PagginationBtn } from '../../atoms/Dropdown/PagginationBtn';
+import { PagginationBtn } from '../../atoms/PagginationBtn';
 
 interface Props {}
 
@@ -14,7 +14,11 @@ export const Footer: React.FC<Props> = () => {
       <div className={styles.pagination}>
         {pages.map(page => {
           return (
-            <PagginationBtn key={page} isSelected={page === activePage} click={() => {}}>
+            <PagginationBtn
+              key={page}
+              isSelected={page === activePage}
+              click={() => {}}
+            >
               {page}
             </PagginationBtn>
           );
