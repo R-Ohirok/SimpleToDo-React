@@ -7,7 +7,7 @@ interface Props {
   closeModal: () => void;
 }
 
-export const ModalWindow: React.FC<Props> = ({ isVisible, closeModal }) => {
+const ModalWindow: React.FC<Props> = ({ isVisible, closeModal }) => {
   return (
     <div
       id="modal"
@@ -43,3 +43,5 @@ export const ModalWindow: React.FC<Props> = ({ isVisible, closeModal }) => {
     </div>
   );
 };
+
+export default ModalWindow;

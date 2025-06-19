@@ -10,7 +10,9 @@ interface Props {
 const Dropdown: React.FC<Props> = ({
   options,
   value,
-  onSelect = value => {console.log(value)},
+  onSelect = value => {
+    console.log(value);
+  },
 }) => {
   return (
     <select
@@ -21,7 +23,11 @@ const Dropdown: React.FC<Props> = ({
     >
       {options.map(currValue => {
         return (
-          <option key={currValue} value={currValue} className={styles.dropdownOption}>
+          <option
+            key={currValue}
+            value={currValue}
+            className={styles.dropdownOption}
+          >
             {currValue}
           </option>
         );

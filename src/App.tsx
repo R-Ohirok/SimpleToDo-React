@@ -1,9 +1,9 @@
 import './App.scss';
+import ModalWindow from './components/molecules/ModalWindow/ModalWindow';
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
 import { useState } from 'react';
-import { ModalWindow } from './components/molecules/ModalWindow';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -18,10 +18,11 @@ function App() {
       <main>
         <ToDoList />
       </main>
-
-      <Footer openModal={changeModalVisibility}/>
-
-      <ModalWindow isVisible={isModalVisible} closeModal={changeModalVisibility} />
+      <Footer openModal={changeModalVisibility} />
+      <ModalWindow
+        isVisible={isModalVisible}
+        closeModal={changeModalVisibility}
+      />
     </div>
   );
 }

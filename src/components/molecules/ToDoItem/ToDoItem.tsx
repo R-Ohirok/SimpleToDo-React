@@ -7,7 +7,9 @@ interface Props {
   todo?: ToDoType;
 }
 
-const ToDoItem: React.FC<Props> = ({ todo = { id:1, title:'test', isCompleted: false } }) => {
+const ToDoItem: React.FC<Props> = ({
+  todo = { id: 1, title: 'test', isCompleted: false },
+}) => {
   const { id, title, isCompleted } = todo;
   return (
     <li className={styles.todoItem}>
@@ -16,7 +18,6 @@ const ToDoItem: React.FC<Props> = ({ todo = { id:1, title:'test', isCompleted: f
         type="checkbox"
         className={styles.todoItemStatus}
         defaultChecked={isCompleted}
-        // checked={isCompleted}
       />
 
       <span
