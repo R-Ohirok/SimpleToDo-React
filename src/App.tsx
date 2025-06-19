@@ -4,12 +4,18 @@ import { Footer } from './components/organisms/Footer';
 import { ToDoList } from './components/organisms/ToDoList';
 import { useState } from 'react';
 import { ModalWindow } from './components/molecules/ModalWindow';
+import type { ToDoType } from './types/ToDoType';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [todos, setTodos] = useState<ToDoType[]>([]);
 
   const changeModalVisibility = () => {
     setIsModalVisible(prev => !prev);
+  };
+
+  const addTodo = (newTodo: ToDoType) => {
+    setTodos(currTodos => [...currTodos, newTodo]);
   };
 
   return (
@@ -17,12 +23,17 @@ function App() {
       <Header />
 
       <main>
-        <ToDoList />
+        <ToDoList todos={todos} />
       </main>
 
-      <Footer openModal={changeModalVisibility}/>
+      <Footer openModal={changeModalVisibility} />
 
-      <ModalWindow isVisible={isModalVisible} closeModal={changeModalVisibility} />
+      {isModalVisible && (
+        <ModalWindow
+          closeModal={changeModalVisibility}
+          addNewTodo={addTodo}
+        />
+      )}
     </div>
   );
 }

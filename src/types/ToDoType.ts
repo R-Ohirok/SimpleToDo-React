@@ -1,5 +1,5 @@
 export interface ToDoType {
-  id: number;
+  id: string;
   title: string;
   isCompleted: boolean;
 }
