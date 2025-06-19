@@ -19,7 +19,6 @@ const PagginationBtn: React.FC<Props> = ({
         [styles.btnSelected]: isActive,
       })}
       onClick={onClick}
-      // disabled={isSelected}
     >
       {label}
     </button>
