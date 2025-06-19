@@ -1,9 +1,9 @@
 import './App.scss';
-import { Header } from './components/organisms/Header';
-import { Footer } from './components/organisms/Footer';
-import { ToDoList } from './components/organisms/ToDoList';
+import CreateTodoModal from './components/molecules/CreateTodoModal/CreateTodoModal';
+import Footer from './components/organisms/Footer/Footer';
+import Header from './components/organisms/Header/Header';
+import ToDoList from './components/organisms/ToDoList/ToDoList';
 import { useState } from 'react';
-import { ModalWindow } from './components/molecules/ModalWindow';
 import type { ToDoType } from './types/ToDoType';
 
 function App() {
@@ -21,19 +21,12 @@ function App() {
   return (
     <div className="app">
       <Header />
-
       <main>
         <ToDoList todos={todos} />
       </main>
+      <Footer onOpenCreatingModal={changeModalVisibility} />
 
-      <Footer openModal={changeModalVisibility} />
-
-      {isModalVisible && (
-        <ModalWindow
-          closeModal={changeModalVisibility}
-          addNewTodo={addTodo}
-        />
-      )}
+      {isModalVisible && <CreateTodoModal onClose={changeModalVisibility} />}
     </div>
   );
 }

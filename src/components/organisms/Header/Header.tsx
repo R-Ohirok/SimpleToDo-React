@@ -1,12 +1,11 @@
 import type { FilterStatus } from '../../../types/FilterStatus';
-import { Dropdown } from '../../atoms/Dropdown';
+import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 
-export const Header = () => {
-  const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
-  let active = 'All';
-  // const change = newItem => {};
+const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
+let active = 'All';
 
+const Header = () => {
   return (
     <header className={styles.header}>
       <h1 className={styles.headerTitle}>TODO LIST</h1>
@@ -22,14 +21,12 @@ export const Header = () => {
           <button className={styles.searchBtn} />
         </div>
 
-        <Dropdown
-          values={filterStatuses}
-          activeValue={active}
-          // onSelect={change}
-        />
+        <Dropdown options={filterStatuses} value={active} onSelect={() => {}} />
 
         <button className={styles.themeToggle} />
       </div>
     </header>
   );
 };
+
+export default Header;
