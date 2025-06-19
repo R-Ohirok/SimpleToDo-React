@@ -1,7 +1,7 @@
 import type React from "react";
 import styles from './ToDoList.module.scss';
 import type { ToDoType } from "../../../types/ToDoType";
-import { ToDoItem } from "../../molecules/ToDoItem";
+import ToDoItem from "../../molecules/ToDoItem/ToDoItem";
 
 interface Props {
   todos?: ToDoType[];
@@ -15,7 +15,7 @@ const testTodos = [
   { id:5, title:'test 5', isCompleted: false }
 ];
 
-export const ToDoList: React.FC<Props> = ({
+const ToDoList: React.FC<Props> = ({
   todos = testTodos
 }) => {
   return (
@@ -26,3 +26,5 @@ export const ToDoList: React.FC<Props> = ({
     </ul>
   );
 };
+
+export default ToDoList;

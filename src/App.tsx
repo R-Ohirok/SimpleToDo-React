@@ -1,7 +1,7 @@
 import './App.scss';
-import { Header } from './components/organisms/Header';
-import { Footer } from './components/organisms/Footer';
-import { ToDoList } from './components/organisms/ToDoList';
+import Footer from './components/organisms/Footer/Footer';
+import Header from './components/organisms/Header/Header';
+import ToDoList from './components/organisms/ToDoList/ToDoList';
 import { useState } from 'react';
 import { ModalWindow } from './components/molecules/ModalWindow';
 
@@ -15,7 +15,6 @@ function App() {
   return (
     <div className="app">
       <Header />
-
       <main>
         <ToDoList />
       </main>

@@ -2,30 +2,32 @@ import type React from 'react';
 import styles from './Dropdown.module.scss';
 
 interface Props {
-  values: string[] | number[];
-  activeValue: string | number;
+  options: string[] | number[];
+  value: string | number;
   onSelect?: (value: string) => void;
 }
 
-export const Dropdown: React.FC<Props> = ({
-  values,
-  activeValue,
+const Dropdown: React.FC<Props> = ({
+  options,
+  value,
   onSelect = value => {console.log(value)},
 }) => {
   return (
     <select
-      value={activeValue}
+      value={value}
       className={styles.dropdown}
       onChange={item => onSelect(item.target.value)}
-      name={activeValue.toString()}
+      name={value.toString()}
     >
-      {values.map(currVlue => {
+      {options.map(currValue => {
         return (
-          <option key={currVlue} value={currVlue} className={styles.dropdownOption}>
-            {currVlue}
+          <option key={currValue} value={currValue} className={styles.dropdownOption}>
+            {currValue}
           </option>
         );
       })}
     </select>
   );
 };
+
+export default Dropdown;

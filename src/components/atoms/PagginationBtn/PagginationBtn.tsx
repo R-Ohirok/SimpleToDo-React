@@ -1,28 +1,29 @@
 import type React from 'react';
-import type { ReactNode } from 'react';
 import styles from './PagginationBtn.module.scss';
 import cn from 'classnames';
 
 interface Props {
-  isSelected: boolean;
-  children: ReactNode | ReactNode[];
-  click: () => void;
+  isActive: boolean;
+  label: string | number;
+  onClick: () => void;
 }
 
-export const PagginationBtn: React.FC<Props> = ({
-  isSelected = true,
-  children,
-  click,
+const PagginationBtn: React.FC<Props> = ({
+  isActive = true,
+  label,
+  onClick,
 }) => {
   return (
     <button
       className={cn(styles.btn, {
-        [styles.btnSelected]: isSelected,
+        [styles.btnSelected]: isActive,
       })}
-      onClick={click}
-      disabled={isSelected}
+      onClick={onClick}
+      // disabled={isSelected}
     >
-      {children}
+      {label}
     </button>
   );
 };
+
+export default PagginationBtn;

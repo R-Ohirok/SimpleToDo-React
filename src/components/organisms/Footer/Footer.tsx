@@ -1,6 +1,6 @@
 import type React from 'react';
 import styles from './Footer.module.scss';
-import { PagginationBtn } from '../../atoms/PagginationBtn';
+import PagginationBtn from '../../atoms/PagginationBtn/PagginationBtn';
 
 interface Props {
   openModal: () => void;
@@ -20,14 +20,15 @@ export const Footer: React.FC<Props> = ({ openModal }) => {
           return (
             <PagginationBtn
               key={page}
-              isSelected={page === activePage}
-              click={() => {}}
-            >
-              {page}
-            </PagginationBtn>
+              isActive={page === activePage}
+              onClick={() => {}}
+              label={page}
+            />
           );
         })}
       </div>
     </div>
   );
 };
+
+export default Footer;
