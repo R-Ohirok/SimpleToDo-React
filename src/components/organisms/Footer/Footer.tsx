@@ -9,7 +9,7 @@ interface Props {
 const pages = [1, 2, 3, 4, 5];
 const activePage = 2;
 
-export const Footer: React.FC<Props> = ({ onOpenCreatingModal }) => {
+const Footer: React.FC<Props> = ({ onOpenCreatingModal }) => {
   return (
     <div className={styles.footer}>
       <button className={styles.addBtn} onClick={onOpenCreatingModal}>

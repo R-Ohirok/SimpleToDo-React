@@ -2,10 +2,10 @@ import type { FilterStatus } from '../../../types/FilterStatus';
 import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 
-const Header = () => {
-  const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
-  let active = 'All';
+const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
+let active = 'All';
 
+const Header = () => {
   return (
     <header className={styles.header}>
       <h1 className={styles.headerTitle}>TODO LIST</h1>
