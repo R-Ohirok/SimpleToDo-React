@@ -7,7 +7,7 @@ interface Props {
   onSelect?: (value: string) => void;
 }
 
-export const Dropdown: React.FC<Props> = ({
+const Dropdown: React.FC<Props> = ({
   values,
   activeValue,
   onSelect = value => {console.log(value)},
@@ -29,3 +29,5 @@ export const Dropdown: React.FC<Props> = ({
     </select>
   );
 };
+
+export default Dropdown;

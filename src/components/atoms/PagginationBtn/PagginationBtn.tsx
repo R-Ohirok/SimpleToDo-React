@@ -9,7 +9,7 @@ interface Props {
   click: () => void;
 }
 
-export const PagginationBtn: React.FC<Props> = ({
+const PagginationBtn: React.FC<Props> = ({
   isSelected = true,
   children,
   click,
@@ -26,3 +26,5 @@ export const PagginationBtn: React.FC<Props> = ({
     </button>
   );
 };
+
+export default PagginationBtn;

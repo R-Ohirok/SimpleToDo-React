@@ -1,11 +1,10 @@
 import type { FilterStatus } from '../../../types/FilterStatus';
-import { Dropdown } from '../../atoms/Dropdown';
+import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 
-export const Header = () => {
+const Header = () => {
   const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
   let active = 'All';
-  // const change = newItem => {};
 
   return (
     <header className={styles.header}>
@@ -33,3 +32,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;

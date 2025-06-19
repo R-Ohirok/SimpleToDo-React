@@ -1,10 +1,10 @@
 import type React from 'react';
 import styles from './Footer.module.scss';
-import { PagginationBtn } from '../../atoms/PagginationBtn';
+import PagginationBtn from '../../atoms/PagginationBtn/PagginationBtn';
 
 interface Props {}
 
-export const Footer: React.FC<Props> = () => {
+const Footer: React.FC<Props> = () => {
   const pages = [1, 2, 3, 4, 5];
   const activePage = 2;
   return (
@@ -27,3 +27,5 @@ export const Footer: React.FC<Props> = () => {
     </div>
   );
 };
+
+export default Footer;
