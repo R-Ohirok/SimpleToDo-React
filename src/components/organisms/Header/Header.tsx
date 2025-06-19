@@ -1,12 +1,16 @@
+import type React from 'react';
 import type { FilterStatus } from '../../../types/FilterStatus';
 import { Dropdown } from '../../atoms/Dropdown';
 import styles from './Header.module.scss';
 
-export const Header = () => {
-  const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
-  let active = 'All';
-  // const change = newItem => {};
+interface Props {
+  activeStatus: string;
+  changeStatus: (newStatus: string) => void;
+};
 
+const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
+
+export const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
   return (
     <header className={styles.header}>
       <h1 className={styles.headerTitle}>TODO LIST</h1>
@@ -24,8 +28,8 @@ export const Header = () => {
 
         <Dropdown
           values={filterStatuses}
-          activeValue={active}
-          // onSelect={change}
+          activeValue={activeStatus}
+          onChange={changeStatus}
         />
 
         <button className={styles.themeToggle} />

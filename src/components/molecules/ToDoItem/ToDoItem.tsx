@@ -11,6 +11,7 @@ interface Props {
 
 export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo, changeStatus }) => {
   const { id, title, isCompleted } = todo;
+  
   return (
     <li className={styles.todoItem}>
       <input

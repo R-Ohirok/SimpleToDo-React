@@ -5,10 +5,14 @@ import { ToDoList } from './components/organisms/ToDoList';
 import { useState } from 'react';
 import { ModalWindow } from './components/molecules/ModalWindow';
 import type { ToDoType } from './types/ToDoType';
+import { filterTodosByStatus } from './utils/filterTodosByStatus';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [todos, setTodos] = useState<ToDoType[]>([]);
+  const [filterBy, setFilterBy] = useState('All');
+
+  const filteredTodos = filterTodosByStatus(todos, filterBy);
 
   const changeModalVisibility = () => {
     setIsModalVisible(prev => !prev);
@@ -35,10 +39,10 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
+      <Header activeStatus={filterBy} changeStatus={setFilterBy} />
 
       <main>
-        <ToDoList todos={todos} deleteToDo={deleteToDo} changeStatus={changeStatus} />
+        <ToDoList todos={filteredTodos} deleteToDo={deleteToDo} changeStatus={changeStatus} />
       </main>
 
       <Footer openModal={changeModalVisibility} />

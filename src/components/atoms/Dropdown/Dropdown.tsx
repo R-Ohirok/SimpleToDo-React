@@ -4,19 +4,19 @@ import styles from './Dropdown.module.scss';
 interface Props {
   values: string[] | number[];
   activeValue: string | number;
-  onSelect?: (value: string) => void;
+  onChange: (value: string) => void;
 }
 
 export const Dropdown: React.FC<Props> = ({
   values,
   activeValue,
-  onSelect = value => {console.log(value)},
+  onChange,
 }) => {
   return (
     <select
       value={activeValue}
       className={styles.dropdown}
-      onChange={item => onSelect(item.target.value)}
+      onChange={item => onChange(item.target.value)}
       name={activeValue.toString()}
     >
       {values.map(currVlue => {
