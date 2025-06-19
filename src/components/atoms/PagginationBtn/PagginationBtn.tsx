@@ -3,23 +3,23 @@ import styles from './PagginationBtn.module.scss';
 import cn from 'classnames';
 
 interface Props {
-  isSelected: boolean;
+  isActive: boolean;
   label: string | number;
   onClick: () => void;
 }
 
 const PagginationBtn: React.FC<Props> = ({
-  isSelected = true,
+  isActive = true,
   label,
   onClick,
 }) => {
   return (
     <button
       className={cn(styles.btn, {
-        [styles.btnSelected]: isSelected,
+        [styles.btnSelected]: isActive,
       })}
       onClick={onClick}
-      disabled={isSelected}
+      // disabled={isSelected}
     >
       {label}
     </button>

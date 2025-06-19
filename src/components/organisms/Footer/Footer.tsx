@@ -17,7 +17,7 @@ const Footer: React.FC<Props> = () => {
           return (
             <PagginationBtn
               key={page}
-              isSelected={page === activePage}
+              isActive={page === activePage}
               onClick={() => {}}
               label={page}
             />
