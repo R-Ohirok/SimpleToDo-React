@@ -22,8 +22,8 @@ const Header = () => {
         </div>
 
         <Dropdown
-          values={filterStatuses}
-          activeValue={active}
+          options={filterStatuses}
+          value={active}
           // onSelect={change}
         />
 

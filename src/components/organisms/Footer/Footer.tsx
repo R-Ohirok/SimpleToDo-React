@@ -4,9 +4,10 @@ import PagginationBtn from '../../atoms/PagginationBtn/PagginationBtn';
 
 interface Props {}
 
+const pages = [1, 2, 3, 4, 5];
+const activePage = 2;
+
 const Footer: React.FC<Props> = () => {
-  const pages = [1, 2, 3, 4, 5];
-  const activePage = 2;
   return (
     <div className={styles.footer}>
       <button className={styles.addBtn}>＋</button>
@@ -17,10 +18,9 @@ const Footer: React.FC<Props> = () => {
             <PagginationBtn
               key={page}
               isSelected={page === activePage}
-              click={() => {}}
-            >
-              {page}
-            </PagginationBtn>
+              onClick={() => {}}
+              label={page}
+            />
           );
         })}
       </div>
