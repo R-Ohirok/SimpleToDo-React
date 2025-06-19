@@ -1,0 +1,23 @@
+:root {
+  --main-color: #252525;
+  --main-button-color: #F7F7F7;
+  --secondary-color: #F7F7F7;
+  --placeholder-text-color: #C3C1E5;
+  --element-color: #6C63FF;
+  --element-hover-color: #534CC2;
+  --placeholder-text-size: 16px;
+  --button-text-size: 18px;
+  --main-text-size: 20px;
+  --standart-font-weight: 500;
+  --standart-border-radius: 5px;
+  --standart-input-height: 38px;
+}
+
+html[data-dark] {
+  --main-color: #F7F7F7;
+  --main-button-color: #F7F7F7;
+  --secondary-color: #252525;
+  --placeholder-text-color: #666666;
+  --element-color: #6C63FF;
+  --element-hover-color: #534CC2;
+}

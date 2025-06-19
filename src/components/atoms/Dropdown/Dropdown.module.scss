@@ -1,0 +1,30 @@
+.dropdown {
+  font-family: Kanit, sans-serif;
+  font-size: var(--button-text-size);
+  font-weight: var(--standart-font-weight);
+  width: auto;
+  background-color: var(--element-color);
+  color: var(--main-button-color);
+  text-transform: uppercase;
+
+  border: none;
+  border-radius: var(--standart-border-radius);
+  height: 100%;
+  padding-inline: 10px;
+  cursor: pointer;
+
+  &Option {
+    background-color: var(--main-button-color);
+    color: var(--element-color);
+  }
+
+  &:hover {
+    background-color: var(--element-hover-color);
+    box-shadow: 0px 0px 4px 0px #6C63FF;
+  }
+
+  &:active {
+    background-color: var(--element-hover-color);
+    box-shadow: 0px 0px 4px 0px #6C63FF;
+  }
+}
