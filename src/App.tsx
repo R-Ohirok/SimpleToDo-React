@@ -1,4 +1,4 @@
-import './App.scss';
+import './index.scss';
 import { Header } from './components/organisms/Header';
 import { Footer } from './components/organisms/Footer';
 import { ToDoList } from './components/organisms/ToDoList';
@@ -22,12 +22,23 @@ function App() {
     setTodos(currTodos => currTodos.filter(todo => todo.id !== todoId));
   };
 
+  const changeStatus = (todoId: string) => {
+    setTodos(currTodos =>
+      currTodos.map(todo => (
+        todo.id === todoId 
+        ? { ...todo, isCompleted: !todo.isCompleted } 
+        : todo
+      )
+      ),
+    );
+  };
+
   return (
     <div className="app">
       <Header />
 
       <main>
-        <ToDoList todos={todos} deleteToDo={deleteToDo} />
+        <ToDoList todos={todos} deleteToDo={deleteToDo} changeStatus={changeStatus} />
       </main>
 
       <Footer openModal={changeModalVisibility} />

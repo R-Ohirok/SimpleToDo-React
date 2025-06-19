@@ -6,9 +6,10 @@ import type { ToDoType } from '../../../types/ToDoType';
 interface Props {
   todo: ToDoType;
   deleteToDo: (todoId: string) => void;
+  changeStatus: (todoId: string) => void;
 }
 
-export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo }) => {
+export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo, changeStatus }) => {
   const { id, title, isCompleted } = todo;
   return (
     <li className={styles.todoItem}>
@@ -16,13 +17,13 @@ export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo }) => {
         name={id.toString()}
         type="checkbox"
         className={styles.todoItemStatus}
-        defaultChecked={isCompleted}
-        // checked={isCompleted}
+        checked={isCompleted}
+        onChange={() => changeStatus(todo.id)}
       />
 
       <span
         className={cn(styles.todoItemTitle, {
-          [styles.todoItemCompleted]: isCompleted,
+          [styles.todoItemTitleCompleted]: isCompleted,
         })}
       >
         {title}
