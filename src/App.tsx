@@ -11,6 +11,7 @@ function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [todos, setTodos] = useState<ToDoType[]>([]);
   const [filterBy, setFilterBy] = useState('All');
+  const [query, setQuery] = useState('');
 
   const filteredTodos = filterTodosByStatus(todos, filterBy);
 

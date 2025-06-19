@@ -2,6 +2,7 @@ import type React from 'react';
 import type { FilterStatus } from '../../../types/FilterStatus';
 import { Dropdown } from '../../atoms/Dropdown';
 import styles from './Header.module.scss';
+import { useState } from 'react';
 
 interface Props {
   activeStatus: string;
@@ -11,6 +12,7 @@ interface Props {
 const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
 
 export const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
+  const [query, setQuery] = useState('');
   return (
     <header className={styles.header}>
       <h1 className={styles.headerTitle}>TODO LIST</h1>
@@ -21,6 +23,8 @@ export const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
             id="search-input"
             type="text"
             placeholder="Search..."
+            value={query}
+            onChange={event => setQuery(event.target.value)}
             className={styles.searchInput}
           />
           <button className={styles.searchBtn} />
