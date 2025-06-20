@@ -5,11 +5,11 @@ import type { ToDoType } from '../../../types/ToDoType';
 
 interface Props {
   todo: ToDoType;
-  deleteToDo: (todoId: string) => void;
+  onDelete: (todoId: string) => void;
   changeStatus: (todoId: string) => void;
 }
 
-export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo, changeStatus }) => {
+const ToDoItem: React.FC<Props> = ({ todo, onDelete, changeStatus }) => {
   const { id, title, isCompleted } = todo;
   return (
     <li className={styles.todoItem}>
@@ -41,9 +41,11 @@ export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo, changeStatus }) =>
             styles.todoItemControlBtn,
             styles.todoItemControlBtnDelete,
           )}
-          onClick={() => deleteToDo(todo.id)}
+          onClick={() => onDelete(todo.id)}
         ></button>
       </div>
     </li>
   );
 };
+
+export default ToDoItem;

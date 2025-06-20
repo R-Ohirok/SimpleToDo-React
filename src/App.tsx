@@ -1,26 +1,26 @@
 import './index.scss';
-import { Header } from './components/organisms/Header';
-import { Footer } from './components/organisms/Footer';
-import { ToDoList } from './components/organisms/ToDoList';
-import { useState } from 'react';
-import { ModalWindow } from './components/molecules/ModalWindow';
+import CreateTodoModal from './components/molecules/CreateTodoModal/CreateTodoModal';
+import Footer from './components/organisms/Footer/Footer';
+import Header from './components/organisms/Header/Header';
+import ToDoList from './components/organisms/ToDoList/ToDoList';
+import { useCallback, useState } from 'react';
 import type { ToDoType } from './types/ToDoType';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [todos, setTodos] = useState<ToDoType[]>([]);
 
-  const changeModalVisibility = () => {
+  const changeModalVisibility = useCallback(() => {
     setIsModalVisible(prev => !prev);
-  };
+  }, []);
 
-  const addTodo = (newTodo: ToDoType) => {
+  const addTodo = useCallback((newTodo: ToDoType) => {
     setTodos(currTodos => [...currTodos, newTodo]);
-  };
+  }, []);
 
-  const deleteToDo = (todoId: string) => {
+  const deleteToDo = useCallback((todoId: string) => {
     setTodos(currTodos => currTodos.filter(todo => todo.id !== todoId));
-  };
+  }, []);
 
   const changeStatus = (todoId: string) => {
     setTodos(currTodos =>
@@ -36,15 +36,13 @@ function App() {
   return (
     <div className="app">
       <Header />
-
       <main>
-        <ToDoList todos={todos} deleteToDo={deleteToDo} changeStatus={changeStatus} />
+        <ToDoList todos={todos} onDelete={deleteToDo} changeStatus={changeStatus} />
       </main>
-
-      <Footer openModal={changeModalVisibility} />
+      <Footer onOpenCreatingModal={changeModalVisibility} />
 
       {isModalVisible && (
-        <ModalWindow closeModal={changeModalVisibility} addNewTodo={addTodo} />
+        <CreateTodoModal onClose={changeModalVisibility} сreateToDo={addTodo} />
       )}
     </div>
   );
