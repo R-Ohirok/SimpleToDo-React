@@ -37,3 +37,4 @@ const Footer: React.FC<Props> = ({ onOpenCreatingModal }) => {
 };
 
 export default Footer;
+
