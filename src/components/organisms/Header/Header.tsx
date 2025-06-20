@@ -1,9 +1,9 @@
-import type { FilterStatus } from '../../../types/FilterStatus';
+import { FILTER_STATUSES } from '../../../constants/FilterStatuses';
+import type { FilterStatusType } from '../../../types/FilterStatusType';
 import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 
-const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
-let active = 'All';
+let activeStatus: FilterStatusType = 'All';
 
 const Header = () => {
   return (
@@ -21,7 +21,11 @@ const Header = () => {
           <button className={styles.searchBtn} />
         </div>
 
-        <Dropdown options={filterStatuses} value={active} onSelect={() => {}} />
+        <Dropdown
+          options={FILTER_STATUSES}
+          value={activeStatus}
+          onSelect={() => {}}
+        />
 
         <button className={styles.themeToggle} />
       </div>

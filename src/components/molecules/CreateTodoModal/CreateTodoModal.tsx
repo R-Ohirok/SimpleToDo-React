@@ -1,26 +1,38 @@
 import type React from 'react';
 import styles from './CreateTodoModal.module.scss';
 import cn from 'classnames';
-import { generateId } from '../../../utils/generateId';
 import type { ToDoType } from '../../../types/ToDoType';
 import { normalizeValue } from '../../../utils/normalizeValue';
-import { useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 
 interface Props {
   onClose: () => void;
-  onCreateNewTodo: (newTodo: ToDoType) => void;
+  сreateToDo: (newTodo: ToDoType) => void;
 }
 
-function createTodo(title: string): ToDoType {
+function getNewToDo(title: string): ToDoType {
   return {
-    id: generateId(),
+    id: useId(),
     title: normalizeValue(title),
     isCompleted: false,
   };
 }
 
-const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateNewTodo }) => {
-  const [query, setQuery] = useState('');
+const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
+  const [value, setValue] = useState('');
+
+  const onCreate = useCallback(() => {
+    сreateToDo(getNewToDo(value));
+    onClose();
+  }, []);
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(event.target.value);
+    },
+    [],
+  );
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -30,8 +42,8 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateNewTodo }) => {
             className={styles.modalContentInput}
             type="text"
             placeholder="Input your note..."
-            value={query}
-            onChange={event => setQuery(event.target.value)}
+            value={value}
+            onChange={handleChange}
           />
         </div>
         <div className={styles.modalControl}>
@@ -43,10 +55,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateNewTodo }) => {
           </button>
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnApply)}
-            onClick={() => {
-              onCreateNewTodo(createTodo(query));
-              onClose();
-            }}
+            onClick={onCreate}
           >
             APPLY
           </button>
