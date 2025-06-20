@@ -19,6 +19,14 @@ const Header: React.FC<Props> = memo(
       return { id: useId(), label: status };
     });
 
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(event.target.value);
+    };
+
+    const handleFind = () => {
+      onFind(searchValue);
+    };
+
     return (
       <header className={styles.header}>
         <h1 className={styles.headerTitle}>TODO LIST</h1>
@@ -30,13 +38,10 @@ const Header: React.FC<Props> = memo(
               type="text"
               placeholder="Search..."
               value={searchValue}
-              onChange={event => setSearchValue(event.target.value)}
+              onChange={handleChange}
               className={styles.searchInput}
             />
-            <button
-              className={styles.searchBtn}
-              onClick={() => onFind(searchValue)}
-            />
+            <button className={styles.searchBtn} onClick={handleFind} />
           </div>
 
           <Dropdown
