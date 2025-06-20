@@ -18,12 +18,7 @@
     color: var(--element-color);
   }
 
-  &:hover {
-    background-color: var(--element-hover-color);
-    box-shadow: 0px 0px 4px 0px #6C63FF;
-  }
-
-  &:active {
+  &:hover, &:active {
     background-color: var(--element-hover-color);
     box-shadow: 0px 0px 4px 0px #6C63FF;
   }

@@ -1,17 +1,22 @@
 import type React from 'react';
 import styles from './Footer.module.scss';
-import { PagginationBtn } from '../../atoms/PagginationBtn';
+import PagginationBtn from '../../atoms/PagginationBtn/PagginationBtn';
+import { memo, useCallback } from 'react';
 
 interface Props {
-  openModal: () => void;
+  onOpenCreatingModal: () => void;
 }
 
-export const Footer: React.FC<Props> = ({ openModal }) => {
-  const pages = [1, 2, 3, 4, 5];
-  const activePage = 2;
+const pages = [1, 2, 3, 4, 5];
+const FIRST_PAGE = 1;
+const activePage = FIRST_PAGE;
+
+const Footer: React.FC<Props> = memo(({ onOpenCreatingModal }) => {
+  const onChangePage = useCallback(() => {}, []); //TODO
+
   return (
     <div className={styles.footer}>
-      <button className={styles.addBtn} onClick={openModal}>
+      <button className={styles.addBtn} onClick={onOpenCreatingModal}>
         ＋
       </button>
 
@@ -20,14 +25,15 @@ export const Footer: React.FC<Props> = ({ openModal }) => {
           return (
             <PagginationBtn
               key={page}
-              isSelected={page === activePage}
-              click={() => {}}
-            >
-              {page}
-            </PagginationBtn>
+              isActive={page === activePage}
+              onClick={onChangePage}
+              label={page}
+            />
           );
         })}
       </div>
     </div>
   );
-};
+});
+
+export default Footer;

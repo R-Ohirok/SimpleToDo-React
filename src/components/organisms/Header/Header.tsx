@@ -1,21 +1,25 @@
+import { FILTER_STATUSES } from '../../../constants/FilterStatuses';
 import type React from 'react';
-import type { FilterStatus } from '../../../types/FilterStatus';
-import { Dropdown } from '../../atoms/Dropdown';
+import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
-import { useState } from 'react';
+import { memo, useState, useId } from 'react';
+import type { DropdownOptionType } from '../../../types/DropdownOptionType';
 
 interface Props {
-  activeStatus: string;
-  changeStatus: (newStatus: string) => void;
-};
+  activeFilterStatus: string;
+  onFilterStatusChange: (newStatus: string) => void;
+}
 
-const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
+const Header: React.FC<Props> = memo(
+  ({ activeFilterStatus, onFilterStatusChange }) => {
+    const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
+      return { id: useId(), label: status };
+    });
 
-export const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
-  const [query, setQuery] = useState('');
+    const [query, setQuery] = useState('');
   return (
-    <header className={styles.header}>
-      <h1 className={styles.headerTitle}>TODO LIST</h1>
+      <header className={styles.header}>
+        <h1 className={styles.headerTitle}>TODO LIST</h1>
 
       <div className={styles.topBar}>
         <div className={styles.searchWrapper}>
@@ -30,14 +34,17 @@ export const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
           <button className={styles.searchBtn} />
         </div>
 
-        <Dropdown
-          values={filterStatuses}
-          activeValue={activeStatus}
-          onChange={changeStatus}
-        />
+          <Dropdown
+            options={filterOptions}
+            value={activeFilterStatus}
+            onValueChange={onFilterStatusChange}
+          />
 
-        <button className={styles.themeToggle} />
-      </div>
-    </header>
-  );
-};
+          <button className={styles.themeToggle} />
+        </div>
+      </header>
+    );
+  },
+);
+
+export default Header;
