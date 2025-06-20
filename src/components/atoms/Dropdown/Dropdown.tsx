@@ -1,8 +1,9 @@
 import type React from 'react';
 import styles from './Dropdown.module.scss';
+import type { DropdownOptionType } from '../../../types/DropdownOptionType';
 
 interface Props {
-  options: string[] | number[];
+  options: DropdownOptionType[];
   value: string;
   onValueChange: (value: string) => void;
 }
@@ -19,16 +20,16 @@ const Dropdown: React.FC<Props> = ({ options, value, onValueChange }) => {
       value={value}
       className={styles.dropdown}
       onChange={handleValueChange}
-      name={value.toString()}
+      name={value}
     >
       {options.map(currValue => {
         return (
           <option
-            key={currValue}
-            value={currValue}
+            key={currValue.id}
+            value={currValue.label}
             className={styles.dropdownOption}
           >
-            {currValue}
+            {currValue.label}
           </option>
         );
       })}

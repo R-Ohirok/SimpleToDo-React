@@ -12,14 +12,12 @@ interface Props {
 
 const ToDoItem: React.FC<Props> = memo(
   ({ todo, onDelete, onStatusChange }) => {
-    console.log(todo);
     const { id, title, isCompleted } = todo;
 
     const handleDelete = useCallback(() => onDelete(todo.id), []);
     const handleStatusChange = useCallback(() => onStatusChange(todo.id), []);
 
-    
-  return (
+    return (
       <li className={styles.todoItem}>
         <input
           name={id.toString()}

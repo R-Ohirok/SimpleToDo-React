@@ -1,4 +1,4 @@
-import type { ToDoType } from "../types/ToDoType";
+import type { ToDoType } from '../types/ToDoType';
 
 export const filterTodosByStatus = (todos: ToDoType[], show: string) => {
   switch (show) {

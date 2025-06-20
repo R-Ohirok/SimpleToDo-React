@@ -12,8 +12,6 @@ const FIRST_PAGE = 1;
 const activePage = FIRST_PAGE;
 
 const Footer: React.FC<Props> = memo(({ onOpenCreatingModal }) => {
-  console.log('render footer');
-
   const onChangePage = useCallback(() => {}, []); //TODO
 
   return (

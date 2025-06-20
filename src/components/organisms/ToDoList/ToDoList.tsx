@@ -10,15 +10,21 @@ interface Props {
   onStatusChange: (todoId: string) => void;
 }
 
-const ToDoList: React.FC<Props> = memo(({ todos, onDelete, onStatusChange }) => {
-  console.log('render list');
-  return (
-    <ul className={styles.todoList}>
-      {todos.map(todo => (
-        <ToDoItem key={todo.id} todo={todo} onDelete={onDelete} onStatusChange={onStatusChange} />
-      ))}
-    </ul>
-  );
-});
+const ToDoList: React.FC<Props> = memo(
+  ({ todos, onDelete, onStatusChange }) => {
+    return (
+      <ul className={styles.todoList}>
+        {todos.map(todo => (
+          <ToDoItem
+            key={todo.id}
+            todo={todo}
+            onDelete={onDelete}
+            onStatusChange={onStatusChange}
+          />
+        ))}
+      </ul>
+    );
+  },
+);
 
 export default ToDoList;
