@@ -22,22 +22,23 @@ function App() {
     setTodos(currTodos => currTodos.filter(todo => todo.id !== todoId));
   }, []);
 
-  const changeStatus = (todoId: string) => {
+  const changeStatus = useCallback((todoId: string) => {
     setTodos(currTodos =>
-      currTodos.map(todo => (
-        todo.id === todoId 
-        ? { ...todo, isCompleted: !todo.isCompleted } 
-        : todo
-      )
+      currTodos.map(todo =>
+        todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
       ),
     );
-  };
+  }, []);
 
   return (
     <div className="app">
       <Header />
       <main>
-        <ToDoList todos={todos} onDelete={deleteToDo} changeStatus={changeStatus} />
+        <ToDoList
+          todos={todos}
+          onDelete={deleteToDo}
+          onStatusChange={changeStatus}
+        />
       </main>
       <Footer onOpenCreatingModal={changeModalVisibility} />
 

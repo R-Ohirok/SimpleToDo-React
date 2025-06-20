@@ -6,14 +6,14 @@ import ToDoItem from '../../molecules/ToDoItem/ToDoItem';
 interface Props {
   todos: ToDoType[];
   onDelete: (todoId: string) => void;
-  changeStatus: (todoId: string) => void;
+  onStatusChange: (todoId: string) => void;
 }
 
-const ToDoList: React.FC<Props> = ({ todos, onDelete, changeStatus }) => {
+const ToDoList: React.FC<Props> = ({ todos, onDelete, onStatusChange }) => {
   return (
     <ul className={styles.todoList}>
       {todos.map(todo => (
-        <ToDoItem key={todo.id} todo={todo} onDelete={onDelete} changeStatus={changeStatus} />
+        <ToDoItem key={todo.id} todo={todo} onDelete={onDelete} onStatusChange={onStatusChange} />
       ))}
     </ul>
   );
