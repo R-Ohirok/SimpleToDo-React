@@ -12,6 +12,7 @@ function App() {
   const [todos, setTodos] = useState<ToDoType[]>([]);
   const [filterBy, setFilterBy] = useState('All');
   const [searchValue, setSearchValue] = useState('');
+  const [editingTodoId, setEditingTodoId] = useState<string>('');
 
   const filteredTodos = filterTodos(todos, searchValue, filterBy);
 
@@ -35,6 +36,14 @@ function App() {
     );
   }, []);
 
+  const changeTitle = useCallback((todoId: string, newTodoTitle: string) => {
+    setTodos(currTodos =>
+      currTodos.map(todo =>
+        todo.id === todoId ? { ...todo, title: newTodoTitle } : todo,
+      ),
+    );
+  }, []);
+
   return (
     <div className="app">
       <Header
@@ -48,6 +57,9 @@ function App() {
           todos={filteredTodos}
           onDelete={deleteToDo}
           onChangeStatus={changeStatus}
+          editingTodoId={editingTodoId}
+          setEditingTodoId={setEditingTodoId}
+          changeTitle={changeTitle}
         />
       </main>
       <Footer onOpenCreatingModal={changeModalVisibility} />

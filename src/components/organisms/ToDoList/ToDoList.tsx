@@ -8,10 +8,20 @@ interface Props {
   todos: ToDoType[];
   onDelete: (todoId: string) => void;
   onChangeStatus: (todoId: string) => void;
+  editingTodoId: string;
+  setEditingTodoId: (id: string) => void;
+  changeTitle: (todoId: string, newTitle: string) => void;
 }
 
 const ToDoList: React.FC<Props> = memo(
-  ({ todos, onDelete, onChangeStatus }) => {
+  ({
+    todos,
+    onDelete,
+    onChangeStatus,
+    editingTodoId,
+    setEditingTodoId,
+    changeTitle,
+  }) => {
     return (
       <ul className={styles.todoList}>
         {todos.map(todo => (
@@ -20,6 +30,9 @@ const ToDoList: React.FC<Props> = memo(
             todo={todo}
             onDelete={onDelete}
             onChangeStatus={onChangeStatus}
+            editingTodoId={editingTodoId}
+            setEditingTodoId={setEditingTodoId}
+            changeTitle={changeTitle}
           />
         ))}
       </ul>
