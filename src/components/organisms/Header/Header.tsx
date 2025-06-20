@@ -8,31 +8,36 @@ import type { DropdownOptionType } from '../../../types/DropdownOptionType';
 interface Props {
   activeFilterStatus: string;
   onFilterStatusChange: (newStatus: string) => void;
+  onFind: (title: string) => void;
 }
 
 const Header: React.FC<Props> = memo(
-  ({ activeFilterStatus, onFilterStatusChange }) => {
+  ({ activeFilterStatus, onFilterStatusChange, onFind }) => {
+    const [searchValue, setSearchValue] = useState('');
+
     const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
       return { id: useId(), label: status };
     });
 
-    const [query, setQuery] = useState('');
-  return (
+    return (
       <header className={styles.header}>
         <h1 className={styles.headerTitle}>TODO LIST</h1>
 
-      <div className={styles.topBar}>
-        <div className={styles.searchWrapper}>
-          <input
-            id="search-input"
-            type="text"
-            placeholder="Search..."
-            value={query}
-            onChange={event => setQuery(event.target.value)}
-            className={styles.searchInput}
-          />
-          <button className={styles.searchBtn} />
-        </div>
+        <div className={styles.topBar}>
+          <div className={styles.searchWrapper}>
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search..."
+              value={searchValue}
+              onChange={event => setSearchValue(event.target.value)}
+              className={styles.searchInput}
+            />
+            <button
+              className={styles.searchBtn}
+              onClick={() => onFind(searchValue)}
+            />
+          </div>
 
           <Dropdown
             options={filterOptions}

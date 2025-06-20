@@ -5,15 +5,15 @@ import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
 import { useCallback, useState } from 'react';
 import type { ToDoType } from './types/ToDoType';
-import { filterTodosByStatus } from './utils/filterTodosByStatus';
+import { filterTodos } from './utils/filterToDos';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [todos, setTodos] = useState<ToDoType[]>([]);
   const [filterBy, setFilterBy] = useState('All');
-  const [query, setQuery] = useState('');
+  const [searchValue, setSearchValue] = useState('');
 
-  const filteredTodos = filterTodosByStatus(todos, filterBy);
+  const filteredTodos = filterTodos(todos, searchValue, filterBy);
 
   const changeModalVisibility = useCallback(() => {
     setIsModalVisible(prev => !prev);
@@ -40,6 +40,7 @@ function App() {
       <Header
         activeFilterStatus={filterBy}
         onFilterStatusChange={setFilterBy}
+        onFind={setSearchValue}
       />
 
       <main>

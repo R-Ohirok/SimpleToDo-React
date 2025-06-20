@@ -45,6 +45,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
             type="text"
             placeholder="Input your note..."
             value={value}
+            autoFocus
             onChange={handleChange}
           />
         </div>

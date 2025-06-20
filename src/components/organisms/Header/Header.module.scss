@@ -36,6 +36,7 @@
     border-radius: var(--standart-border-radius);
     font-size: var(--placeholder-text-size);
     color: var(--element-color);
+    text-transform: uppercase;
 
     &::placeholder {
       color: var(--placeholder-text-color);
