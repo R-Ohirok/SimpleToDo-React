@@ -1,9 +1,9 @@
 import './index.scss';
-import { Header } from './components/organisms/Header';
-import { Footer } from './components/organisms/Footer';
-import { ToDoList } from './components/organisms/ToDoList';
-import { useState } from 'react';
-import { ModalWindow } from './components/molecules/ModalWindow';
+import CreateTodoModal from './components/molecules/CreateTodoModal/CreateTodoModal';
+import Footer from './components/organisms/Footer/Footer';
+import Header from './components/organisms/Header/Header';
+import ToDoList from './components/organisms/ToDoList/ToDoList';
+import { useCallback, useState } from 'react';
 import type { ToDoType } from './types/ToDoType';
 import { filterTodosByStatus } from './utils/filterTodosByStatus';
 
@@ -14,41 +14,41 @@ function App() {
 
   const filteredTodos = filterTodosByStatus(todos, filterBy);
 
-  const changeModalVisibility = () => {
+  const changeModalVisibility = useCallback(() => {
     setIsModalVisible(prev => !prev);
-  };
+  }, []);
 
-  const addTodo = (newTodo: ToDoType) => {
+  const addTodo = useCallback((newTodo: ToDoType) => {
     setTodos(currTodos => [...currTodos, newTodo]);
-  };
+  }, []);
 
-  const deleteToDo = (todoId: string) => {
+  const deleteToDo = useCallback((todoId: string) => {
     setTodos(currTodos => currTodos.filter(todo => todo.id !== todoId));
-  };
+  }, []);
 
-  const changeStatus = (todoId: string) => {
+  const changeStatus = useCallback((todoId: string) => {
     setTodos(currTodos =>
-      currTodos.map(todo => (
-        todo.id === todoId 
-        ? { ...todo, isCompleted: !todo.isCompleted } 
-        : todo
-      )
+      currTodos.map(todo =>
+        todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
       ),
     );
-  };
+  }, []);
 
   return (
     <div className="app">
       <Header activeStatus={filterBy} changeStatus={setFilterBy} />
 
       <main>
-        <ToDoList todos={filteredTodos} deleteToDo={deleteToDo} changeStatus={changeStatus} />
+        <ToDoList
+          todos={filteredTodos}
+          onDelete={deleteToDo}
+          onStatusChange={changeStatus}
+        />
       </main>
-
-      <Footer openModal={changeModalVisibility} />
+      <Footer onOpenCreatingModal={changeModalVisibility} />
 
       {isModalVisible && (
-        <ModalWindow closeModal={changeModalVisibility} addNewTodo={addTodo} />
+        <CreateTodoModal onClose={changeModalVisibility} сreateToDo={addTodo} />
       )}
     </div>
   );

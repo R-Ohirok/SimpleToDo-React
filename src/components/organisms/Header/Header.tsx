@@ -1,6 +1,6 @@
+import { FILTER_STATUSES } from '../../../constants/FilterStatuses';
 import type React from 'react';
-import type { FilterStatus } from '../../../types/FilterStatus';
-import { Dropdown } from '../../atoms/Dropdown';
+import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 
 interface Props {
@@ -8,9 +8,8 @@ interface Props {
   changeStatus: (newStatus: string) => void;
 };
 
-const filterStatuses: FilterStatus[] = ['All', 'Active', 'Completed'];
+const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
 
-export const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
   return (
     <header className={styles.header}>
       <h1 className={styles.headerTitle}>TODO LIST</h1>
@@ -27,9 +26,9 @@ export const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
         </div>
 
         <Dropdown
-          values={filterStatuses}
-          activeValue={activeStatus}
-          onChange={changeStatus}
+          options={FILTER_STATUSES}
+          value={activeStatus}
+          onSelect={() => {}}
         />
 
         <button className={styles.themeToggle} />
@@ -37,3 +36,5 @@ export const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
     </header>
   );
 };
+
+export default Header;
