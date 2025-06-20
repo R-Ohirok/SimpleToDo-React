@@ -4,36 +4,35 @@ import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
 import { useCallback, useMemo, useState } from 'react';
-import type { ToDoType } from './types/ToDoType';
 import { filterTodos } from './utils/filterToDos';
-import { FIRST_PAGE, PER_PAGE } from './constants/constants';
+import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import { getVisibleTodos } from './utils/getVisibleToDos';
+import type { FilterStatusType, ToDoType } from './types';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [todos, setTodos] = useState<ToDoType[]>([]);
-  const [filterBy, setFilterBy] = useState('All');
+  const [filterBy, setFilterBy] = useState<FilterStatusType>('All');
   const [searchValue, setSearchValue] = useState('');
-  const [editingTodoId, setEditingTodoId] = useState<string>('');
   const [activePage, setActivePage] = useState(FIRST_PAGE);
 
   const filteredTodos = useMemo(
     () => filterTodos(todos, searchValue, filterBy),
     [todos, searchValue, filterBy],
   );
-  const pagesCount = useMemo(
-    () => Math.ceil(filteredTodos.length / PER_PAGE),
-    [filteredTodos.length],
-  );
+  const pagesCount = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
   const visibleToDos = useMemo(
     () => getVisibleTodos(filteredTodos, activePage),
     [filteredTodos, activePage],
   );
 
-  const handleFilterStatusChange = useCallback((newStatus: string) => {
-    setFilterBy(newStatus);
-    setActivePage(FIRST_PAGE);
-  }, []);
+  const handleFilterStatusChange = useCallback(
+    (newStatus: FilterStatusType) => {
+      setFilterBy(newStatus);
+      setActivePage(FIRST_PAGE);
+    },
+    [],
+  );
 
   const handleSearchChange = useCallback((title: string) => {
     setSearchValue(title);
@@ -53,7 +52,7 @@ function App() {
     setActivePage(FIRST_PAGE);
   }, []);
 
-  const changeStatus = useCallback((todoId: string) => {
+  const handleChangeStatus = useCallback((todoId: string) => {
     setTodos(currTodos =>
       currTodos.map(todo =>
         todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
@@ -62,31 +61,32 @@ function App() {
     setActivePage(FIRST_PAGE);
   }, []);
 
-  const changeTitle = useCallback((todoId: string, newTodoTitle: string) => {
-    setTodos(currTodos =>
-      currTodos.map(todo =>
-        todo.id === todoId ? { ...todo, title: newTodoTitle } : todo,
-      ),
-    );
-    setActivePage(FIRST_PAGE);
-  }, []);
+  const handleChangeTitle = useCallback(
+    (todoId: string, newTodoTitle: string) => {
+      setTodos(currTodos =>
+        currTodos.map(todo =>
+          todo.id === todoId ? { ...todo, title: newTodoTitle } : todo,
+        ),
+      );
+      setActivePage(FIRST_PAGE);
+    },
+    [],
+  );
 
   return (
     <div className="app">
       <Header
         activeFilterStatus={filterBy}
         onFilterStatusChange={handleFilterStatusChange}
-        onFind={handleSearchChange}
+        onSearchSubmit={handleSearchChange}
       />
 
       <main>
         <ToDoList
           todos={visibleToDos}
           onDelete={deleteToDo}
-          onChangeStatus={changeStatus}
-          editingTodoId={editingTodoId}
-          setEditingTodoId={setEditingTodoId}
-          changeTitle={changeTitle}
+          onChangeStatus={handleChangeStatus}
+          changeTitle={handleChangeTitle}
         />
       </main>
       <Footer

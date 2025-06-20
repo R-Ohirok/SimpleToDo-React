@@ -1,9 +1,9 @@
 import type React from 'react';
 import styles from './CreateTodoModal.module.scss';
 import cn from 'classnames';
-import type { ToDoType } from '../../../types/ToDoType';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import { useCallback, useId, useState } from 'react';
+import type { ToDoType } from '../../../types';
 
 interface Props {
   onClose: () => void;

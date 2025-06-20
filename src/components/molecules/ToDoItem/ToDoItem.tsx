@@ -1,39 +1,33 @@
 import type React from 'react';
 import styles from './ToDoItem.module.scss';
 import cn from 'classnames';
-import type { ToDoType } from '../../../types/ToDoType';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
+import type { ToDoType } from '../../../types';
 
 interface Props {
   todo: ToDoType;
   onDelete: (todoId: string) => void;
   onChangeStatus: (todoId: string) => void;
-  editingTodoId: string;
-  setEditingTodoId: (id: string) => void;
   changeTitle: (todoId: string, newTitle: string) => void;
 }
 
 const ToDoItem: React.FC<Props> = memo(
-  ({
-    todo,
-    onDelete,
-    onChangeStatus,
-    editingTodoId,
-    setEditingTodoId,
-    changeTitle,
-  }) => {
+  ({ todo, onDelete, onChangeStatus, changeTitle }) => {
     const { id, title, isCompleted } = todo;
 
-    const [todoTitle, setTodoTitle] = useState(title);
+    const [isEditing, setIsEditing] = useState(false);
 
-    const isEditing = useMemo(() => editingTodoId === id, [editingTodoId]);
+    let newTitle = title;
+
+    const handleChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
+      newTitle = event.target.value;
+    };
 
     const handleDelete = useCallback(() => onDelete(todo.id), []);
     const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
     const handleSelectTodo = useCallback(() => {
-      setEditingTodoId(id);
-      setTodoTitle(title);
+      setIsEditing(true);
     }, [title]);
     const handleEditTodo = useCallback(
       (event: React.FormEvent<HTMLFormElement>, newTitle: string) => {
@@ -42,20 +36,20 @@ const ToDoItem: React.FC<Props> = memo(
         const cleanTitle = normalizeValue(newTitle);
 
         if (cleanTitle === title) {
-          setEditingTodoId('');
+          setIsEditing(false);
 
           return;
         }
 
         if (!cleanTitle) {
           handleDelete();
-          setEditingTodoId('');
+          setIsEditing(false);
 
           return;
         }
 
         changeTitle(id, cleanTitle);
-        setEditingTodoId('');
+        setIsEditing(false);
       },
       [],
     );
@@ -72,20 +66,21 @@ const ToDoItem: React.FC<Props> = memo(
 
         {isEditing ? (
           <form
-            onBlur={event => handleEditTodo(event, todoTitle)}
-            onSubmit={event => handleEditTodo(event, todoTitle)}
+            onBlur={event => handleEditTodo(event, newTitle)}
+            onSubmit={event => handleEditTodo(event, newTitle)}
             onKeyUp={event => {
               if (event.key === 'Escape') {
-                setEditingTodoId('');
+                setIsEditing(false);
               }
             }}
           >
             <input
+              name="todoItemInput"
               type="text"
               className={styles.todoItemInput}
               placeholder="Empty todo will be deleted"
-              value={todoTitle}
-              onChange={event => setTodoTitle(event.target.value)}
+              defaultValue={title}
+              onChange={event => handleChangeTitle(event)}
               autoFocus
             />
           </form>
@@ -118,12 +113,6 @@ const ToDoItem: React.FC<Props> = memo(
           </>
         )}
       </li>
-    );
-  },
-  (prevProps, nextProps) => {
-    return (
-      prevProps.todo.isCompleted === nextProps.todo.isCompleted &&
-      prevProps.editingTodoId === nextProps.editingTodoId
     );
   },
 );

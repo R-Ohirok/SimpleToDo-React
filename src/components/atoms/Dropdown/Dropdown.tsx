@@ -1,18 +1,18 @@
 import type React from 'react';
 import styles from './Dropdown.module.scss';
-import type { DropdownOptionType } from '../../../types/DropdownOptionType';
+import type { DropdownOptionType, FilterStatusType } from '../../../types';
 
 interface Props {
   options: DropdownOptionType[];
   value: string;
-  onValueChange: (value: string) => void;
+  onChange: (value: FilterStatusType) => void;
 }
 
-const Dropdown: React.FC<Props> = ({ options, value, onValueChange }) => {
+const Dropdown: React.FC<Props> = ({ options, value, onChange }) => {
   const handleValueChange = (
     newValue: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    onValueChange(newValue.target.value);
+    onChange(newValue.target.value as FilterStatusType);
   };
 
   return (

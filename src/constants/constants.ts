@@ -1,4 +1,4 @@
-import type { FilterStatusType } from '../types/FilterStatusType';
+import type { FilterStatusType } from '../types';
 
 export const FILTER_STATUSES: FilterStatusType[] = [
   'All',
@@ -8,4 +8,4 @@ export const FILTER_STATUSES: FilterStatusType[] = [
 
 export const FIRST_PAGE = 1;
 
-export const PER_PAGE = 5;
+export const ITEMS_PER_PAGE = 5;

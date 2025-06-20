@@ -12,7 +12,6 @@ interface Props {
 
 const Footer: React.FC<Props> = memo(
   ({ onOpenCreatingModal, pagesCount, activePage, onChangePage }) => {
-    console.log('render footer');
     return (
       <div className={styles.footer}>
         <button className={styles.addBtn} onClick={onOpenCreatingModal}>

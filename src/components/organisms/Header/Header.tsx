@@ -3,18 +3,17 @@ import type React from 'react';
 import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 import { memo, useState, useId } from 'react';
-import type { DropdownOptionType } from '../../../types/DropdownOptionType';
 import { normalizeValue } from '../../../utils/normalizeValue';
+import type { DropdownOptionType, FilterStatusType } from '../../../types';
 
 interface Props {
   activeFilterStatus: string;
-  onFilterStatusChange: (newStatus: string) => void;
-  onFind: (title: string) => void;
+  onFilterStatusChange: (newStatus: FilterStatusType) => void;
+  onSearchSubmit: (title: string) => void;
 }
 
 const Header: React.FC<Props> = memo(
-  ({ activeFilterStatus, onFilterStatusChange, onFind }) => {
-    console.log('render header');
+  ({ activeFilterStatus, onFilterStatusChange, onSearchSubmit }) => {
     const [searchValue, setSearchValue] = useState('');
 
     const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
@@ -25,11 +24,16 @@ const Header: React.FC<Props> = memo(
       setSearchValue(event.target.value);
     };
 
-    const handleFind = () => {
-      const clearValue = normalizeValue(searchValue);
+    const handleCancel = () => {
+      setSearchValue('');
+      onSearchSubmit('');
+    };
 
-      setSearchValue(clearValue);
-      onFind(clearValue);
+    const handleSubmit = () => {
+      const value = normalizeValue(searchValue);
+
+      setSearchValue(value);
+      onSearchSubmit(value);
     };
 
     return (
@@ -39,20 +43,21 @@ const Header: React.FC<Props> = memo(
         <div className={styles.topBar}>
           <div className={styles.searchWrapper}>
             <input
-              id="search-input"
+              name="searchInput"
               type="text"
               placeholder="Search..."
               value={searchValue}
               onChange={handleChange}
               className={styles.searchInput}
             />
-            <button className={styles.searchBtn} onClick={handleFind} />
+            <button className={styles.searchBtnSearch} onClick={handleSubmit} />
+            <button className={styles.searchBtnCancel} onClick={handleCancel} />
           </div>
 
           <Dropdown
             options={filterOptions}
             value={activeFilterStatus}
-            onValueChange={onFilterStatusChange}
+            onChange={onFilterStatusChange}
           />
 
           <button className={styles.themeToggle} />
