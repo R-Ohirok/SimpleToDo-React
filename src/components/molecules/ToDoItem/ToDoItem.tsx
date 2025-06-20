@@ -7,15 +7,15 @@ import { memo, useCallback } from 'react';
 interface Props {
   todo: ToDoType;
   onDelete: (todoId: string) => void;
-  onStatusChange: (todoId: string) => void;
+  onChangeStatus: (todoId: string) => void;
 }
 
 const ToDoItem: React.FC<Props> = memo(
-  ({ todo, onDelete, onStatusChange }) => {
+  ({ todo, onDelete, onChangeStatus }) => {
     const { id, title, isCompleted } = todo;
 
     const handleDelete = useCallback(() => onDelete(todo.id), []);
-    const handleStatusChange = useCallback(() => onStatusChange(todo.id), []);
+    const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
 
     return (
       <li className={styles.todoItem}>
@@ -24,7 +24,7 @@ const ToDoItem: React.FC<Props> = memo(
           type="checkbox"
           className={styles.todoItemStatus}
           checked={isCompleted}
-          onChange={handleStatusChange}
+          onChange={handleChangeStatus}
         />
 
         <span

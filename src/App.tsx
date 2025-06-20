@@ -47,7 +47,7 @@ function App() {
         <ToDoList
           todos={filteredTodos}
           onDelete={deleteToDo}
-          onStatusChange={changeStatus}
+          onChangeStatus={changeStatus}
         />
       </main>
       <Footer onOpenCreatingModal={changeModalVisibility} />

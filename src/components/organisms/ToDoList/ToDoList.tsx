@@ -7,11 +7,11 @@ import { memo } from 'react';
 interface Props {
   todos: ToDoType[];
   onDelete: (todoId: string) => void;
-  onStatusChange: (todoId: string) => void;
+  onChangeStatus: (todoId: string) => void;
 }
 
 const ToDoList: React.FC<Props> = memo(
-  ({ todos, onDelete, onStatusChange }) => {
+  ({ todos, onDelete, onChangeStatus }) => {
     return (
       <ul className={styles.todoList}>
         {todos.map(todo => (
@@ -19,7 +19,7 @@ const ToDoList: React.FC<Props> = memo(
             key={todo.id}
             todo={todo}
             onDelete={onDelete}
-            onStatusChange={onStatusChange}
+            onChangeStatus={onChangeStatus}
           />
         ))}
       </ul>
