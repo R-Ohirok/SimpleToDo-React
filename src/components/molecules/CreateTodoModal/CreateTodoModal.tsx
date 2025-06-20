@@ -10,28 +10,29 @@ interface Props {
   сreateToDo: (newTodo: ToDoType) => void;
 }
 
-function getNewToDo(title: string): ToDoType {
-  return {
-    id: useId(),
-    title: normalizeValue(title),
-    isCompleted: false,
-  };
-}
-
 const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
   const [value, setValue] = useState('');
+  const uniqueToDoId = useId();
 
-  const onCreate = useCallback(() => {
-    сreateToDo(getNewToDo(value));
-    onClose();
+  const getNewToDo = useCallback((title: string): ToDoType => {
+    return {
+      id: uniqueToDoId,
+      title: normalizeValue(title),
+      isCompleted: false,
+    };
   }, []);
 
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(event.target.value);
-    },
-    [],
-  );
+  const onCreate = () => {
+    if (value.trim()) {
+      сreateToDo(getNewToDo(value));
+    }
+
+    onClose();
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
 
   return (
     <div className={styles.modal}>
