@@ -2,13 +2,15 @@ import { FILTER_STATUSES } from '../../../constants/FilterStatuses';
 import type React from 'react';
 import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
+import { memo } from 'react';
 
 interface Props {
-  activeStatus: string;
-  changeStatus: (newStatus: string) => void;
+  activeFilterStatus: string;
+  onFilterStatusChange: (newStatus: string) => void;
 };
 
-const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
+const Header: React.FC<Props> = memo(({activeFilterStatus, onFilterStatusChange}) => {
+  console.log('render header');
 
   return (
     <header className={styles.header}>
@@ -27,14 +29,14 @@ const Header: React.FC<Props> = ({activeStatus, changeStatus}) => {
 
         <Dropdown
           options={FILTER_STATUSES}
-          value={activeStatus}
-          onSelect={() => {}}
+          value={activeFilterStatus}
+          onSelect={onFilterStatusChange}
         />
 
         <button className={styles.themeToggle} />
       </div>
     </header>
   );
-};
+});
 
 export default Header;

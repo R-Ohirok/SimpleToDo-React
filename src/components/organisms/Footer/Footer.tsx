@@ -1,7 +1,7 @@
 import type React from 'react';
 import styles from './Footer.module.scss';
 import PagginationBtn from '../../atoms/PagginationBtn/PagginationBtn';
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 
 interface Props {
   onOpenCreatingModal: () => void;
@@ -11,7 +11,9 @@ const pages = [1, 2, 3, 4, 5];
 const FIRST_PAGE = 1;
 const activePage = FIRST_PAGE;
 
-const Footer: React.FC<Props> = ({ onOpenCreatingModal }) => {
+const Footer: React.FC<Props> = memo(({ onOpenCreatingModal }) => {
+  console.log('render footer');
+
   const onChangePage = useCallback(() => {}, []); //TODO
 
   return (
@@ -34,6 +36,6 @@ const Footer: React.FC<Props> = ({ onOpenCreatingModal }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Footer;

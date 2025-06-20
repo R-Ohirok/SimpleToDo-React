@@ -36,7 +36,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header activeStatus={filterBy} changeStatus={setFilterBy} />
+      <Header activeFilterStatus={filterBy} onFilterStatusChange={setFilterBy} />
 
       <main>
         <ToDoList
