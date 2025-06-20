@@ -4,22 +4,15 @@ import type { ToDoType } from '../../../types/ToDoType';
 import ToDoItem from '../../molecules/ToDoItem/ToDoItem';
 
 interface Props {
-  todos?: ToDoType[];
+  todos: ToDoType[];
+  onDelete: (todoId: string) => void;
 }
 
-const testTodos = [
-  { id:'1', title:'test 1', isCompleted: false },
-  { id:'2', title:'test 2', isCompleted: true },
-  { id:'3', title:'test 3', isCompleted: false },
-  { id:'4', title:'test 4', isCompleted: true },
-  { id:'5', title:'test 5', isCompleted: false }
-];
-
-const ToDoList: React.FC<Props> = ({ todos = testTodos }) => {
+const ToDoList: React.FC<Props> = ({ todos, onDelete }) => {
   return (
     <ul className={styles.todoList}>
       {todos.map(todo => (
-        <ToDoItem key={todo.id} todo={todo} />
+        <ToDoItem key={todo.id} todo={todo} onDelete={onDelete} />
       ))}
     </ul>
   );

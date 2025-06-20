@@ -2,15 +2,18 @@ import type React from 'react';
 import styles from './ToDoItem.module.scss';
 import cn from 'classnames';
 import type { ToDoType } from '../../../types/ToDoType';
+import { useCallback } from 'react';
 
 interface Props {
-  todo?: ToDoType;
+  todo: ToDoType;
+  onDelete: (todoId: string) => void;
 }
 
-const ToDoItem: React.FC<Props> = ({
-  todo = { id: 1, title: 'test', isCompleted: false },
-}) => {
+const ToDoItem: React.FC<Props> = ({ todo, onDelete }) => {
   const { id, title, isCompleted } = todo;
+
+  const handleDelete = useCallback(() => onDelete(todo.id), []);
+
   return (
     <li className={styles.todoItem}>
       <input
@@ -40,6 +43,7 @@ const ToDoItem: React.FC<Props> = ({
             styles.todoItemControlBtn,
             styles.todoItemControlBtnDelete,
           )}
+          onClick={handleDelete}
         ></button>
       </div>
     </li>
