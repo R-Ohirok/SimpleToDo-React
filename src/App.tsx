@@ -18,19 +18,21 @@ function App() {
     setTodos(currTodos => [...currTodos, newTodo]);
   }, []);
 
-  const deleteToDo = (todoId: string) => {
+  const deleteToDo = useCallback((todoId: string) => {
     setTodos(currTodos => currTodos.filter(todo => todo.id !== todoId));
-  };
+  }, []);
 
   return (
     <div className="app">
       <Header />
       <main>
-        <ToDoList todos={todos} deleteToDo={deleteToDo} />
+        <ToDoList todos={todos} onDelete={deleteToDo} />
       </main>
       <Footer onOpenCreatingModal={changeModalVisibility} />
 
-      {isModalVisible && <CreateTodoModal onClose={changeModalVisibility} сreateToDo={addTodo} />}
+      {isModalVisible && (
+        <CreateTodoModal onClose={changeModalVisibility} сreateToDo={addTodo} />
+      )}
     </div>
   );
 }

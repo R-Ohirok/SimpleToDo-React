@@ -7,11 +7,7 @@ interface Props {
   onSelect: (value: string) => void;
 }
 
-const Dropdown: React.FC<Props> = ({
-  options,
-  value,
-  onSelect,
-}) => {
+const Dropdown: React.FC<Props> = ({ options, value, onSelect }) => {
   return (
     <select
       value={value}
