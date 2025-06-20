@@ -30,7 +30,7 @@ const Header: React.FC<Props> = memo(({activeFilterStatus, onFilterStatusChange}
         <Dropdown
           options={FILTER_STATUSES}
           value={activeFilterStatus}
-          onSelect={onFilterStatusChange}
+          onValueChange={onFilterStatusChange}
         />
 
         <button className={styles.themeToggle} />

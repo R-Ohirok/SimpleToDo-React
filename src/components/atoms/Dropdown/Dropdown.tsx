@@ -3,16 +3,22 @@ import styles from './Dropdown.module.scss';
 
 interface Props {
   options: string[] | number[];
-  value: string | number;
-  onSelect: (value: string) => void;
+  value: string;
+  onValueChange: (value: string) => void;
 }
 
-const Dropdown: React.FC<Props> = ({ options, value, onSelect }) => {
+const Dropdown: React.FC<Props> = ({ options, value, onValueChange }) => {
+  const handleValueChange = (
+    newValue: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    onValueChange(newValue.target.value);
+  };
+
   return (
     <select
       value={value}
       className={styles.dropdown}
-      onChange={item => onSelect(item.target.value)}
+      onChange={handleValueChange}
       name={value.toString()}
     >
       {options.map(currValue => {
