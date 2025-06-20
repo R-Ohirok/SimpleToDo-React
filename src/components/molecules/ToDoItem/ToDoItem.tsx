@@ -11,7 +11,6 @@ interface Props {
 
 const ToDoItem: React.FC<Props> = ({ todo, onDelete }) => {
   const { id, title, isCompleted } = todo;
-  console.log('render ' + id);
 
   const handleDelete = useCallback(() => onDelete(todo.id), []);
 
