@@ -4,6 +4,7 @@ import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 import { memo, useState, useId } from 'react';
 import type { DropdownOptionType } from '../../../types/DropdownOptionType';
+import { normalizeValue } from '../../../utils/normalizeValue';
 
 interface Props {
   activeFilterStatus: string;
@@ -24,7 +25,10 @@ const Header: React.FC<Props> = memo(
     };
 
     const handleFind = () => {
-      onFind(searchValue);
+      const clearValue = normalizeValue(searchValue);
+
+      setSearchValue(clearValue);
+      onFind(clearValue);
     };
 
     return (
