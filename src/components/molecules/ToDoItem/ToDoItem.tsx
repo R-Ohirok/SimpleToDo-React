@@ -8,7 +8,9 @@ interface Props {
   deleteToDo: (todoId: string) => void;
 }
 
-export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo }) => {
+const ToDoItem: React.FC<Props> = ({
+  todo = { id: 1, title: 'test', isCompleted: false },
+}) => {
   const { id, title, isCompleted } = todo;
   return (
     <li className={styles.todoItem}>
@@ -17,7 +19,6 @@ export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo }) => {
         type="checkbox"
         className={styles.todoItemStatus}
         defaultChecked={isCompleted}
-        // checked={isCompleted}
       />
 
       <span
@@ -46,3 +47,5 @@ export const ToDoItem: React.FC<Props> = ({ todo, deleteToDo }) => {
     </li>
   );
 };
+
+export default ToDoItem;

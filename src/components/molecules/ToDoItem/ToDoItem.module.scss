@@ -1,8 +1,8 @@
 .todoItem {
   display: flex;
   align-items: center;
-  gap: 17px;
-  padding-block: 17px;
+  gap: 16px;
+  padding-block: 16px;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--element-color);
