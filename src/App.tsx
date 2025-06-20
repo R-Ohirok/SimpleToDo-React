@@ -3,24 +3,30 @@ import CreateTodoModal from './components/molecules/CreateTodoModal/CreateTodoMo
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import type { ToDoType } from './types/ToDoType';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [todos, setTodos] = useState<ToDoType[]>([]);
 
-  const changeModalVisibility = () => {
+  const changeModalVisibility = useCallback(() => {
     setIsModalVisible(prev => !prev);
-  };
+  }, []);
+
+  const addTodo = useCallback((newTodo: ToDoType) => {
+    setTodos(currTodos => [...currTodos, newTodo]);
+  }, []);
 
   return (
     <div className="app">
       <Header />
       <main>
-        <ToDoList />
+        <ToDoList todos={todos} />
       </main>
       <Footer onOpenCreatingModal={changeModalVisibility} />
 
-      {isModalVisible && <CreateTodoModal onClose={changeModalVisibility} />}
+      {isModalVisible && <CreateTodoModal onClose={changeModalVisibility} сreateToDo={addTodo} />}
     </div>
   );
 }
