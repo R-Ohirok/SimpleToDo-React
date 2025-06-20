@@ -4,21 +4,21 @@ import cn from 'classnames';
 
 interface Props {
   isActive: boolean;
-  label: string | number;
-  onClick: () => void;
+  label: number;
+  onChangePage: (newActivePage: number) => void;
 }
 
 const PagginationBtn: React.FC<Props> = ({
   isActive = true,
   label,
-  onClick,
+  onChangePage,
 }) => {
   return (
     <button
       className={cn(styles.btn, {
         [styles.btnSelected]: isActive,
       })}
-      onClick={onClick}
+      onClick={() => onChangePage(label)}
     >
       {label}
     </button>

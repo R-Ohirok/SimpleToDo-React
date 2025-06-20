@@ -1,4 +1,4 @@
-import { FILTER_STATUSES } from '../../../constants/FilterStatuses';
+import { FILTER_STATUSES } from '../../../constants/constants';
 import type React from 'react';
 import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
@@ -14,6 +14,7 @@ interface Props {
 
 const Header: React.FC<Props> = memo(
   ({ activeFilterStatus, onFilterStatusChange, onFind }) => {
+    console.log('render header');
     const [searchValue, setSearchValue] = useState('');
 
     const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {

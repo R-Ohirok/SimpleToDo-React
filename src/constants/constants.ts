@@ -5,3 +5,7 @@ export const FILTER_STATUSES: FilterStatusType[] = [
   'Active',
   'Completed',
 ];
+
+export const FIRST_PAGE = 1;
+
+export const PER_PAGE = 5;

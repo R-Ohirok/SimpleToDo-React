@@ -23,7 +23,6 @@ const ToDoItem: React.FC<Props> = memo(
     setEditingTodoId,
     changeTitle,
   }) => {
-    console.log(todo);
     const { id, title, isCompleted } = todo;
 
     const [todoTitle, setTodoTitle] = useState(title);
@@ -123,7 +122,6 @@ const ToDoItem: React.FC<Props> = memo(
   },
   (prevProps, nextProps) => {
     return (
-      // prevProps.todo.title === nextProps.todo.title &&
       prevProps.todo.isCompleted === nextProps.todo.isCompleted &&
       prevProps.editingTodoId === nextProps.editingTodoId
     );

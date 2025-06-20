@@ -22,6 +22,7 @@ const ToDoList: React.FC<Props> = memo(
     setEditingTodoId,
     changeTitle,
   }) => {
+    console.log('render list');
     return (
       <ul className={styles.todoList}>
         {todos.map(todo => (
