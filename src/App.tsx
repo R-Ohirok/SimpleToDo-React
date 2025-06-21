@@ -45,27 +45,37 @@ function App() {
     setTodos(currTodos => [...currTodos, newTodo]);
   }, []);
 
-  const handleDeleteToDo = useCallback((todoId: string) => {
-    setTodos(currTodos => currTodos.filter(todo => todo.id !== todoId));
+  const handleDeleteToDo = useCallback(
+    (todoId: string) => {
+      setTodos(currTodos => {
+        return currTodos.filter(todo => todo.id !== todoId);
+      });
 
-    if (visibleToDos.length - 1 === 0 && activePage > 1) {
-      setActivePage(prev => prev - 1);
-    }
-  }, []);
-
-  const handleChangeStatus = useCallback((todoId: string) => {
-    setTodos(currTodos =>
-      currTodos.map(todo =>
-        todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
-      ),
-    );
-
-    if (filterBy !== 'All') {
       if (visibleToDos.length - 1 === 0 && activePage > 1) {
         setActivePage(prev => prev - 1);
       }
-    }
-  }, []);
+    },
+    [visibleToDos],
+  );
+
+  const handleChangeStatus = useCallback(
+    (todoId: string) => {
+      setTodos(currTodos =>
+        currTodos.map(todo =>
+          todo.id === todoId
+            ? { ...todo, isCompleted: !todo.isCompleted }
+            : todo,
+        ),
+      );
+
+      if (filterBy !== 'All') {
+        if (visibleToDos.length - 1 === 0 && activePage > 1) {
+          setActivePage(prev => prev - 1);
+        }
+      }
+    },
+    [visibleToDos],
+  );
 
   const handleChangeTitle = useCallback(
     (todoId: string, newTodoTitle: string) => {
@@ -81,7 +91,7 @@ function App() {
         }
       }
     },
-    [],
+    [visibleToDos],
   );
 
   return (

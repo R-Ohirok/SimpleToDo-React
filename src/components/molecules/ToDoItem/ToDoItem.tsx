@@ -14,6 +14,7 @@ interface Props {
 
 const ToDoItem: React.FC<Props> = memo(
   ({ todo, onDelete, onChangeStatus, changeTitle }) => {
+    console.log(todo);
     const { id, title, isCompleted } = todo;
 
     const [isEditing, setIsEditing] = useState(false);
@@ -108,7 +109,9 @@ const ToDoItem: React.FC<Props> = memo(
         )}
       </li>
     );
-  },
+  }, (prevProps, nextProps) => {
+    return prevProps.todo === nextProps.todo;
+  }
 );
 
 export default ToDoItem;
