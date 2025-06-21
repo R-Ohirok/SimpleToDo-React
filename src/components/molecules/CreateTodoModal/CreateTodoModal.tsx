@@ -1,9 +1,9 @@
 import type React from 'react';
 import styles from './CreateTodoModal.module.scss';
 import cn from 'classnames';
-import type { ToDoType } from '../../../types/ToDoType';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import { useCallback, useId, useState } from 'react';
+import type { ToDoType } from '../../../types';
 
 interface Props {
   onClose: () => void;
@@ -45,6 +45,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
             type="text"
             placeholder="Input your note..."
             value={value}
+            autoFocus
             onChange={handleChange}
           />
         </div>
