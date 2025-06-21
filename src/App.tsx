@@ -48,9 +48,7 @@ function App() {
   const handleDeleteToDo = useCallback((todoId: string) => {
     setTodos(currTodos => currTodos.filter(todo => todo.id !== todoId));
 
-    if (visibleToDos.length - 1 === 0 && activePage > 1) {
-      setActivePage(prev => prev - 1);
-    }
+    setActivePage(FIRST_PAGE);
   }, []);
 
   const handleChangeStatus = useCallback((todoId: string) => {
@@ -60,11 +58,7 @@ function App() {
       ),
     );
 
-    if (filterBy !== 'All') {
-      if (visibleToDos.length - 1 === 0 && activePage > 1) {
-        setActivePage(prev => prev - 1);
-      }
-    }
+    setActivePage(FIRST_PAGE);
   }, []);
 
   const handleChangeTitle = useCallback(
@@ -75,11 +69,7 @@ function App() {
         ),
       );
 
-      if (!newTodoTitle.includes(searchValue)) {
-        if (visibleToDos.length - 1 === 0 && activePage > 1) {
-          setActivePage(prev => prev - 1);
-        }
-      }
+      setActivePage(FIRST_PAGE);
     },
     [],
   );
