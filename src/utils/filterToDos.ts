@@ -9,9 +9,9 @@ export const filterTodos = (
     return todos.filter(todo => todo.title.includes(title));
   }
 
-  return todos.filter(todo =>
+  return todos.filter(todo => 
     status === 'Active'
-      ? !todo.isCompleted && todos.filter(todo => todo.title.includes(title))
-      : todo.isCompleted && todos.filter(todo => todo.title.includes(title)),
+      ? !todo.isCompleted && todo.title.includes(title)
+      : todo.isCompleted && todo.title.includes(title),
   );
 };

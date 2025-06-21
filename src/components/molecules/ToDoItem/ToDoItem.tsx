@@ -18,37 +18,32 @@ const ToDoItem: React.FC<Props> = memo(
 
     const [isEditing, setIsEditing] = useState(false);
 
-    let newTitle = title;
-
-    const handleChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-      newTitle = event.target.value;
-    };
-
     const handleDelete = useCallback(() => onDelete(todo.id), []);
     const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
     const handleSelectTodo = useCallback(() => {
       setIsEditing(true);
     }, [title]);
     const handleEditTodo = useCallback(
-      (event: React.FormEvent<HTMLFormElement>, newTitle: string) => {
+      (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const cleanTitle = normalizeValue(newTitle);
+        const formData = new FormData(event.currentTarget);
+        const newTitle = normalizeValue(formData.get('todoItemInput') as string);
 
-        if (cleanTitle === title) {
+        if (newTitle === title) {
           setIsEditing(false);
 
           return;
         }
 
-        if (!cleanTitle) {
+        if (!newTitle) {
           handleDelete();
           setIsEditing(false);
 
           return;
         }
 
-        changeTitle(id, cleanTitle);
+        changeTitle(id, newTitle);
         setIsEditing(false);
       },
       [],
@@ -66,8 +61,8 @@ const ToDoItem: React.FC<Props> = memo(
 
         {isEditing ? (
           <form
-            onBlur={event => handleEditTodo(event, newTitle)}
-            onSubmit={event => handleEditTodo(event, newTitle)}
+            onBlur={handleEditTodo}
+            onSubmit={handleEditTodo}
             onKeyUp={event => {
               if (event.key === 'Escape') {
                 setIsEditing(false);
@@ -80,7 +75,6 @@ const ToDoItem: React.FC<Props> = memo(
               className={styles.todoItemInput}
               placeholder="Empty todo will be deleted"
               defaultValue={title}
-              onChange={event => handleChangeTitle(event)}
               autoFocus
             />
           </form>

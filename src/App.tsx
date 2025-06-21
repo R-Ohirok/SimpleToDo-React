@@ -10,21 +10,19 @@ import { getVisibleTodos } from './utils/getVisibleToDos';
 import type { FilterStatusType, ToDoType } from './types';
 
 function App() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCreationModalVisible, setIsCreationModalVisible] = useState(false);
   const [todos, setTodos] = useState<ToDoType[]>([]);
   const [filterBy, setFilterBy] = useState<FilterStatusType>('All');
   const [searchValue, setSearchValue] = useState('');
   const [activePage, setActivePage] = useState(FIRST_PAGE);
 
-  const filteredTodos = useMemo(
-    () => filterTodos(todos, searchValue, filterBy),
-    [todos, searchValue, filterBy],
-  );
-  const pagesCount = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
-  const visibleToDos = useMemo(
-    () => getVisibleTodos(filteredTodos, activePage),
-    [filteredTodos, activePage],
-  );
+  const { pagesCount, visibleToDos } = useMemo(() => {
+    const filteredTodos = filterTodos(todos, searchValue, filterBy);
+    const pagesCount = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
+    const visibleToDos = getVisibleTodos(filteredTodos, activePage);
+
+    return { pagesCount, visibleToDos };
+  }, [todos, searchValue, filterBy, activePage]);
 
   const handleFilterStatusChange = useCallback(
     (newStatus: FilterStatusType) => {
@@ -39,17 +37,20 @@ function App() {
     setActivePage(FIRST_PAGE);
   }, []);
 
-  const changeModalVisibility = useCallback(() => {
-    setIsModalVisible(prev => !prev);
+  const handleChangeModalVisibility = useCallback(() => {
+    setIsCreationModalVisible(prev => !prev);
   }, []);
 
-  const addTodo = useCallback((newTodo: ToDoType) => {
+  const handleAddTodo = useCallback((newTodo: ToDoType) => {
     setTodos(currTodos => [...currTodos, newTodo]);
   }, []);
 
-  const deleteToDo = useCallback((todoId: string) => {
+  const handleDeleteToDo = useCallback((todoId: string) => {
     setTodos(currTodos => currTodos.filter(todo => todo.id !== todoId));
-    setActivePage(FIRST_PAGE);
+
+    if (visibleToDos.length - 1 === 0 && activePage > 1) {
+      setActivePage(prev => prev - 1);
+    }
   }, []);
 
   const handleChangeStatus = useCallback((todoId: string) => {
@@ -58,7 +59,12 @@ function App() {
         todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
       ),
     );
-    setActivePage(FIRST_PAGE);
+
+    if (filterBy !== 'All') {
+      if (visibleToDos.length - 1 === 0 && activePage > 1) {
+        setActivePage(prev => prev - 1);
+      }
+    }
   }, []);
 
   const handleChangeTitle = useCallback(
@@ -68,7 +74,12 @@ function App() {
           todo.id === todoId ? { ...todo, title: newTodoTitle } : todo,
         ),
       );
-      setActivePage(FIRST_PAGE);
+
+      if (!newTodoTitle.includes(searchValue)) {
+        if (visibleToDos.length - 1 === 0 && activePage > 1) {
+          setActivePage(prev => prev - 1);
+        }
+      }
     },
     [],
   );
@@ -84,20 +95,23 @@ function App() {
       <main>
         <ToDoList
           todos={visibleToDos}
-          onDelete={deleteToDo}
+          onDelete={handleDeleteToDo}
           onChangeStatus={handleChangeStatus}
           changeTitle={handleChangeTitle}
         />
       </main>
       <Footer
-        onOpenCreatingModal={changeModalVisibility}
+        onOpenCreatingModal={handleChangeModalVisibility}
         pagesCount={pagesCount}
         activePage={activePage}
         onChangePage={setActivePage}
       />
 
-      {isModalVisible && (
-        <CreateTodoModal onClose={changeModalVisibility} сreateToDo={addTodo} />
+      {isCreationModalVisible && (
+        <CreateTodoModal
+          onClose={handleChangeModalVisibility}
+          сreateToDo={handleAddTodo}
+        />
       )}
     </div>
   );
