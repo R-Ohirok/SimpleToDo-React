@@ -2,17 +2,18 @@ import './index.scss';
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { filterTodos } from './utils/filterToDos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import { getVisibleTodos } from './utils/getVisibleToDos';
 import type { ToDoType } from './types';
 import { useSearchParams } from 'react-router-dom';
 import { getNewSearchParams } from './utils/getNewSearchParams';
+import useTodos from './hooks/useTodods';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [todos, setTodos] = useState<ToDoType[]>([]);
+  const [todos, setTodos] = useTodos([]);
 
   const activePage = Number(searchParams.get('page')) || FIRST_PAGE;
 
@@ -23,18 +24,6 @@ function App() {
 
     return { pagesCount, visibleToDos };
   }, [todos, searchParams]);
-
-  useEffect(() => {
-    const storedData = localStorage.getItem('todos');
-    
-    if (storedData) {
-      setTodos(JSON.parse(storedData));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
 
   useEffect(() => {
     if (visibleToDos.length === 0 && activePage > 1) {
