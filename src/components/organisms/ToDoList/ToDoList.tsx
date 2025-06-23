@@ -3,6 +3,7 @@ import styles from './ToDoList.module.scss';
 import ToDoItem from '../../molecules/ToDoItem/ToDoItem';
 import { memo } from 'react';
 import type { ToDoType } from '../../../types';
+import EmptyImg from '../../molecules/EmptyImg/EmptyImg';
 
 interface Props {
   todos: ToDoType[];
@@ -14,17 +15,23 @@ interface Props {
 const ToDoList: React.FC<Props> = memo(
   ({ todos, onDelete, onChangeStatus, onChangeTitle }) => {
     return (
-      <ul className={styles.todoList}>
-        {todos.map(todo => (
-          <ToDoItem
-            key={todo.id}
-            todo={todo}
-            onDelete={onDelete}
-            onChangeStatus={onChangeStatus}
-            onChangeTitle={onChangeTitle}
-          />
-        ))}
-      </ul>
+      <>
+        {todos.length === 0 ? (
+          <EmptyImg />
+        ) : (
+          <ul className={styles.todoList}>
+            {todos.map(todo => (
+              <ToDoItem
+                key={todo.id}
+                todo={todo}
+                onDelete={onDelete}
+                onChangeStatus={onChangeStatus}
+                onChangeTitle={onChangeTitle}
+              />
+            ))}
+          </ul>
+        )}
+      </>
     );
   },
 );

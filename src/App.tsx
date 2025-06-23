@@ -7,7 +7,6 @@ import { filterTodos } from './utils/filterToDos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import { getVisibleTodos } from './utils/getVisibleToDos';
 import type { FilterStatusType, ToDoType } from './types';
-import EmptyImg from './components/molecules/EmptyImg/EmptyImg';
 
 function App() {
   const [todos, setTodos] = useState<ToDoType[]>([]);
@@ -80,16 +79,12 @@ function App() {
       />
 
       <main>
-        {visibleToDos.length === 0 ? (
-          <EmptyImg />
-        ) : (
-          <ToDoList
-            todos={visibleToDos}
-            onDelete={handleDeleteToDo}
-            onChangeStatus={handleChangeStatus}
-            onChangeTitle={handleChangeTitle}
-          />
-        )}
+        <ToDoList
+          todos={visibleToDos}
+          onDelete={handleDeleteToDo}
+          onChangeStatus={handleChangeStatus}
+          onChangeTitle={handleChangeTitle}
+        />
       </main>
 
       <Footer
