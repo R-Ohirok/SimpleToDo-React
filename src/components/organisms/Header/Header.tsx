@@ -2,9 +2,12 @@ import { FILTER_STATUSES } from '../../../constants/constants';
 import type React from 'react';
 import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
+import cn from 'classnames';
 import { memo, useState, useId } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { DropdownOptionType, FilterStatusType } from '../../../types';
+import { useAtom } from 'jotai';
+import { themeAtom } from '../../../state/jotai';
 
 interface Props {
   activeFilterStatus: string;
@@ -15,6 +18,7 @@ interface Props {
 const Header: React.FC<Props> = memo(
   ({ activeFilterStatus, onFilterStatusChange, onSearchSubmit }) => {
     const [searchValue, setSearchValue] = useState('');
+    const [activeTheme, setActiveTheme] = useAtom(themeAtom);
 
     const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
       return { id: useId(), label: status };
@@ -34,6 +38,13 @@ const Header: React.FC<Props> = memo(
 
       setSearchValue(value);
       onSearchSubmit(value);
+    };
+
+    const handleChangeTheme = () => {
+      const newTheme = activeTheme === 'light' ? 'dark' : 'light';
+
+      document.documentElement.setAttribute('data-theme', newTheme);
+      setActiveTheme(newTheme);
     };
 
     return (
@@ -60,7 +71,12 @@ const Header: React.FC<Props> = memo(
             onChange={onFilterStatusChange}
           />
 
-          <button className={styles.themeToggle} />
+          <button
+            className={cn(styles.themeToggle, {
+              [styles.themeToggleDark]: activeTheme === 'dark',
+            })}
+            onClick={handleChangeTheme}
+          />
         </div>
       </header>
     );

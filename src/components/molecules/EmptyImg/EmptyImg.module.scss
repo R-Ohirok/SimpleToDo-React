@@ -13,5 +13,9 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+
+    &Dark {
+      background-image: url(../../../assets/empty-dark.png);
+    }
   }
 }

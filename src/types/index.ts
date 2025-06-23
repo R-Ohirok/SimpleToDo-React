@@ -10,3 +10,5 @@ export interface ToDoType {
   title: string;
   isCompleted: boolean;
 }
+
+export type ThemeType = 'dark' | 'light';

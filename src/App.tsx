@@ -103,6 +103,7 @@ function App() {
           />
         )}
       </main>
+      
       <Footer
         onOpenCreatingModal={handleChangeModalVisibility}
         pagesCount={pagesCount}
