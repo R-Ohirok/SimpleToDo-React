@@ -1,10 +1,9 @@
-import { useAtom } from 'jotai';
 import styles from './EmptyList.module.scss';
 import cn from 'classnames';
-import { themeAtom } from '../../../state/jotai';
+import useSwitchTheme from '../../../state/hooks/useSwitchTheme';
 
 const EmptyList = () => {
-  const [activeTheme] = useAtom(themeAtom);
+  const { activeTheme } = useSwitchTheme();
 
   return (
     <div className={styles.empty}>

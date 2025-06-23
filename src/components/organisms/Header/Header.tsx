@@ -6,8 +6,7 @@ import cn from 'classnames';
 import { memo, useState, useId } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { DropdownOptionType, FilterStatusType } from '../../../types';
-import { useAtom } from 'jotai';
-import { themeAtom } from '../../../state/jotai';
+import useSwitchTheme from '../../../state/hooks/useSwitchTheme';
 
 interface Props {
   activeFilterStatus: string;
@@ -18,7 +17,7 @@ interface Props {
 const Header: React.FC<Props> = memo(
   ({ activeFilterStatus, onFilterStatusChange, onSearchSubmit }) => {
     const [searchValue, setSearchValue] = useState('');
-    const [activeTheme, setActiveTheme] = useAtom(themeAtom);
+    const { activeTheme, changeActiveTheme } = useSwitchTheme();
 
     const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
       return { id: useId(), label: status };
@@ -38,13 +37,6 @@ const Header: React.FC<Props> = memo(
 
       setSearchValue(value);
       onSearchSubmit(value);
-    };
-
-    const handleChangeTheme = () => {
-      const newTheme = activeTheme === 'light' ? 'dark' : 'light';
-
-      document.documentElement.setAttribute('data-theme', newTheme);
-      setActiveTheme(newTheme);
     };
 
     return (
@@ -75,7 +67,7 @@ const Header: React.FC<Props> = memo(
             className={cn(styles.themeToggle, {
               [styles.themeToggleDark]: activeTheme === 'dark',
             })}
-            onClick={handleChangeTheme}
+            onClick={changeActiveTheme}
           />
         </div>
       </header>
