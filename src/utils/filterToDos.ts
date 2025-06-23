@@ -1,17 +1,25 @@
-import type { FilterStatusType, ToDoType } from '../types';
+import type { ToDoType } from '../types';
 
 export const filterTodos = (
   todos: ToDoType[],
-  title: string,
-  status: FilterStatusType,
+  searchParams: URLSearchParams,
 ) => {
-  if (status === 'All') {
-    return todos.filter(todo => todo.title.includes(title));
+  const title = searchParams.get('title') || '';
+  const status = searchParams.get('status') || null;
+
+  if (status) {
+    if (status === 'Active') {
+      return todos.filter(
+        todo => !todo.isCompleted && todo.title.includes(title),
+      );
+    }
+
+    if (status === 'Completed') {
+      return todos.filter(
+        todo => todo.isCompleted && todo.title.includes(title),
+      );
+    }
   }
 
-  return todos.filter(todo => 
-    status === 'Active'
-      ? !todo.isCompleted && todo.title.includes(title)
-      : todo.isCompleted && todo.title.includes(title),
-  );
+  return todos.filter(todo => todo.title.includes(title));
 };
