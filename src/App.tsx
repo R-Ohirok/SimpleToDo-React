@@ -9,7 +9,7 @@ import { getVisibleTodos } from './utils/getVisibleToDos';
 import type { ToDoType } from './types';
 import { useSearchParams } from 'react-router-dom';
 import { getNewSearchParams } from './utils/getNewSearchParams';
-import useTodos from './hooks/useTodods';
+import useTodos from './hooks/useTodos';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
