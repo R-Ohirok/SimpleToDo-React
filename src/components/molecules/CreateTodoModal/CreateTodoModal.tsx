@@ -7,10 +7,10 @@ import type { ToDoType } from '../../../types';
 
 interface Props {
   onClose: () => void;
-  сreateToDo: (newTodo: ToDoType) => void;
+  onCreateToDo: (newTodo: ToDoType) => void;
 }
 
-const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
+const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
   const [value, setValue] = useState('');
   const uniqueToDoId = useId();
 
@@ -24,7 +24,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
 
   const onCreate = () => {
     if (value.trim()) {
-      сreateToDo(getNewToDo(value));
+      onCreateToDo(getNewToDo(value));
     }
 
     onClose();

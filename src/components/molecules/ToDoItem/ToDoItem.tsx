@@ -9,12 +9,11 @@ interface Props {
   todo: ToDoType;
   onDelete: (todoId: string) => void;
   onChangeStatus: (todoId: string) => void;
-  changeTitle: (todoId: string, newTitle: string) => void;
+  onChangeTitle: (todoId: string, newTitle: string) => void;
 }
 
 const ToDoItem: React.FC<Props> = memo(
-  ({ todo, onDelete, onChangeStatus, changeTitle }) => {
-    console.log(todo);
+  ({ todo, onDelete, onChangeStatus, onChangeTitle }) => {
     const { id, title, isCompleted } = todo;
 
     const [isEditing, setIsEditing] = useState(false);
@@ -29,7 +28,9 @@ const ToDoItem: React.FC<Props> = memo(
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        const newTitle = normalizeValue(formData.get('todoItemInput') as string);
+        const newTitle = normalizeValue(
+          formData.get('todoItemInput') as string,
+        );
 
         if (newTitle === title) {
           setIsEditing(false);
@@ -44,7 +45,7 @@ const ToDoItem: React.FC<Props> = memo(
           return;
         }
 
-        changeTitle(id, newTitle);
+        onChangeTitle(id, newTitle);
         setIsEditing(false);
       },
       [],
@@ -109,9 +110,7 @@ const ToDoItem: React.FC<Props> = memo(
         )}
       </li>
     );
-  }, (prevProps, nextProps) => {
-    return prevProps.todo === nextProps.todo;
-  }
+  },
 );
 
 export default ToDoItem;
