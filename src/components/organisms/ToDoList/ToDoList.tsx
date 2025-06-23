@@ -3,7 +3,7 @@ import styles from './ToDoList.module.scss';
 import ToDoItem from '../../molecules/ToDoItem/ToDoItem';
 import { memo } from 'react';
 import type { ToDoType } from '../../../types';
-import EmptyImg from '../../molecules/EmptyImg/EmptyImg';
+import EmptyList from '../../molecules/EmptyList/EmptyList';
 
 interface Props {
   todos: ToDoType[];
@@ -17,7 +17,7 @@ const ToDoList: React.FC<Props> = memo(
     return (
       <>
         {todos.length === 0 ? (
-          <EmptyImg />
+          <EmptyList />
         ) : (
           <ul className={styles.todoList}>
             {todos.map(todo => (

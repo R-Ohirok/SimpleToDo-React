@@ -1,9 +1,9 @@
 import { useAtom } from 'jotai';
-import styles from './EmptyImg.module.scss';
+import styles from './EmptyList.module.scss';
 import cn from 'classnames';
 import { themeAtom } from '../../../state/jotai';
 
-const EmptyImg = () => {
+const EmptyList = () => {
   const [activeTheme] = useAtom(themeAtom);
 
   return (
@@ -18,4 +18,4 @@ const EmptyImg = () => {
   );
 };
 
-export default EmptyImg;
+export default EmptyList;
