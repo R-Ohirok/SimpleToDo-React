@@ -1,0 +1,21 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-inline: auto;
+
+  &Img {
+    width: 221px;
+    height: 174px;
+    margin-bottom: 20px;
+
+    background-image: url(../../../assets/empty.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &Dark {
+      background-image: url(../../../assets/empty-dark.png);
+    }
+  }
+}
