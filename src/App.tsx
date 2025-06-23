@@ -1,5 +1,4 @@
 import './index.scss';
-import CreateTodoModal from './components/molecules/CreateTodoModal/CreateTodoModal';
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
@@ -10,7 +9,6 @@ import { getVisibleTodos } from './utils/getVisibleToDos';
 import type { FilterStatusType, ToDoType } from './types';
 
 function App() {
-  const [isCreationModalVisible, setIsCreationModalVisible] = useState(false);
   const [todos, setTodos] = useState<ToDoType[]>([]);
   const [filterBy, setFilterBy] = useState<FilterStatusType>('All');
   const [searchValue, setSearchValue] = useState('');
@@ -43,10 +41,6 @@ function App() {
     setActivePage(FIRST_PAGE);
   }, []);
 
-  const handleChangeModalVisibility = useCallback(() => {
-    setIsCreationModalVisible(prev => !prev);
-  }, []);
-
   const handleAddTodo = useCallback((newTodo: ToDoType) => {
     setTodos(currTodos => [...currTodos, newTodo]);
   }, []);
@@ -63,12 +57,6 @@ function App() {
         todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
       ),
     );
-
-    if (filterBy !== 'All') {
-      if (visibleToDos.length - 1 === 0 && activePage > 1) {
-        setActivePage(prev => prev - 1);
-      }
-    }
   }, []);
 
   const handleChangeTitle = useCallback(
@@ -95,22 +83,16 @@ function App() {
           todos={visibleToDos}
           onDelete={handleDeleteToDo}
           onChangeStatus={handleChangeStatus}
-          changeTitle={handleChangeTitle}
+          onChangeTitle={handleChangeTitle}
         />
       </main>
+
       <Footer
-        onOpenCreatingModal={handleChangeModalVisibility}
         pagesCount={pagesCount}
         activePage={activePage}
         onChangePage={setActivePage}
+        onCreateToDo={handleAddTodo}
       />
-
-      {isCreationModalVisible && (
-        <CreateTodoModal
-          onClose={handleChangeModalVisibility}
-          сreateToDo={handleAddTodo}
-        />
-      )}
     </div>
   );
 }
