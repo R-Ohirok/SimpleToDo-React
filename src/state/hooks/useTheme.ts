@@ -3,7 +3,7 @@ import type { ThemeType } from '../../types';
 
 const themeAtom = atom<ThemeType>('light');
 
-const useTheme = () => {
+const useTheme = (): [ThemeType, () => void] => {
   const [theme, setActiveTheme] = useAtom(themeAtom);
 
   const toggleTheme = () => {
@@ -13,7 +13,7 @@ const useTheme = () => {
     setActiveTheme(newTheme);
   };
 
-  return { theme, toggleTheme };
+  return [theme, toggleTheme];
 };
 
 export default useTheme;

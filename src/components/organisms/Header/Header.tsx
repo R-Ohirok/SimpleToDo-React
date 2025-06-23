@@ -18,7 +18,7 @@ const Header: React.FC<Props> = memo(
   ({ activeFilterStatus, onFilterStatusChange, onSearchSubmit }) => {
     const [searchValue, setSearchValue] = useState('');
 
-    const { theme, toggleTheme } = useTheme();
+    const [theme, toggleTheme] = useTheme();
 
     const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
       return { id: useId(), label: status };
