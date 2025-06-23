@@ -7,12 +7,8 @@ export const getNewSearchParams = (
   const newParams = new URLSearchParams(currentParams);
 
   Object.entries(paramsToUpdate).forEach(([key, value]) => {
-    if (value === null) {
-      newParams.delete(key);
-    } else {
-      newParams.set(key, value);
-    }
+    value ? newParams.set(key, value) : newParams.delete(key);
   });
 
   return newParams.toString();
-}
+};

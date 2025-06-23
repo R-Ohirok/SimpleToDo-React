@@ -7,18 +7,18 @@ export const filterTodos = (
   const title = searchParams.get('title') || '';
   const status = searchParams.get('status') || null;
 
-  if (status) {
-    if (status === 'Active') {
-      return todos.filter(
-        todo => !todo.isCompleted && todo.title.includes(title),
-      );
-    }
+  if (!status) {
+    return todos.filter(todo => todo.title.includes(title));
+  }
 
-    if (status === 'Completed') {
-      return todos.filter(
-        todo => todo.isCompleted && todo.title.includes(title),
-      );
-    }
+  if (status === 'Active') {
+    return todos.filter(
+      todo => !todo.isCompleted && todo.title.includes(title),
+    );
+  }
+
+  if (status === 'Completed') {
+    return todos.filter(todo => todo.isCompleted && todo.title.includes(title));
   }
 
   return todos.filter(todo => todo.title.includes(title));

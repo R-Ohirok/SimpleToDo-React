@@ -7,14 +7,12 @@ import { filterTodos } from './utils/filterToDos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import { getVisibleTodos } from './utils/getVisibleToDos';
 import type { ToDoType } from './types';
-import useTheme from './state/hooks/useTheme';
 import { useSearchParams } from 'react-router-dom';
 import { getNewSearchParams } from './utils/getNewSearchParams';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [todos, setTodos] = useState<ToDoType[]>([]);
-  const [activeTheme] = useTheme();
 
   const activePage = Number(searchParams.get('page')) || FIRST_PAGE;
 
@@ -27,24 +25,12 @@ function App() {
   }, [todos, searchParams]);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', activeTheme);
-  }, [activeTheme]);
-
-  useEffect(() => {
     if (visibleToDos.length === 0 && activePage > 1) {
-      if (activePage === 2) {
-        const newParamsString = getNewSearchParams(searchParams, {
-          page: null,
-        });
+      const newParamsString = getNewSearchParams(searchParams, {
+        page: (activePage - 1).toString(),
+      });
 
-        setSearchParams(newParamsString);
-      } else {
-        const newParamsString = getNewSearchParams(searchParams, {
-          page: (activePage - 1).toString(),
-        });
-
-        setSearchParams(newParamsString);
-      }
+      setSearchParams(newParamsString);
     }
   }, [visibleToDos]);
 
