@@ -1,16 +1,16 @@
 import type React from 'react';
 import styles from './CreateTodoModal.module.scss';
 import cn from 'classnames';
-import type { ToDoType } from '../../../types/ToDoType';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import { useCallback, useId, useState } from 'react';
+import type { ToDoType } from '../../../types';
 
 interface Props {
   onClose: () => void;
-  сreateToDo: (newTodo: ToDoType) => void;
+  onCreateToDo: (newTodo: ToDoType) => void;
 }
 
-const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
+const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
   const [value, setValue] = useState('');
   const uniqueToDoId = useId();
 
@@ -24,7 +24,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
 
   const onCreate = () => {
     if (value.trim()) {
-      сreateToDo(getNewToDo(value));
+      onCreateToDo(getNewToDo(value));
     }
 
     onClose();
@@ -45,6 +45,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, сreateToDo }) => {
             type="text"
             placeholder="Input your note..."
             value={value}
+            autoFocus
             onChange={handleChange}
           />
         </div>

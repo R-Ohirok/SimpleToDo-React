@@ -1,4 +1,4 @@
-@use '../../../App.scss';
+@use '../../../index.scss';
 
 .header {
   width: 90dvw;
@@ -36,19 +36,31 @@
     border-radius: var(--standart-border-radius);
     font-size: var(--placeholder-text-size);
     color: var(--element-color);
+    text-transform: uppercase;
 
     &::placeholder {
       color: var(--placeholder-text-color);
     }
   }
 
-  &Btn {
+  &BtnSearch {
     position: absolute;
     top: 50%;
-    transform: translate(-42px, -50%);
-    height: 21px;
+    transform: translate(-60px, -50%);
+    height: 20px;
     aspect-ratio: 1/1;
     background-image: url(../../../assets/icons/search.svg);
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  &BtnCancel {
+    position: absolute;
+    top: 50%;
+    transform: translate(-30px, -50%);
+    height: 20px;
+    aspect-ratio: 1/1;
+    background-image: url(../../../assets/icons/cancel.svg);
     background-size: cover;
     background-repeat: no-repeat;
   }

@@ -1,39 +1,48 @@
 import type React from 'react';
 import styles from './Footer.module.scss';
-import PagginationBtn from '../../atoms/PagginationBtn/PagginationBtn';
-import { useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
+import Pagination from '../../molecules/Pagination/Pagination';
+import CreateTodoModal from '../../molecules/CreateTodoModal/CreateTodoModal';
+import type { ToDoType } from '../../../types';
 
 interface Props {
-  onOpenCreatingModal: () => void;
+  pagesCount: number;
+  activePage: number;
+  onChangePage: (newActivePage: number) => void;
+  onCreateToDo: (newTodo: ToDoType) => void;
 }
 
-const pages = [1, 2, 3, 4, 5];
-const FIRST_PAGE = 1;
-const activePage = FIRST_PAGE;
+const Footer: React.FC<Props> = memo(
+  ({ pagesCount, activePage, onChangePage, onCreateToDo }) => {
+    const [isCreationModalVisible, setIsCreationModalVisible] = useState(false);
 
-const Footer: React.FC<Props> = ({ onOpenCreatingModal }) => {
-  const onChangePage = useCallback(() => {}, []); //TODO
+    const handleChangeModalVisibility = useCallback(() => {
+      setIsCreationModalVisible(prev => !prev);
+    }, []);
 
-  return (
-    <div className={styles.footer}>
-      <button className={styles.addBtn} onClick={onOpenCreatingModal}>
-        ＋
-      </button>
+    return (
+      <>
+        <div className={styles.footer}>
+          <button className={styles.addBtn} onClick={handleChangeModalVisibility}>
+            ＋
+          </button>
 
-      <div className={styles.pagination}>
-        {pages.map(page => {
-          return (
-            <PagginationBtn
-              key={page}
-              isActive={page === activePage}
-              onClick={onChangePage}
-              label={page}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+          <Pagination
+            pagesCount={pagesCount}
+            activePage={activePage}
+            onChangePage={onChangePage}
+          />
+        </div>
+
+        {isCreationModalVisible && (
+          <CreateTodoModal
+            onClose={handleChangeModalVisibility}
+            onCreateToDo={onCreateToDo}
+          />
+        )}
+      </>
+    );
+  },
+);
 
 export default Footer;
