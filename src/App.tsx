@@ -3,7 +3,7 @@ import CreateTodoModal from './components/molecules/CreateTodoModal/CreateTodoMo
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { filterTodos } from './utils/filterToDos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import { getVisibleTodos } from './utils/getVisibleToDos';
@@ -16,13 +16,20 @@ function App() {
   const [searchValue, setSearchValue] = useState('');
   const [activePage, setActivePage] = useState(FIRST_PAGE);
 
+  
   const { pagesCount, visibleToDos } = useMemo(() => {
     const filteredTodos = filterTodos(todos, searchValue, filterBy);
     const pagesCount = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
     const visibleToDos = getVisibleTodos(filteredTodos, activePage);
-
+    
     return { pagesCount, visibleToDos };
   }, [todos, searchValue, filterBy, activePage]);
+
+  useEffect (() => {
+    if (visibleToDos.length === 0 && activePage > 1) {
+      setActivePage(prev => --prev);
+    }
+  }, [visibleToDos, activePage]);
 
   const handleFilterStatusChange = useCallback(
     (newStatus: FilterStatusType) => {
@@ -50,13 +57,8 @@ function App() {
       setTodos(currTodos => {
         return currTodos.filter(todo => todo.id !== todoId);
       });
-
-      if (visibleToDos.length - 1 === 0 && activePage > 1) {
-        setActivePage(prev => prev - 1);
-      }
     },
-    [visibleToDos],
-  );
+    []);
 
   const handleChangeStatus = useCallback(
     (todoId: string) => {
