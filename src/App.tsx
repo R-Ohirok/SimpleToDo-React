@@ -8,6 +8,7 @@ import { filterTodos } from './utils/filterToDos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import { getVisibleTodos } from './utils/getVisibleToDos';
 import type { FilterStatusType, ToDoType } from './types';
+import EmptyImg from './components/molecules/EmptyImg/EmptyImg';
 
 function App() {
   const [isCreationModalVisible, setIsCreationModalVisible] = useState(false);
@@ -91,12 +92,16 @@ function App() {
       />
 
       <main>
-        <ToDoList
-          todos={visibleToDos}
-          onDelete={handleDeleteToDo}
-          onChangeStatus={handleChangeStatus}
-          changeTitle={handleChangeTitle}
-        />
+        {visibleToDos.length === 0 ? (
+          <EmptyImg />
+        ) : (
+          <ToDoList
+            todos={visibleToDos}
+            onDelete={handleDeleteToDo}
+            onChangeStatus={handleChangeStatus}
+            changeTitle={handleChangeTitle}
+          />
+        )}
       </main>
       <Footer
         onOpenCreatingModal={handleChangeModalVisibility}
