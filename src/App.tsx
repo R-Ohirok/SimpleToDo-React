@@ -7,8 +7,10 @@ import { filterTodos } from './utils/filterToDos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import { getVisibleTodos } from './utils/getVisibleToDos';
 import type { FilterStatusType, ToDoType } from './types';
+import useTheme from './state/hooks/useTheme';
 
 function App() {
+  const [activeTheme] = useTheme();
   const [todos, setTodos] = useState<ToDoType[]>([]);
   const [filterBy, setFilterBy] = useState<FilterStatusType>('All');
   const [searchValue, setSearchValue] = useState('');
@@ -21,6 +23,10 @@ function App() {
 
     return { pagesCount, visibleToDos };
   }, [todos, searchValue, filterBy, activePage]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', activeTheme);
+  }, [activeTheme]);
 
   useEffect(() => {
     if (visibleToDos.length === 0 && activePage > 1) {

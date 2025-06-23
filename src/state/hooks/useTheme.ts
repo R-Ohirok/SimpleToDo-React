@@ -1,7 +1,9 @@
 import { atom, useAtom } from 'jotai';
 import type { ThemeType } from '../../types';
 
-const themeAtom = atom<ThemeType>('light');
+const initialState: ThemeType = (localStorage.getItem('theme') as ThemeType) || 'light';
+
+const themeAtom = atom<ThemeType>(initialState);
 
 const useTheme = (): [ThemeType, () => void] => {
   const [theme, setActiveTheme] = useAtom(themeAtom);
@@ -9,6 +11,7 @@ const useTheme = (): [ThemeType, () => void] => {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
 
+    localStorage.setItem('theme', newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
     setActiveTheme(newTheme);
   };
