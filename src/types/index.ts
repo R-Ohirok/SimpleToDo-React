@@ -12,3 +12,7 @@ export interface ToDoType {
 }
 
 export type ThemeType = 'dark' | 'light';
+
+export type SearchParams = {
+  [key: string]: string | null;
+};

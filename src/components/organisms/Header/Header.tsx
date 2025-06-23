@@ -3,77 +3,109 @@ import type React from 'react';
 import Dropdown from '../../atoms/Dropdown/Dropdown';
 import styles from './Header.module.scss';
 import cn from 'classnames';
-import { memo, useState, useId } from 'react';
+import { memo, useState, useId, useCallback } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { DropdownOptionType, FilterStatusType } from '../../../types';
 import useTheme from '../../../state/hooks/useTheme';
+import { useSearchParams } from 'react-router-dom';
+import { getNewSearchParams } from '../../../utils/getNewSearchParams';
 
-interface Props {
-  activeFilterStatus: string;
-  onFilterStatusChange: (newStatus: FilterStatusType) => void;
-  onSearchSubmit: (title: string) => void;
-}
+const Header: React.FC = memo(() => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('title') || '';
+  const activeFilterStatus = searchParams.get('status') || 'All';
+  const [searchValue, setSearchValue] = useState(query);
+  const [theme, toggleTheme] = useTheme();
 
-const Header: React.FC<Props> = memo(
-  ({ activeFilterStatus, onFilterStatusChange, onSearchSubmit }) => {
-    const [searchValue, setSearchValue] = useState('');
+  const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
+    return { id: useId(), label: status };
+  });
 
-    const [theme, toggleTheme] = useTheme();
+  const handleFilterStatusChange = useCallback((newStatus: FilterStatusType) => {
+    if (newStatus === 'All') {
+      const newParamsString = getNewSearchParams(searchParams, {
+        status: null,
+        page: null,
+      });
 
-    const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
-      return { id: useId(), label: status };
+      setSearchParams(newParamsString);
+    } else {
+      const newParamsString = getNewSearchParams(searchParams, {
+        status: newStatus,
+        page: null,
+      });
+
+      setSearchParams(newParamsString);
+    }
+  }, [searchParams]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  };
+
+  const handleCancel = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const newParamsString = getNewSearchParams(searchParams, {
+      title: null,
+      page: null,
     });
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchValue(event.target.value);
-    };
+    setSearchParams(newParamsString);
 
-    const handleCancel = () => {
-      setSearchValue('');
-      onSearchSubmit('');
-    };
+    setSearchValue('');
+  }, [searchParams]);
 
-    const handleSubmit = () => {
-      const value = normalizeValue(searchValue);
+  const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-      setSearchValue(value);
-      onSearchSubmit(value);
-    };
+    const value = normalizeValue(searchValue);
+    const newParamsString = getNewSearchParams(searchParams, {
+      title: value || null,
+      page: null,
+    });
 
-    return (
-      <header className={styles.header}>
-        <h1 className={styles.headerTitle}>TODO LIST</h1>
+    setSearchParams(newParamsString);
+    setSearchValue(value);
+  },[searchParams, searchValue]);
 
-        <div className={styles.topBar}>
-          <div className={styles.searchWrapper}>
-            <input
-              name="searchInput"
-              type="text"
-              placeholder="Search..."
-              value={searchValue}
-              onChange={handleChange}
-              className={styles.searchInput}
-            />
-            <button className={styles.searchBtnSearch} onClick={handleSubmit} />
-            <button className={styles.searchBtnCancel} onClick={handleCancel} />
-          </div>
+  return (
+    <header className={styles.header}>
+      <h1 className={styles.headerTitle}>TODO LIST</h1>
 
-          <Dropdown
-            options={filterOptions}
-            value={activeFilterStatus}
-            onChange={onFilterStatusChange}
+      <div className={styles.topBar}>
+        <form
+          className={styles.searchWrapper}
+          onSubmit={handleSubmit}
+          onReset={handleCancel}
+        >
+          <input
+            name="searchInput"
+            type="text"
+            placeholder="Search..."
+            value={searchValue}
+            onChange={handleChange}
+            className={styles.searchInput}
           />
+          <button className={styles.searchBtnSearch} type="submit" />
+          <button className={styles.searchBtnCancel} type="reset" />
+        </form>
 
-          <button
-            className={cn(styles.themeToggle, {
-              [styles.themeToggleDark]: theme === 'dark',
-            })}
-            onClick={toggleTheme}
-          />
-        </div>
-      </header>
-    );
-  },
-);
+        <Dropdown
+          options={filterOptions}
+          value={activeFilterStatus}
+          onChange={handleFilterStatusChange}
+        />
+
+        <button
+          className={cn(styles.themeToggle, {
+            [styles.themeToggleDark]: theme === 'dark',
+          })}
+          onClick={toggleTheme}
+        />
+      </div>
+    </header>
+  );
+});
 
 export default Header;

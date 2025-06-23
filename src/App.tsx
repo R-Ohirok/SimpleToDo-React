@@ -6,40 +6,33 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { filterTodos } from './utils/filterToDos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import { getVisibleTodos } from './utils/getVisibleToDos';
-import type { FilterStatusType, ToDoType } from './types';
+import type { ToDoType } from './types';
+import { useSearchParams } from 'react-router-dom';
+import { getNewSearchParams } from './utils/getNewSearchParams';
 
 function App() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [todos, setTodos] = useState<ToDoType[]>([]);
-  const [filterBy, setFilterBy] = useState<FilterStatusType>('All');
-  const [searchValue, setSearchValue] = useState('');
-  const [activePage, setActivePage] = useState(FIRST_PAGE);
+
+  const activePage = Number(searchParams.get('page')) || FIRST_PAGE;
 
   const { pagesCount, visibleToDos } = useMemo(() => {
-    const filteredTodos = filterTodos(todos, searchValue, filterBy);
+    const filteredTodos = filterTodos(todos, searchParams);
     const pagesCount = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
     const visibleToDos = getVisibleTodos(filteredTodos, activePage);
 
     return { pagesCount, visibleToDos };
-  }, [todos, searchValue, filterBy, activePage]);
+  }, [todos, searchParams]);
 
   useEffect(() => {
     if (visibleToDos.length === 0 && activePage > 1) {
-      setActivePage(prev => --prev);
+      const newParamsString = getNewSearchParams(searchParams, {
+        page: (activePage - 1).toString(),
+      });
+
+      setSearchParams(newParamsString);
     }
-  }, [visibleToDos, activePage]);
-
-  const handleFilterStatusChange = useCallback(
-    (newStatus: FilterStatusType) => {
-      setFilterBy(newStatus);
-      setActivePage(FIRST_PAGE);
-    },
-    [],
-  );
-
-  const handleSearchChange = useCallback((title: string) => {
-    setSearchValue(title);
-    setActivePage(FIRST_PAGE);
-  }, []);
+  }, [visibleToDos]);
 
   const handleAddTodo = useCallback((newTodo: ToDoType) => {
     setTodos(currTodos => [...currTodos, newTodo]);
@@ -72,11 +65,7 @@ function App() {
 
   return (
     <div className="app">
-      <Header
-        activeFilterStatus={filterBy}
-        onFilterStatusChange={handleFilterStatusChange}
-        onSearchSubmit={handleSearchChange}
-      />
+      <Header />
 
       <main>
         <ToDoList
@@ -87,12 +76,7 @@ function App() {
         />
       </main>
 
-      <Footer
-        pagesCount={pagesCount}
-        activePage={activePage}
-        onChangePage={setActivePage}
-        onCreateToDo={handleAddTodo}
-      />
+      <Footer pagesCount={pagesCount} onCreateToDo={handleAddTodo} />
     </div>
   );
 }
