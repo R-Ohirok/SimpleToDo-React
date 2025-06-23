@@ -25,6 +25,18 @@ function App() {
   }, [todos, searchParams]);
 
   useEffect(() => {
+    const storedData = localStorage.getItem('todos');
+    
+    if (storedData) {
+      setTodos(JSON.parse(storedData));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
+  useEffect(() => {
     if (visibleToDos.length === 0 && activePage > 1) {
       const newParamsString = getNewSearchParams(searchParams, {
         page: (activePage - 1).toString(),
