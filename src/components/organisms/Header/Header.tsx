@@ -6,7 +6,7 @@ import cn from 'classnames';
 import { memo, useState, useId } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { DropdownOptionType, FilterStatusType } from '../../../types';
-import useSwitchTheme from '../../../state/hooks/useSwitchTheme';
+import useTheme from '../../../state/hooks/useTheme';
 
 interface Props {
   activeFilterStatus: string;
@@ -17,7 +17,8 @@ interface Props {
 const Header: React.FC<Props> = memo(
   ({ activeFilterStatus, onFilterStatusChange, onSearchSubmit }) => {
     const [searchValue, setSearchValue] = useState('');
-    const { activeTheme, changeActiveTheme } = useSwitchTheme();
+
+    const { theme, toggleTheme } = useTheme();
 
     const filterOptions: DropdownOptionType[] = FILTER_STATUSES.map(status => {
       return { id: useId(), label: status };
@@ -65,9 +66,9 @@ const Header: React.FC<Props> = memo(
 
           <button
             className={cn(styles.themeToggle, {
-              [styles.themeToggleDark]: activeTheme === 'dark',
+              [styles.themeToggleDark]: theme === 'dark',
             })}
-            onClick={changeActiveTheme}
+            onClick={toggleTheme}
           />
         </div>
       </header>

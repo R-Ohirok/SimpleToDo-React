@@ -1,15 +1,15 @@
 import styles from './EmptyList.module.scss';
 import cn from 'classnames';
-import useSwitchTheme from '../../../state/hooks/useSwitchTheme';
+import useTheme from '../../../state/hooks/useTheme';
 
 const EmptyList = () => {
-  const { activeTheme } = useSwitchTheme();
+  const {theme} = useTheme();
 
   return (
     <div className={styles.empty}>
       <div
         className={cn(styles.emptyImg, {
-          [styles.emptyImgDark]: activeTheme === 'dark',
+          [styles.emptyImgDark]: theme === 'dark',
         })}
       ></div>
       <span>Empty...</span>
