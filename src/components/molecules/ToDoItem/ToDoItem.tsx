@@ -6,6 +6,7 @@ import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
 import Skeleton from '@mui/material/Skeleton';
 import useTodos from '../../../hooks/useTodos';
+import { useDraggable } from '@dnd-kit/core';
 
 interface Props {
   todo: ToDoType;
@@ -20,6 +21,10 @@ const ToDoItem: React.FC<Props> = memo(
 
     const [isEditing, setIsEditing] = useState(false);
     const { isLoading } = useTodos();
+
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+      id,
+    });
 
     const handleDelete = useCallback(() => onDelete(todo.id), []);
     const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
@@ -62,6 +67,13 @@ const ToDoItem: React.FC<Props> = memo(
       [],
     );
 
+    const style = transform
+      ? {
+          transform: `translate(${transform.x}px, ${transform.y}px)`,
+          transition: 'transform 0.2s ease',
+        }
+      : undefined;
+
     if (isLoading) {
       return (
         <li className={styles.todoItem}>
@@ -77,7 +89,13 @@ const ToDoItem: React.FC<Props> = memo(
     }
 
     return (
-      <li className={styles.todoItem}>
+      <li
+        className={styles.todoItem}
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+      >
         <input
           name={id.toString()}
           type="checkbox"

@@ -4,6 +4,7 @@ import ToDoItem from '../../molecules/ToDoItem/ToDoItem';
 import { memo } from 'react';
 import type { ToDoType } from '../../../types';
 import EmptyList from '../../molecules/EmptyList/EmptyList';
+import { useDroppable } from '@dnd-kit/core';
 
 interface Props {
   todos: ToDoType[];
@@ -14,12 +15,14 @@ interface Props {
 
 const ToDoList: React.FC<Props> = memo(
   ({ todos, onDelete, onChangeStatus, onChangeTitle }) => {
+    const { setNodeRef } = useDroppable({ id: 'todo-list' });
+    
     return (
       <>
         {todos.length === 0 ? (
           <EmptyList />
         ) : (
-          <ul className={styles.todoList}>
+          <ul className={styles.todoList} ref={setNodeRef}>
             {todos.map(todo => (
               <ToDoItem
                 key={todo.id}
