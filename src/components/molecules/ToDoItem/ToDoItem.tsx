@@ -62,9 +62,9 @@ const ToDoItem: React.FC<Props> = memo(
       [],
     );
 
-    return (
-      <li className={styles.todoItem}>
-        {isLoading ? (
+    if (isLoading) {
+      return (
+        <li className={styles.todoItem}>
           <Skeleton
             variant="rectangular"
             height={32}
@@ -72,59 +72,61 @@ const ToDoItem: React.FC<Props> = memo(
             sx={{ bgcolor: 'grey.500', borderRadius: '6px' }}
             animation="wave"
           />
+        </li>
+      );
+    }
+
+    return (
+      <li className={styles.todoItem}>
+        <input
+          name={id.toString()}
+          type="checkbox"
+          className={styles.todoItemStatus}
+          checked={isCompleted}
+          onChange={handleChangeStatus}
+        />
+
+        {isEditing ? (
+          <form
+            onBlur={handleEditTodo}
+            onSubmit={handleEditTodo}
+            onKeyUp={handleKeyDown}
+          >
+            <input
+              name="todoItemInput"
+              type="text"
+              className={styles.todoItemInput}
+              placeholder="Empty todo will be deleted"
+              defaultValue={title}
+              autoFocus
+            />
+          </form>
         ) : (
           <>
-            <input
-              name={id.toString()}
-              type="checkbox"
-              className={styles.todoItemStatus}
-              checked={isCompleted}
-              onChange={handleChangeStatus}
-            />
+            <span
+              className={cn(styles.todoItemTitle, {
+                [styles.todoItemTitleCompleted]: isCompleted,
+              })}
+            >
+              {title}
+            </span>
 
-            {isEditing ? (
-              <form
-                onBlur={handleEditTodo}
-                onSubmit={handleEditTodo}
-                onKeyUp={handleKeyDown}
-              >
-                <input
-                  name="todoItemInput"
-                  type="text"
-                  className={styles.todoItemInput}
-                  placeholder="Empty todo will be deleted"
-                  defaultValue={title}
-                  autoFocus
-                />
-              </form>
-            ) : (
-              <>
-                <span
-                  className={cn(styles.todoItemTitle, {
-                    [styles.todoItemTitleCompleted]: isCompleted,
-                  })}
-                >
-                  {title}
-                </span>
-
-                <div className={styles.todoItemControl}>
-                  <button
-                    className={cn(
-                      styles.todoItemControlBtn,
-                      styles.todoItemControlBtnEdit,
-                    )}
-                    onClick={handleSelectTodo}
-                  ></button>
-                  <button
-                    className={cn(
-                      styles.todoItemControlBtn,
-                      styles.todoItemControlBtnDelete,
-                    )}
-                    onClick={handleDelete}
-                  ></button>
-                </div>
-              </>
-            )}
+            <div className={styles.todoItemControl}>
+              <button
+                className={cn(
+                  styles.todoItemControlBtn,
+                  styles.todoItemControlBtnEdit,
+                )}
+                onClick={handleSelectTodo}
+              ></button>
+              <button
+                className={cn(
+                  styles.todoItemControlBtn,
+                  styles.todoItemControlBtnDelete,
+                )}
+                onClick={handleDelete}
+              ></button>
+            </div>
           </>
         )}
       </li>

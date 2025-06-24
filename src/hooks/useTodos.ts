@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ToDoType } from '../types';
 
+type useTodosType = {
+  todos: ToDoType[];
+  setTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
+  isLoading: boolean;
+};
+
 const DEFAULT_VALUE: ToDoType[] = [];
 
 const getInitialValue = (): ToDoType[] => {
@@ -19,12 +25,8 @@ const getInitialValue = (): ToDoType[] => {
   return DEFAULT_VALUE;
 };
 
-const useTodos = (): {
-  todos: ToDoType[];
-  updateTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
-  isLoading: boolean;
-} => {
-  const [todos, setTodos] = useState<ToDoType[]>(getInitialValue());
+const useTodos = (): useTodosType => {
+  const [todos, setNewTodos] = useState<ToDoType[]>(getInitialValue);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -36,11 +38,11 @@ const useTodos = (): {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
-  const updateTodos = useCallback((value: React.SetStateAction<ToDoType[]>) => {
-    setTodos(value);
+  const setTodos = useCallback((value: React.SetStateAction<ToDoType[]>) => {
+    setNewTodos(value);
   }, []);
 
-  return { todos, updateTodos, isLoading };
+  return { todos, setTodos, isLoading };
 };
 
 export default useTodos;
