@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { fetchTodos } from '../api/todos';
 import type { ToDoType } from '../types';
 
 type useTodosType = {
@@ -7,40 +8,30 @@ type useTodosType = {
   isLoading: boolean;
 };
 
-const DEFAULT_VALUE: ToDoType[] = [];
-
-const getInitialValue = (): ToDoType[] => {
-  const data = localStorage.getItem('todos');
-
-  if (data === null) {
-    return DEFAULT_VALUE;
-  }
-
-  try {
-    return JSON.parse(data);
-  } catch {
-    localStorage.removeItem('todos');
-  }
-
-  return DEFAULT_VALUE;
-};
-
 const useTodos = (): useTodosType => {
-  const [todos, setNewTodos] = useState<ToDoType[]>(getInitialValue);
+  const [todos, setNewTodos] = useState<ToDoType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    const fetchData = async () => {
+      try {
+        const data = await fetchTodos();
 
-  useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+        setNewTodos(data as ToDoType[]);
+      } catch (err) {
+        console.error('Error fetching todos:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const setTodos = useCallback((value: React.SetStateAction<ToDoType[]>) => {
     setNewTodos(value);
   }, []);
+
 
   return { todos, setTodos, isLoading };
 };
