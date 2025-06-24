@@ -4,6 +4,8 @@ import cn from 'classnames';
 import { memo, useCallback, useState } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
+import Skeleton from '@mui/material/Skeleton';
+import useTodos from '../../../hooks/useTodos';
 
 interface Props {
   todo: ToDoType;
@@ -17,6 +19,7 @@ const ToDoItem: React.FC<Props> = memo(
     const { id, title, isCompleted } = todo;
 
     const [isEditing, setIsEditing] = useState(false);
+    const { isLoading } = useTodos();
 
     const handleDelete = useCallback(() => onDelete(todo.id), []);
     const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
@@ -50,6 +53,28 @@ const ToDoItem: React.FC<Props> = memo(
       },
       [],
     );
+    const handleKeyDown = useCallback(
+      (event: React.KeyboardEvent<HTMLFormElement>) => {
+        if (event.key === 'Escape') {
+          setIsEditing(false);
+        }
+      },
+      [],
+    );
+
+    if (isLoading) {
+      return (
+        <li className={styles.todoItem}>
+          <Skeleton
+            variant="rectangular"
+            height={32}
+            width="100%"
+            sx={{ bgcolor: 'grey.500', borderRadius: '6px' }}
+            animation="wave"
+          />
+        </li>
+      );
+    }
 
     return (
       <li className={styles.todoItem}>
@@ -65,11 +90,7 @@ const ToDoItem: React.FC<Props> = memo(
           <form
             onBlur={handleEditTodo}
             onSubmit={handleEditTodo}
-            onKeyUp={event => {
-              if (event.key === 'Escape') {
-                setIsEditing(false);
-              }
-            }}
+            onKeyUp={handleKeyDown}
           >
             <input
               name="todoItemInput"

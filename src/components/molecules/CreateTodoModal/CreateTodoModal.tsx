@@ -2,8 +2,9 @@ import type React from 'react';
 import styles from './CreateTodoModal.module.scss';
 import cn from 'classnames';
 import { normalizeValue } from '../../../utils/normalizeValue';
-import { useCallback, useId, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { ToDoType } from '../../../types';
+import generateId from '../../../utils/generateId';
 
 interface Props {
   onClose: () => void;
@@ -12,11 +13,10 @@ interface Props {
 
 const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
   const [value, setValue] = useState('');
-  const uniqueToDoId = useId();
 
   const getNewToDo = useCallback((title: string): ToDoType => {
     return {
-      id: uniqueToDoId,
+      id: generateId(),
       title: normalizeValue(title),
       isCompleted: false,
     };
