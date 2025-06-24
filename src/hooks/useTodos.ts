@@ -20,9 +20,9 @@ const getInitialValue = (): ToDoType[] => {
 };
 
 const useTodos = (): {
-  todos: ToDoType[],
-  updateTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>,
-  isLoading: boolean,
+  todos: ToDoType[];
+  updateTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
+  isLoading: boolean;
 } => {
   const [todos, setTodos] = useState<ToDoType[]>(getInitialValue());
   const [isLoading, setIsLoading] = useState(true);
@@ -40,7 +40,7 @@ const useTodos = (): {
     setTodos(value);
   }, []);
 
-  return {todos, updateTodos, isLoading};
+  return { todos, updateTodos, isLoading };
 };
 
 export default useTodos;

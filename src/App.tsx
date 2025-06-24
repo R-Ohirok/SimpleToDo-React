@@ -13,7 +13,7 @@ import useTodos from './hooks/useTodos';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const {todos, updateTodos: setTodos} = useTodos();
+  const { todos, updateTodos: setTodos } = useTodos();
 
   const activePage = Number(searchParams.get('page')) || FIRST_PAGE;
 
