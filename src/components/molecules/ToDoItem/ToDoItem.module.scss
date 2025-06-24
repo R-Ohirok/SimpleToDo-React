@@ -3,6 +3,7 @@
   align-items: center;
   gap: 16px;
   padding-block: 16px;
+  background-color: var(--secondary-color);
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--element-color);

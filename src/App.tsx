@@ -10,6 +10,7 @@ import type { ToDoType } from './types';
 import { useSearchParams } from 'react-router-dom';
 import { getNewSearchParams } from './utils/getNewSearchParams';
 import useTodos from './hooks/useTodos';
+import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,17 +65,26 @@ function App() {
     [],
   );
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) {
+      handleDeleteToDo(active.id as string);
+    }
+  };
+
   return (
     <div className="app">
       <Header />
 
       <main>
-        <ToDoList
-          todos={visibleToDos}
-          onDelete={handleDeleteToDo}
-          onChangeStatus={handleChangeStatus}
-          onChangeTitle={handleChangeTitle}
-        />
+        <DndContext onDragEnd={handleDragEnd}>
+          <ToDoList
+            todos={visibleToDos}
+            onDelete={handleDeleteToDo}
+            onChangeStatus={handleChangeStatus}
+            onChangeTitle={handleChangeTitle}
+          />
+        </DndContext>
       </main>
 
       <Footer pagesCount={pagesCount} onCreateToDo={handleAddTodo} />
