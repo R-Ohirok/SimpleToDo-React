@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ToDoType } from '../types';
 
-const getInitialValue = (defaultValue: ToDoType[]): ToDoType[] => {
+const DEFAULT_VALUE: ToDoType[] = [];
+
+const getInitialValue = (): ToDoType[] => {
   const data = localStorage.getItem('todos');
 
   if (data === null) {
-    return defaultValue;
+    return DEFAULT_VALUE;
   }
 
   try {
@@ -14,33 +16,31 @@ const getInitialValue = (defaultValue: ToDoType[]): ToDoType[] => {
     localStorage.removeItem('todos');
   }
 
-  return defaultValue;
+  return DEFAULT_VALUE;
 };
 
-const useTodos = (
-  defaultValue: ToDoType[],
-): [
-  ToDoType[],
-  (value: ToDoType[] | ((prev: ToDoType[]) => ToDoType[])) => void,
-] => {
-  const [todos, setTodos] = useState<ToDoType[]>(getInitialValue(defaultValue));
+const useTodos = (): {
+  todos: ToDoType[],
+  updateTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>,
+  isLoading: boolean,
+} => {
+  const [todos, setTodos] = useState<ToDoType[]>(getInitialValue());
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
   }, [todos]);
 
-  const updateTodos = useCallback(
-    (value: ToDoType[] | ((prev: ToDoType[]) => ToDoType[])) => {
-      setTodos(prev =>
-        typeof value === 'function'
-          ? (value as (prev: ToDoType[]) => ToDoType[])(prev)
-          : value,
-      );
-    },
-    [],
-  );
+  const updateTodos = useCallback((value: React.SetStateAction<ToDoType[]>) => {
+    setTodos(value);
+  }, []);
 
-  return [todos, updateTodos];
+  return {todos, updateTodos, isLoading};
 };
 
 export default useTodos;

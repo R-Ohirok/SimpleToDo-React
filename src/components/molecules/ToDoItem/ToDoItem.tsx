@@ -1,10 +1,11 @@
 import type React from 'react';
 import styles from './ToDoItem.module.scss';
 import cn from 'classnames';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
 import Skeleton from '@mui/material/Skeleton';
+import useTodos from '../../../hooks/useTodos';
 
 interface Props {
   todo: ToDoType;
@@ -18,12 +19,7 @@ const ToDoItem: React.FC<Props> = memo(
     const { id, title, isCompleted } = todo;
 
     const [isEditing, setIsEditing] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-      const timer = setTimeout(() => setIsVisible(true), 1000);
-      return () => clearTimeout(timer);
-    }, []);
+    const { isLoading } = useTodos();
 
     const handleDelete = useCallback(() => onDelete(todo.id), []);
     const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
@@ -57,10 +53,26 @@ const ToDoItem: React.FC<Props> = memo(
       },
       [],
     );
+    const handleKeyDown = useCallback(
+      (event: React.KeyboardEvent<HTMLFormElement>) => {
+        if (event.key === 'Escape') {
+          setIsEditing(false);
+        }
+      },
+      [],
+    );
 
     return (
       <li className={styles.todoItem}>
-        {isVisible ? (
+        {isLoading ? (
+          <Skeleton
+            variant="rectangular"
+            height={32}
+            width="100%"
+            sx={{ bgcolor: 'grey.500', borderRadius: '6px' }}
+            animation="wave"
+          />
+        ) : (
           <>
             <input
               name={id.toString()}
@@ -74,11 +86,7 @@ const ToDoItem: React.FC<Props> = memo(
               <form
                 onBlur={handleEditTodo}
                 onSubmit={handleEditTodo}
-                onKeyUp={event => {
-                  if (event.key === 'Escape') {
-                    setIsEditing(false);
-                  }
-                }}
+                onKeyUp={handleKeyDown}
               >
                 <input
                   name="todoItemInput"
@@ -118,14 +126,6 @@ const ToDoItem: React.FC<Props> = memo(
               </>
             )}
           </>
-        ) : (
-          <Skeleton
-            variant="rectangular"
-            height={32}
-            width="100%"
-            sx={{ bgcolor: 'grey.500', borderRadius: '6px' }}
-            animation="wave"
-          />
         )}
       </li>
     );

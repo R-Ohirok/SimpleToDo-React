@@ -10,8 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.1.2",
     "classnames": "^2.5.1",
     "jotai": "^2.12.5",
