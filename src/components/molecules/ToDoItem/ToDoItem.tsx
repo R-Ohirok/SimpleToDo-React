@@ -89,13 +89,7 @@ const ToDoItem: React.FC<Props> = memo(
     }
 
     return (
-      <li
-        className={styles.todoItem}
-        ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}
-      >
+      <li className={styles.todoItem} ref={setNodeRef} style={style}>
         <input
           name={id.toString()}
           type="checkbox"
@@ -125,6 +119,8 @@ const ToDoItem: React.FC<Props> = memo(
               className={cn(styles.todoItemTitle, {
                 [styles.todoItemTitleCompleted]: isCompleted,
               })}
+              {...attributes}
+              {...listeners}
             >
               {title}
             </span>
