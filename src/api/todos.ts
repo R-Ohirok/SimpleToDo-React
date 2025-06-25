@@ -1,9 +1,9 @@
 import type { ToDoType } from '../types';
-import instance from './config';
+import api from './config';
 
 export async function getTodos(): Promise<ToDoType[]> {
   try {
-    const response = await instance.get<ToDoType[]>('/todos');
+    const response = await api.get<ToDoType[]>('/todos');
 
     return response.data;
   } catch (error) {
@@ -14,7 +14,7 @@ export async function getTodos(): Promise<ToDoType[]> {
 
 export async function addTodo(newTodo: ToDoType): Promise<ToDoType[]> {
   try {
-    const response = await instance.post('/todos', newTodo);
+    const response = await api.post('/todos', newTodo);
 
     return response.data;
   } catch (error) {
@@ -25,7 +25,7 @@ export async function addTodo(newTodo: ToDoType): Promise<ToDoType[]> {
 
 export async function deleteTodo(idToDelete: string): Promise<ToDoType[]> {
   try {
-    const response = await instance.delete(`/todos/${idToDelete}`);
+    const response = await api.delete(`/todos/${idToDelete}`);
 
     return response.data;
   } catch (error) {

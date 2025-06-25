@@ -2,14 +2,14 @@ import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 
-const instance = axios.create({
+const api = axios.create({
   baseURL: 'http://localhost:3000',
 });
 
-instance.defaults.timeout = 2500;
-instance.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
+api.defaults.timeout = 2500;
+api.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
 
-instance.interceptors.request.use(config => {
+api.interceptors.request.use(config => {
   if (config.data) {
     config.data = snakecaseKeys(config.data, { deep: true });
   }
@@ -17,7 +17,7 @@ instance.interceptors.request.use(config => {
   return config;
 });
 
-instance.interceptors.response.use(
+api.interceptors.response.use(
   response => {
     const camelcaseData = camelcaseKeys(response.data, { deep: true });
 
@@ -33,4 +33,4 @@ instance.interceptors.response.use(
   },
 );
 
-export default instance;
+export default api;
