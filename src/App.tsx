@@ -11,6 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getNewSearchParams } from './utils/getNewSearchParams';
 import useTodos from './hooks/useTodos';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
+import { addTodo, deleteTodo } from './api/todos';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,14 +37,23 @@ function App() {
     }
   }, [visibleToDos]);
 
-  const handleAddTodo = useCallback((newTodo: ToDoType) => {
-    setTodos(currTodos => [...currTodos, newTodo]);
+  const handleAddTodo = useCallback( async (newTodo: ToDoType) => {
+    try{
+      await addTodo(newTodo);
+
+      setTodos(currTodos => [...currTodos, newTodo]);
+    } catch {}
+
   }, []);
 
-  const handleDeleteToDo = useCallback((todoId: string) => {
-    setTodos(currTodos => {
-      return currTodos.filter(todo => todo.id !== todoId);
-    });
+  const handleDeleteToDo = useCallback( async (todoId: string) => {
+    try{
+      await deleteTodo(todoId);
+
+      setTodos(currTodos => {
+        return currTodos.filter(todo => todo.id !== todoId);
+      });
+    } catch {}
   }, []);
 
   const handleChangeStatus = useCallback((todoId: string) => {
