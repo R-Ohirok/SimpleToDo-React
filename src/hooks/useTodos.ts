@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { fetchTodos } from '../api/todos';
+import { getTodos } from '../api/todos';
 import type { ToDoType } from '../types';
 
 type useTodosType = {
@@ -13,25 +13,22 @@ const useTodos = (): useTodosType => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getData = async () => {
       try {
-        const data = await fetchTodos();
+        const data = await getTodos();
 
         setNewTodos(data as ToDoType[]);
-      } catch (err) {
-        console.error('Error fetching todos:', err);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
+    getData();
   }, []);
 
   const setTodos = useCallback((value: React.SetStateAction<ToDoType[]>) => {
     setNewTodos(value);
   }, []);
-
 
   return { todos, setTodos, isLoading };
 };

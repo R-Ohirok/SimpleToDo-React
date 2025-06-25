@@ -1,11 +1,11 @@
 export type FilterStatusType = 'All' | 'Active' | 'Completed';
 
-export interface DropdownOptionType {
+export type DropdownOptionType = {
   id: string;
   label: FilterStatusType;
 }
 
-export interface ToDoType {
+export type ToDoType = {
   id: string;
   title: string;
   isCompleted: boolean;
