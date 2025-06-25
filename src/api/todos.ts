@@ -1,9 +1,9 @@
-import axios from 'axios';
 import type { ToDoType } from '../types';
+import instance from './config';
 
 export async function getTodos(): Promise<ToDoType[]> {
   try {
-    const response = await axios.get<ToDoType[]>('http://localhost:3000/todos');
+    const response = await instance.get<ToDoType[]>('/todos');
 
     return response.data;
   } catch (error) {
