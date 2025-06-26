@@ -11,11 +11,15 @@ import { useSearchParams } from 'react-router-dom';
 import { getNewSearchParams } from './utils/getNewSearchParams';
 import useTodos from './hooks/useTodos';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
-import { addTodo, deleteTodo } from './api/todos';
+// import { addTodo, deleteTodo } from './api/todos';
+import useAddTodo from './hooks/useAddToDo';
+import { useDeleteTodo } from './hooks/useDeleteToDo';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { todos, setTodos } = useTodos();
+  const { todos, isLoading } = useTodos();
+  const addTodoMutation = useAddTodo();
+  const deleteTodoMutation = useDeleteTodo();
 
   const activePage = Number(searchParams.get('page')) || FIRST_PAGE;
 
@@ -37,41 +41,36 @@ function App() {
     }
   }, [visibleToDos]);
 
-  const handleAddTodo = useCallback( async (newTodo: ToDoType) => {
-    try{
-      await addTodo(newTodo);
+  const handleAddTodo = useCallback((newTodo: ToDoType) => {
+      addTodoMutation.mutate(newTodo);
+    },
+    [addTodoMutation],);
 
-      setTodos(currTodos => [...currTodos, newTodo]);
-    } catch {}
+  const handleDeleteToDo = useCallback((todoId: string) => {
+      deleteTodoMutation.mutate(todoId);
+    },
+    [deleteTodoMutation],);
 
-  }, []);
-
-  const handleDeleteToDo = useCallback( async (todoId: string) => {
-    try{
-      await deleteTodo(todoId);
-
-      setTodos(currTodos => {
-        return currTodos.filter(todo => todo.id !== todoId);
-      });
-    } catch {}
-  }, []);
-
-  const handleChangeStatus = useCallback((todoId: string) => {
-    setTodos(currTodos =>
-      currTodos.map(todo =>
-        todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
-      ),
-    );
-  }, []);
+  const handleChangeStatus = useCallback(
+    () => {},
+  //   (todoId: string) => {
+  //   setTodos(currTodos =>
+  //     currTodos.map(todo =>
+  //       todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
+  //     ),
+  //   );
+  // },
+  []);
 
   const handleChangeTitle = useCallback(
-    (todoId: string, newTodoTitle: string) => {
-      setTodos(currTodos =>
-        currTodos.map(todo =>
-          todo.id === todoId ? { ...todo, title: newTodoTitle } : todo,
-        ),
-      );
-    },
+    // (todoId: string, newTodoTitle: string) => {
+    //   setTodos(currTodos =>
+    //     currTodos.map(todo =>
+    //       todo.id === todoId ? { ...todo, title: newTodoTitle } : todo,
+    //     ),
+    //   );
+    // },
+    ()=>{},
     [],
   );
 
@@ -93,6 +92,7 @@ function App() {
             onDelete={handleDeleteToDo}
             onChangeStatus={handleChangeStatus}
             onChangeTitle={handleChangeTitle}
+            isLoading={isLoading}
           />
         </DndContext>
       </main>

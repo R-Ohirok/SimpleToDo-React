@@ -4,8 +4,6 @@ import cn from 'classnames';
 import { memo, useCallback, useState } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
-import Skeleton from '@mui/material/Skeleton';
-import useTodos from '../../../hooks/useTodos';
 import { useDraggable } from '@dnd-kit/core';
 
 interface Props {
@@ -20,7 +18,6 @@ const ToDoItem: React.FC<Props> = memo(
     const { id, title, isCompleted } = todo;
 
     const [isEditing, setIsEditing] = useState(false);
-    const { isLoading } = useTodos();
 
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
       id,
@@ -73,20 +70,6 @@ const ToDoItem: React.FC<Props> = memo(
           transition: 'transform 0.2s ease',
         }
       : undefined;
-
-    if (isLoading) {
-      return (
-        <li className={styles.todoItem}>
-          <Skeleton
-            variant="rectangular"
-            height={32}
-            width="100%"
-            sx={{ bgcolor: 'grey.500', borderRadius: '6px' }}
-            animation="wave"
-          />
-        </li>
-      );
-    }
 
     return (
       <li className={styles.todoItem} ref={setNodeRef} style={style}>
