@@ -12,6 +12,7 @@ const useTodos = () => {
   const {
     data = [],
     isLoading,
+    isPending,
     isError,
     refetch,
   } = useQuery<ToDoType[]>({
@@ -23,6 +24,7 @@ const useTodos = () => {
     todos: data,
     isLoading,
     isError,
+    isPending,
     refetch,
   };
 };

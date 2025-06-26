@@ -11,9 +11,9 @@ import { useSearchParams } from 'react-router-dom';
 import { getNewSearchParams } from './utils/getNewSearchParams';
 import useTodos from './hooks/useTodos';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
-// import { addTodo, deleteTodo } from './api/todos';
 import useAddTodo from './hooks/useAddToDo';
 import { useDeleteTodo } from './hooks/useDeleteToDo';
+import { CircularProgress } from '@mui/material';
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,26 +41,31 @@ function App() {
     }
   }, [visibleToDos]);
 
-  const handleAddTodo = useCallback((newTodo: ToDoType) => {
+  const handleAddTodo = useCallback(
+    (newTodo: ToDoType) => {
       addTodoMutation.mutate(newTodo);
     },
-    [addTodoMutation],);
+    [addTodoMutation],
+  );
 
-  const handleDeleteToDo = useCallback((todoId: string) => {
+  const handleDeleteToDo = useCallback(
+    (todoId: string) => {
       deleteTodoMutation.mutate(todoId);
     },
-    [deleteTodoMutation],);
+    [deleteTodoMutation],
+  );
 
   const handleChangeStatus = useCallback(
     () => {},
-  //   (todoId: string) => {
-  //   setTodos(currTodos =>
-  //     currTodos.map(todo =>
-  //       todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
-  //     ),
-  //   );
-  // },
-  []);
+    //   (todoId: string) => {
+    //   setTodos(currTodos =>
+    //     currTodos.map(todo =>
+    //       todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
+    //     ),
+    //   );
+    // },
+    [],
+  );
 
   const handleChangeTitle = useCallback(
     // (todoId: string, newTodoTitle: string) => {
@@ -70,7 +75,7 @@ function App() {
     //     ),
     //   );
     // },
-    ()=>{},
+    () => {},
     [],
   );
 
@@ -81,6 +86,22 @@ function App() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          width: '100%',
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <Header />
@@ -89,10 +110,8 @@ function App() {
         <DndContext onDragEnd={handleDragEnd}>
           <ToDoList
             todos={visibleToDos}
-            onDelete={handleDeleteToDo}
             onChangeStatus={handleChangeStatus}
             onChangeTitle={handleChangeTitle}
-            isLoading={isLoading}
           />
         </DndContext>
       </main>
