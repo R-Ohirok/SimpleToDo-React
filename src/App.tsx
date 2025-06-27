@@ -2,13 +2,10 @@ import './index.scss';
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
-import { useCallback, useEffect, useMemo } from 'react';
-import { filterTodos } from './utils/filterToDos';
-import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
-import { getVisibleTodos } from './utils/getVisibleToDos';
-import type { ToDoType } from './types';
+import { useCallback } from 'react';
+import { FIRST_PAGE } from './constants/constants';
+import type { FilterStatusType, ToDoType } from './types';
 import { useSearchParams } from 'react-router-dom';
-import { getNewSearchParams } from './utils/getNewSearchParams';
 import useTodos from './hooks/useTodos';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import useAddTodo from './hooks/useAddToDo';
@@ -16,30 +13,18 @@ import { useDeleteTodo } from './hooks/useDeleteToDo';
 import { CircularProgress } from '@mui/material';
 
 function App() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { todos, isLoading } = useTodos();
+  const [searchParams] = useSearchParams();
+  const status = (searchParams.get('status') as FilterStatusType) || undefined;
+  const title = searchParams.get('title') || undefined;
+  const page = searchParams.get('page') || FIRST_PAGE.toString();
+
+  const { todos, activePage, pagesCount, isLoading } = useTodos({
+    status,
+    title,
+    page: page,
+  });
   const addTodoMutation = useAddTodo();
   const deleteTodoMutation = useDeleteTodo();
-
-  const activePage = Number(searchParams.get('page')) || FIRST_PAGE;
-
-  const { pagesCount, visibleToDos } = useMemo(() => {
-    const filteredTodos = filterTodos(todos, searchParams);
-    const pagesCount = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE);
-    const visibleToDos = getVisibleTodos(filteredTodos, activePage);
-
-    return { pagesCount, visibleToDos };
-  }, [todos, searchParams]);
-
-  useEffect(() => {
-    if (visibleToDos.length === 0 && activePage > 1) {
-      const newParamsString = getNewSearchParams(searchParams, {
-        page: (activePage - 1).toString(),
-      });
-
-      setSearchParams(newParamsString);
-    }
-  }, [visibleToDos]);
 
   const handleAddTodo = useCallback(
     (newTodo: ToDoType) => {
@@ -52,7 +37,7 @@ function App() {
     (todoId: string) => {
       deleteTodoMutation.mutate(todoId);
     },
-    [deleteTodoMutation],
+    [deleteTodoMutation, todos],
   );
 
   const handleChangeStatus = useCallback(
@@ -109,14 +94,38 @@ function App() {
       <main>
         <DndContext onDragEnd={handleDragEnd}>
           <ToDoList
-            todos={visibleToDos}
+            todos={todos}
             onChangeStatus={handleChangeStatus}
             onChangeTitle={handleChangeTitle}
+            onDeleteToDo={handleDeleteToDo}
           />
         </DndContext>
       </main>
 
-      <Footer pagesCount={pagesCount} onCreateToDo={handleAddTodo} />
+      <Footer
+        pagesCount={pagesCount}
+        activePage={activePage}
+        onCreateToDo={handleAddTodo}
+      />
+
+      {(addTodoMutation.isPending || deleteTodoMutation.isPending) && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(25, 25, 25, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: '5',
+          }}
+        >
+          <CircularProgress />
+        </div>
+      )}
     </div>
   );
 }

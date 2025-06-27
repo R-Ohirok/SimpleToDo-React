@@ -1,27 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
 import { getTodos } from '../api/todos';
-import type { ToDoType } from '../types';
+import type { TodosParams, TodosResponse } from '../types';
+import { FIRST_PAGE } from '../constants/constants';
 
-// type useTodosType = {
-//   todos: ToDoType[];
-//   setTodos: React.Dispatch<React.SetStateAction<ToDoType[]>>;
-//   isLoading: boolean;
-// };
-
-const useTodos = () => {
+const useTodos = (params?: TodosParams) => {
   const {
-    data = [],
+    data,
     isLoading,
     isPending,
     isError,
     refetch,
-  } = useQuery<ToDoType[]>({
-    queryKey: ['todos'],
-    queryFn: getTodos,
+  } = useQuery<TodosResponse>({
+    queryKey: ['todos', params],
+    queryFn: () => getTodos(params),
   });
 
   return {
-    todos: data,
+    todos: data?.todos ?? [],
+    pagesCount: data?.pagesCount ?? 0,
+    activePage: data?.activePage ?? FIRST_PAGE,
     isLoading,
     isError,
     isPending,
@@ -30,30 +27,3 @@ const useTodos = () => {
 };
 
 export default useTodos;
-
-// const useTodos = (): useTodosType => {
-//   const [todos, setNewTodos] = useState<ToDoType[]>([]);
-//   const [isLoading, setIsLoading] = useState(true);
-
-//   useEffect(() => {
-//     const getData = async () => {
-//       try {
-//         const data = await getTodos();
-
-//         setNewTodos(data as ToDoType[]);
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-
-//     getData();
-//   }, []);
-
-//   const setTodos = useCallback((value: React.SetStateAction<ToDoType[]>) => {
-//     setNewTodos(value);
-//   }, []);
-
-//   return { todos, setTodos, isLoading };
-// };
-
-// export default useTodos;

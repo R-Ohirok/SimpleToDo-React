@@ -4,18 +4,17 @@ import cn from 'classnames';
 import { memo, useCallback, useState } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
-import Skeleton from '@mui/material/Skeleton';
 import { useDraggable } from '@dnd-kit/core';
-import { useDeleteTodo } from '../../../hooks/useDeleteToDo';
 
 interface Props {
   todo: ToDoType;
+  onDeleteToDo: (todoId: string) => void;
   onChangeStatus: (todoId: string) => void;
   onChangeTitle: (todoId: string, newTitle: string) => void;
 }
 
 const ToDoItem: React.FC<Props> = memo(
-  ({ todo, onChangeStatus, onChangeTitle }) => {
+  ({ todo, onDeleteToDo, onChangeStatus, onChangeTitle }) => {
     const { id, title, isCompleted } = todo;
 
     const [isEditing, setIsEditing] = useState(false);
@@ -24,11 +23,9 @@ const ToDoItem: React.FC<Props> = memo(
       id,
     });
 
-    const deleteMutation = useDeleteTodo();
-
-    const handleDelete = () => {
-      deleteMutation.mutate(todo.id);
-    };
+    const handleDeleteToDo = useCallback(() => {
+      onDeleteToDo(id);
+    }, []);
 
     const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
     const handleSelectTodo = useCallback(() => {
@@ -50,7 +47,7 @@ const ToDoItem: React.FC<Props> = memo(
         }
 
         if (!newTitle) {
-          handleDelete();
+          handleDeleteToDo();
           setIsEditing(false);
 
           return;
@@ -76,20 +73,6 @@ const ToDoItem: React.FC<Props> = memo(
           transition: 'transform 0.2s ease',
         }
       : undefined;
-
-    if (deleteMutation.isPending) {
-      return (
-        <li className={styles.todoItem}>
-          <Skeleton
-            variant="rectangular"
-            height={32}
-            width="100%"
-            sx={{ bgcolor: 'grey.500', borderRadius: '6px' }}
-            animation="wave"
-          />
-        </li>
-      );
-    }
 
     return (
       <li className={styles.todoItem} ref={setNodeRef} style={style}>
@@ -141,7 +124,7 @@ const ToDoItem: React.FC<Props> = memo(
                   styles.todoItemControlBtn,
                   styles.todoItemControlBtnDelete,
                 )}
-                onClick={handleDelete}
+                onClick={handleDeleteToDo}
               ></button>
             </div>
           </>

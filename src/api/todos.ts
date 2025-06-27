@@ -1,9 +1,9 @@
-import type { ToDoType } from '../types';
+import type { TodosParams, TodosResponse, ToDoType } from '../types';
 import api from './config';
 
-export async function getTodos(): Promise<ToDoType[]> {
+export async function getTodos(params?: TodosParams): Promise<TodosResponse> {
   try {
-    const response = await api.get<ToDoType[]>('/todos');
+    const response = await api.get<TodosResponse>('/todos', { params });
 
     return response.data;
   } catch (error) {

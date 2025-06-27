@@ -16,3 +16,15 @@ export type ThemeType = 'dark' | 'light';
 export type SearchParams = {
   [key: string]: string | null;
 };
+
+export type TodosParams = {
+  status?: FilterStatusType;
+  title?: string;
+  page?: string;
+}
+
+export type TodosResponse = {
+  todos: ToDoType[];
+  pagesCount: number;
+  activePage: number;
+};
