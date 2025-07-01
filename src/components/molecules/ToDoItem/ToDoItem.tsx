@@ -5,33 +5,40 @@ import { memo, useCallback, useState } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
 import { useDraggable } from '@dnd-kit/core';
+import { useUpdateTodo } from '../../../hooks/useUpdateToDo';
 
 interface Props {
   todo: ToDoType;
   onDeleteToDo: (todoId: string) => void;
-  onChangeStatus: (todoId: string) => void;
-  onChangeTitle: (todoId: string, newTitle: string) => void;
 }
 
 const ToDoItem: React.FC<Props> = memo(
-  ({ todo, onDeleteToDo, onChangeStatus, onChangeTitle }) => {
+  ({ todo, onDeleteToDo }) => {
     const { id, title, isCompleted } = todo;
 
     const [isEditing, setIsEditing] = useState(false);
-
+    const updateTodoMutation = useUpdateTodo();
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
       id,
     });
 
+    const handleUpdateToDo = useCallback(
+      (toDoToUpdate: ToDoType) => {
+        updateTodoMutation.mutate(toDoToUpdate);
+      },
+      [updateTodoMutation],
+    );
+
     const handleDeleteToDo = useCallback(() => {
       onDeleteToDo(id);
     }, []);
-
-    const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
+    const handleChangeStatus = useCallback(() => {
+      handleUpdateToDo({...todo, isCompleted: !isCompleted})
+    }, []);
     const handleSelectTodo = useCallback(() => {
       setIsEditing(true);
     }, [title]);
-    const handleEditTodo = useCallback(
+    const handleChangeTitle = useCallback(
       (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -53,7 +60,8 @@ const ToDoItem: React.FC<Props> = memo(
           return;
         }
 
-        onChangeTitle(id, newTitle);
+        handleUpdateToDo({...todo, title: newTitle});
+
         setIsEditing(false);
       },
       [],
@@ -86,9 +94,9 @@ const ToDoItem: React.FC<Props> = memo(
 
         {isEditing ? (
           <form
-            onBlur={handleEditTodo}
-            onSubmit={handleEditTodo}
-            onKeyUp={handleKeyDown}
+            onBlur={handleChangeTitle}
+            onSubmit={handleChangeTitle}
+            onKeyDown={handleKeyDown}
           >
             <input
               name="todoItemInput"

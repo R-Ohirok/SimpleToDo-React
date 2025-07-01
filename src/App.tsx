@@ -40,30 +40,6 @@ function App() {
     [deleteTodoMutation, todos],
   );
 
-  const handleChangeStatus = useCallback(
-    () => {},
-    //   (todoId: string) => {
-    //   setTodos(currTodos =>
-    //     currTodos.map(todo =>
-    //       todo.id === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo,
-    //     ),
-    //   );
-    // },
-    [],
-  );
-
-  const handleChangeTitle = useCallback(
-    // (todoId: string, newTodoTitle: string) => {
-    //   setTodos(currTodos =>
-    //     currTodos.map(todo =>
-    //       todo.id === todoId ? { ...todo, title: newTodoTitle } : todo,
-    //     ),
-    //   );
-    // },
-    () => {},
-    [],
-  );
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) {
@@ -95,8 +71,6 @@ function App() {
         <DndContext onDragEnd={handleDragEnd}>
           <ToDoList
             todos={todos}
-            onChangeStatus={handleChangeStatus}
-            onChangeTitle={handleChangeTitle}
             onDeleteToDo={handleDeleteToDo}
           />
         </DndContext>

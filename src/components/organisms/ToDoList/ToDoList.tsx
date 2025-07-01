@@ -9,12 +9,10 @@ import { useDroppable } from '@dnd-kit/core';
 interface Props {
   todos: ToDoType[];
   onDeleteToDo: (todoId: string) => void;
-  onChangeStatus: (todoId: string) => void;
-  onChangeTitle: (todoId: string, newTitle: string) => void;
 }
 
 const ToDoList: React.FC<Props> = memo(
-  ({ todos, onDeleteToDo, onChangeStatus, onChangeTitle }) => {
+  ({ todos, onDeleteToDo }) => {
     const { setNodeRef } = useDroppable({ id: 'todo-list' });
     
     return (
@@ -28,8 +26,6 @@ const ToDoList: React.FC<Props> = memo(
                 key={todo.id}
                 todo={todo}
                 onDeleteToDo={onDeleteToDo}
-                onChangeStatus={onChangeStatus}
-                onChangeTitle={onChangeTitle}
               />
             ))}
           </ul>
