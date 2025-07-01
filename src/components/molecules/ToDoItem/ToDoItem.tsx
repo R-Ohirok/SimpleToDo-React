@@ -6,6 +6,7 @@ import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
 import { useDraggable } from '@dnd-kit/core';
 import { useUpdateTodo } from '../../../hooks/useUpdateToDo';
+import { Skeleton } from '@mui/material';
 
 interface Props {
   todo: ToDoType;
@@ -81,6 +82,21 @@ const ToDoItem: React.FC<Props> = memo(
           transition: 'transform 0.2s ease',
         }
       : undefined;
+
+        if(updateTodoMutation.isPending) {
+      return (
+        <li className={styles.todoItem}>
+          <Skeleton
+            variant="rectangular"
+            height={32}
+            width="100%"
+            sx={{ bgcolor: 'grey.500', borderRadius: '6px' }}
+            animation="wave"
+          />
+        </li>
+      );
+    }
+
 
     return (
       <li className={styles.todoItem} ref={setNodeRef} style={style}>
