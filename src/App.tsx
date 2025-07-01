@@ -16,12 +16,12 @@ function App() {
   const [searchParams] = useSearchParams();
   const status = (searchParams.get('status') as FilterStatusType) || undefined;
   const title = searchParams.get('title') || undefined;
-  const page = searchParams.get('page') || FIRST_PAGE.toString();
+  const activePage = searchParams.get('page') || FIRST_PAGE.toString();
 
-  const { todos, activePage, pagesCount, isLoading } = useTodos({
+  const { todos, pagesCount, isLoading } = useTodos({
     status,
     title,
-    page: page,
+    page: activePage,
   });
   const addTodoMutation = useAddTodo();
   const deleteTodoMutation = useDeleteTodo();
@@ -78,7 +78,7 @@ function App() {
 
       <Footer
         pagesCount={pagesCount}
-        activePage={activePage}
+        activePage={+activePage}
         onCreateToDo={handleAddTodo}
       />
 
