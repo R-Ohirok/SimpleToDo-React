@@ -34,7 +34,7 @@ const ToDoItem: React.FC<Props> = memo(
     }, []);
     const handleChangeStatus = useCallback(() => {
       handleUpdateToDo({...todo, isCompleted: !isCompleted})
-    }, []);
+    }, [isCompleted]);
     const handleSelectTodo = useCallback(() => {
       setIsEditing(true);
     }, [title]);
@@ -64,7 +64,7 @@ const ToDoItem: React.FC<Props> = memo(
 
         setIsEditing(false);
       },
-      [],
+      [title],
     );
     const handleKeyDown = useCallback(
       (event: React.KeyboardEvent<HTMLFormElement>) => {
