@@ -4,34 +4,42 @@ import cn from 'classnames';
 import { memo, useCallback, useState } from 'react';
 import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
-import Skeleton from '@mui/material/Skeleton';
-import useTodos from '../../../hooks/useTodos';
 import { useDraggable } from '@dnd-kit/core';
+import { useUpdateTodo } from '../../../hooks/useUpdateToDo';
+import { Skeleton } from '@mui/material';
 
 interface Props {
   todo: ToDoType;
-  onDelete: (todoId: string) => void;
-  onChangeStatus: (todoId: string) => void;
-  onChangeTitle: (todoId: string, newTitle: string) => void;
+  onDeleteToDo: (todoId: string) => void;
 }
 
 const ToDoItem: React.FC<Props> = memo(
-  ({ todo, onDelete, onChangeStatus, onChangeTitle }) => {
+  ({ todo, onDeleteToDo }) => {
     const { id, title, isCompleted } = todo;
 
     const [isEditing, setIsEditing] = useState(false);
-    const { isLoading } = useTodos();
-
+    const updateTodoMutation = useUpdateTodo();
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
       id,
     });
 
-    const handleDelete = useCallback(() => onDelete(todo.id), []);
-    const handleChangeStatus = useCallback(() => onChangeStatus(todo.id), []);
+    const handleUpdateToDo = useCallback(
+      (toDoToUpdate: ToDoType) => {
+        updateTodoMutation.mutate(toDoToUpdate);
+      },
+      [updateTodoMutation],
+    );
+
+    const handleDeleteToDo = useCallback(() => {
+      onDeleteToDo(id);
+    }, []);
+    const handleChangeStatus = useCallback(() => {
+      handleUpdateToDo({...todo, isCompleted: !isCompleted})
+    }, [isCompleted]);
     const handleSelectTodo = useCallback(() => {
       setIsEditing(true);
     }, [title]);
-    const handleEditTodo = useCallback(
+    const handleChangeTitle = useCallback(
       (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -47,16 +55,17 @@ const ToDoItem: React.FC<Props> = memo(
         }
 
         if (!newTitle) {
-          handleDelete();
+          handleDeleteToDo();
           setIsEditing(false);
 
           return;
         }
 
-        onChangeTitle(id, newTitle);
+        handleUpdateToDo({...todo, title: newTitle});
+
         setIsEditing(false);
       },
-      [],
+      [title],
     );
     const handleKeyDown = useCallback(
       (event: React.KeyboardEvent<HTMLFormElement>) => {
@@ -74,7 +83,7 @@ const ToDoItem: React.FC<Props> = memo(
         }
       : undefined;
 
-    if (isLoading) {
+        if(updateTodoMutation.isPending) {
       return (
         <li className={styles.todoItem}>
           <Skeleton
@@ -88,6 +97,7 @@ const ToDoItem: React.FC<Props> = memo(
       );
     }
 
+
     return (
       <li className={styles.todoItem} ref={setNodeRef} style={style}>
         <input
@@ -100,9 +110,9 @@ const ToDoItem: React.FC<Props> = memo(
 
         {isEditing ? (
           <form
-            onBlur={handleEditTodo}
-            onSubmit={handleEditTodo}
-            onKeyUp={handleKeyDown}
+            onBlur={handleChangeTitle}
+            onSubmit={handleChangeTitle}
+            onKeyDown={handleKeyDown}
           >
             <input
               name="todoItemInput"
@@ -138,7 +148,7 @@ const ToDoItem: React.FC<Props> = memo(
                   styles.todoItemControlBtn,
                   styles.todoItemControlBtnDelete,
                 )}
-                onClick={handleDelete}
+                onClick={handleDeleteToDo}
               ></button>
             </div>
           </>

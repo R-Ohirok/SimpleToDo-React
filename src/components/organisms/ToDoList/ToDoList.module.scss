@@ -2,4 +2,11 @@
   width: 80dvw;
   max-width: 520px;
   margin-inline: auto;
+
+  &Skeleton {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-block: 16px;
+  }
 }

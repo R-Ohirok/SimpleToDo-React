@@ -5,18 +5,17 @@ import Pagination from '../../molecules/Pagination/Pagination';
 import CreateTodoModal from '../../molecules/CreateTodoModal/CreateTodoModal';
 import type { ToDoType } from '../../../types';
 import { useSearchParams } from 'react-router-dom';
-import { FIRST_PAGE } from '../../../constants/constants';
 import { getNewSearchParams } from '../../../utils/getNewSearchParams';
 
 interface Props {
   pagesCount: number;
+  activePage: number;
   onCreateToDo: (newTodo: ToDoType) => void;
 }
 
-const Footer: React.FC<Props> = memo(({ pagesCount, onCreateToDo }) => {
+const Footer: React.FC<Props> = memo(({ pagesCount, activePage, onCreateToDo }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const activePage = Number(searchParams.get('page')) || FIRST_PAGE;
   const isCreationModalVisible = searchParams.has('creationModal');
 
   const handlePageChange = useCallback(
