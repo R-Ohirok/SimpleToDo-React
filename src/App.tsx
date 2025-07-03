@@ -16,7 +16,7 @@ import { useTodoSocket } from './hooks/useTodoSocket';
 function App() {
   const [searchParams] = useSearchParams();
   const status = (searchParams.get('status') as FilterStatusType);
-  const title = searchParams.get('title') || undefined;
+  const title = searchParams.get('title') || '';
   const activePage = searchParams.get('page') || FIRST_PAGE.toString();
 
   const PARAMS = useMemo (() => {

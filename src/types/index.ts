@@ -18,10 +18,10 @@ export type SearchParams = {
 };
 
 export type TodosParams = {
-  status?: FilterStatusType;
-  title?: string;
-  limit?: number;
-  offset?: number;
+  status: FilterStatusType;
+  title: string;
+  limit: number;
+  offset: number;
 }
 
 export type TodosResponse = {
