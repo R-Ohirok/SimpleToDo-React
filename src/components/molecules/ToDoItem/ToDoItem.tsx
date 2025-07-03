@@ -17,18 +17,18 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
   const { id, title, isCompleted } = todo;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoaging, setIsLoaging] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
   });
 
   const handleUpdateToDo = useCallback(
     async (toDoToUpdate: ToDoType) => {
-      setIsLoaging(true);
+      setIsPending(true);
 
       await updateTodo(toDoToUpdate);
       
-      setIsLoaging(false);
+      setIsPending(false);
     },
     [title, isCompleted],
   );
@@ -84,7 +84,7 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
       }
     : undefined;
 
-  if (isLoaging) {
+  if (isPending) {
     return (
       <li className={styles.todoItem}>
         <Skeleton
