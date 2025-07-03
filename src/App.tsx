@@ -2,7 +2,7 @@ import './index.scss';
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import type { FilterStatusType, ToDoType } from './types';
 import { useSearchParams } from 'react-router-dom';
@@ -19,20 +19,19 @@ function App() {
   const title = searchParams.get('title') || undefined;
   const activePage = searchParams.get('page') || FIRST_PAGE.toString();
 
-  const { todos, pagesCount, isLoading } = useTodos({
-    status,
-    title,
-    limit: ITEMS_PER_PAGE,
-    offset: (+activePage - 1) * ITEMS_PER_PAGE
-  });
+  const PARAMS = useMemo (() => {
+    return {
+      status,
+      title,
+      limit: ITEMS_PER_PAGE,
+      offset: (+activePage - 1) * ITEMS_PER_PAGE
+    };
+  }, [status, title, activePage]);
 
-  useTodoSocket({
-    status,
-    title,
-    limit: ITEMS_PER_PAGE,
-    offset: (+activePage - 1) * ITEMS_PER_PAGE,
-  });
-  
+  const { todos, pagesCount, isLoading } = useTodos(PARAMS);
+
+  useTodoSocket(PARAMS);
+
   const addTodoMutation = useAddTodo();
   const deleteTodoMutation = useDeleteTodo();
 
