@@ -11,6 +11,7 @@ import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import useAddTodo from './hooks/useAddToDo';
 import { useDeleteTodo } from './hooks/useDeleteToDo';
 import { CircularProgress } from '@mui/material';
+import { useTodoSocket } from './hooks/useTodoSocket';
 
 function App() {
   const [searchParams] = useSearchParams();
@@ -24,6 +25,14 @@ function App() {
     limit: ITEMS_PER_PAGE,
     offset: (+activePage - 1) * ITEMS_PER_PAGE
   });
+
+  useTodoSocket({
+    status,
+    title,
+    limit: ITEMS_PER_PAGE,
+    offset: (+activePage - 1) * ITEMS_PER_PAGE,
+  });
+  
   const addTodoMutation = useAddTodo();
   const deleteTodoMutation = useDeleteTodo();
 
