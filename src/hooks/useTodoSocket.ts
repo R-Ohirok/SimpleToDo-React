@@ -51,7 +51,6 @@ export const useTodoSocket = () => {
     };
 
     const handleAdd = (newTodo: ToDoType) => {
-      console.log('newTodo');
       queryClient.setQueryData(['todos', PARAMS], (oldData: any) => {
         if (!oldData) return oldData;
 
