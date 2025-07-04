@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FilterStatusType, TodosParams, ToDoType } from '../types';
@@ -9,87 +9,68 @@ import { snakeToCamel } from '../utils/snakeToCamel';
 
 export const useTodoSocket = () => {
   const [searchParams] = useSearchParams();
-  
-  const queryClient = useQueryClient();
-  
-  useEffect(() => {
-    const socket = io(BASE_URL);
 
-    const status = searchParams.get('status') as FilterStatusType;
-    const title = searchParams.get('title') || '';
-    const activePage = Number(searchParams.get('page') || FIRST_PAGE);
-  
-    const PARAMS: TodosParams = {
-      status,
-      title,
-      limit: ITEMS_PER_PAGE,
-      offset: (activePage - 1) * ITEMS_PER_PAGE,
+  const [socket, setSocket] = useState<any>();
+
+  const status = searchParams.get('status') as FilterStatusType;
+  const title = searchParams.get('title') || '';
+  const activePage = Number(searchParams.get('page') || FIRST_PAGE);
+
+  const PARAMS: TodosParams = {
+    status,
+    title,
+    limit: ITEMS_PER_PAGE,
+    offset: (activePage - 1) * ITEMS_PER_PAGE,
+  };
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    setSocket(io(BASE_URL));
+
+    return () => {
+      socket.close();
     };
+  }, []);
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
 
     const handleUpdate = (updatedTodo: ToDoType) => {
-      queryClient.setQueryData(['todos', PARAMS], (oldData: any) => {
-        if (!oldData) return oldData;
+      const isMatch = isMatchParams(updatedTodo, PARAMS);
 
-        const isMatch = isMatchParams(updatedTodo, PARAMS);
-
-        if (!isMatch) {
-          return {
-            ...oldData,
-            todos: oldData.todos.filter(
-              (todo: ToDoType) => todo.id !== updatedTodo.id,
-            ),
-          };
-        }
-
-        return {
-          ...oldData,
-          todos: oldData.todos.map((todo: ToDoType) =>
-            todo.id === updatedTodo.id ? updatedTodo : todo,
-          ),
-        };
-      });
+      isMatch
+        ? queryClient.setQueryData(['todos', PARAMS], (oldData: any) => {
+            return {
+              ...oldData,
+              todos: oldData.todos.map((todo: ToDoType) =>
+                todo.id === updatedTodo.id ? updatedTodo : todo,
+              ),
+            };
+          })
+        : queryClient.invalidateQueries({ queryKey: ['todos'] });
     };
 
-    const handleAdd = (newTodo: ToDoType) => {
-      queryClient.setQueryData(['todos', PARAMS], (oldData: any) => {
-        if (!oldData) return oldData;
-
-        const isMatch = isMatchParams(newTodo, PARAMS);
-
-        if (isMatch) {
-          return {
-            ...oldData,
-            todos: [...oldData.todos, newTodo],
-          };
-        }
-
-        return oldData;
-      });
+    const handleAdd = () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
     };
 
-    const handleDelete = (toDoId: string) => {
-      queryClient.setQueryData(['todos', PARAMS], (oldData: any) => {
-        if (!oldData) return oldData;
-
-        return {
-          ...oldData,
-          todos: oldData.todos.filter((todo: ToDoType) => todo.id !== toDoId),
-        };
-      });
+    const handleDelete = () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
     };
 
     const updateHandler = snakeToCamel(handleUpdate);
-    const addHandler = snakeToCamel(handleAdd);
 
     socket.on('todo-updated', updateHandler);
-    socket.on('todo-created', addHandler);
+    socket.on('todo-created', handleAdd);
     socket.on('todo-deleted', handleDelete);
 
     return () => {
       socket.off('todo-updated', updateHandler);
-      socket.off('todo-created', addHandler);
+      socket.off('todo-created', handleAdd);
       socket.off('todo-deleted', handleDelete);
-      socket.close();
     };
-  }, [searchParams, queryClient]);
+  }, [socket, queryClient, searchParams]);
 };
