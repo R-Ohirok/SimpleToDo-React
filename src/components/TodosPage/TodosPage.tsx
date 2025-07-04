@@ -82,7 +82,7 @@ const TodosPage = () => {
           marginInline: 'auto',
         }}
       >
-        <Link to="/register">Register</Link>
+        <Link to="/signup">SignUp</Link>
       </div>
 
       <Header />

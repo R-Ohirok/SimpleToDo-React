@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import styles from './RegisterPage.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/auth';
+import useIsAutorized from '../../state/hooks/useIsAutorized';
 
 const RegisterPage = () => {
+  const [isAutorized, setIsAutorized] = useIsAutorized();
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -21,6 +23,7 @@ const RegisterPage = () => {
 
     try {
       await registerUser(params);
+      setIsAutorized();
       setMessage('Registered successfully!');
     } catch (err) {
       setMessage(`${err}`);
@@ -30,6 +33,14 @@ const RegisterPage = () => {
   const goBack = () => {
     navigate(-1);
   };
+
+  if (isAutorized) {
+    return (
+      <div>Already autorized
+        <Link to='/'>Home</Link>
+      </div>
+    );
+  }
 
   return (
     <main className={styles.register}>
