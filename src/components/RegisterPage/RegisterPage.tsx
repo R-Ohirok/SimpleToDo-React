@@ -23,7 +23,7 @@ const RegisterPage = () => {
       await registerUser(params);
       setMessage('Registered successfully!');
     } catch (err) {
-      setMessage(`${err || 'Invalid data'}`);
+      setMessage(`${err}`);
     }
   };
 
