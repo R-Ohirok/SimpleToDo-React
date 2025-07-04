@@ -11,28 +11,22 @@ interface Props {
   onDeleteToDo: (todoId: string) => void;
 }
 
-const ToDoList: React.FC<Props> = memo(
-  ({ todos, onDeleteToDo }) => {
-    const { setNodeRef } = useDroppable({ id: 'todo-list' });
-    
-    return (
-      <>
-        {todos.length === 0 ? (
-          <EmptyList />
-        ) : (
-          <ul className={styles.todoList} ref={setNodeRef}>
-            {todos.map(todo => (
-              <ToDoItem
-                key={todo.id}
-                todo={todo}
-                onDeleteToDo={onDeleteToDo}
-              />
-            ))}
-          </ul>
-        )}
-      </>
-    );
-  },
-);
+const ToDoList: React.FC<Props> = memo(({ todos, onDeleteToDo }) => {
+  const { setNodeRef } = useDroppable({ id: 'todo-list' });
+
+  return (
+    <>
+      {todos.length === 0 ? (
+        <EmptyList />
+      ) : (
+        <ul className={styles.todoList} ref={setNodeRef}>
+          {todos.map(todo => (
+            <ToDoItem key={todo.id} todo={todo} onDeleteToDo={onDeleteToDo} />
+          ))}
+        </ul>
+      )}
+    </>
+  );
+});
 
 export default ToDoList;

@@ -33,9 +33,9 @@ function App() {
   const handleAddTodo = useCallback(
     async (newTodo: ToDoType) => {
       setIsPending(true);
-      
+
       await addTodo(newTodo);
-            
+
       setIsPending(false);
     },
     [todos],
@@ -44,9 +44,9 @@ function App() {
   const handleDeleteToDo = useCallback(
     async (todoId: string) => {
       setIsPending(true);
-      
+
       await deleteTodo(todoId);
-            
+
       setIsPending(false);
     },
     [todos],

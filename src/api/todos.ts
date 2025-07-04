@@ -38,8 +38,11 @@ export async function updateTodo(todoToUpdate: ToDoType): Promise<ToDoType> {
   const { id, title, isCompleted } = todoToUpdate;
 
   try {
-    const response = await api.patch<ToDoType>(`/todos/${id}`, { title, isCompleted });
-    
+    const response = await api.patch<ToDoType>(`/todos/${id}`, {
+      title,
+      isCompleted,
+    });
+
     return response.data;
   } catch (error) {
     console.error('Failed to update ToDo: ', error);

@@ -27,7 +27,7 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
       setIsPending(true);
 
       await updateTodo(toDoToUpdate);
-      
+
       setIsPending(false);
     },
     [title, isCompleted],

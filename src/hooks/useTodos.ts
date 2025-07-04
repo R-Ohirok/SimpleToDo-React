@@ -4,16 +4,11 @@ import type { TodosParams, TodosResponse } from '../types';
 import { FIRST_PAGE } from '../constants/constants';
 
 const useTodos = (params?: TodosParams) => {
-  const {
-    data,
-    isLoading,
-    isPending,
-    isError,
-    refetch,
-  } = useQuery<TodosResponse>({
-    queryKey: ['todos', params],
-    queryFn: () => getTodos(params),
-  });
+  const { data, isLoading, isPending, isError, refetch } =
+    useQuery<TodosResponse>({
+      queryKey: ['todos', params],
+      queryFn: () => getTodos(params),
+    });
 
   return {
     todos: data?.todos ?? [],
