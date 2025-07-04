@@ -29,3 +29,8 @@ export type TodosResponse = {
   pagesCount: number;
   activePage: number;
 };
+
+export type RegisterParams = {
+  email: string;
+  password: string;
+}
