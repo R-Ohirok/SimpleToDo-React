@@ -21,7 +21,8 @@
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "sass": "^1.89.2",
-    "snakecase-keys": "^8.0.1"
+    "snakecase-keys": "^8.0.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

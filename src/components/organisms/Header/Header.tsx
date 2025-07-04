@@ -21,53 +21,62 @@ const Header: React.FC = memo(() => {
     return { id: useId(), label: status };
   });
 
-  const handleFilterStatusChange = useCallback((newStatus: FilterStatusType) => {
-    if (newStatus === 'All') {
-      const newParamsString = getNewSearchParams(searchParams, {
-        status: null,
-        page: null,
-      });
+  const handleFilterStatusChange = useCallback(
+    (newStatus: FilterStatusType) => {
+      if (newStatus === 'All') {
+        const newParamsString = getNewSearchParams(searchParams, {
+          status: null,
+          page: null,
+        });
 
-      setSearchParams(newParamsString);
-    } else {
-      const newParamsString = getNewSearchParams(searchParams, {
-        status: newStatus,
-        page: null,
-      });
+        setSearchParams(newParamsString);
+      } else {
+        const newParamsString = getNewSearchParams(searchParams, {
+          status: newStatus,
+          page: null,
+        });
 
-      setSearchParams(newParamsString);
-    }
-  }, [searchParams]);
+        setSearchParams(newParamsString);
+      }
+    },
+    [searchParams],
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
-  const handleCancel = useCallback((event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleCancel = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
 
-    const newParamsString = getNewSearchParams(searchParams, {
-      title: null,
-      page: null,
-    });
+      const newParamsString = getNewSearchParams(searchParams, {
+        title: null,
+        page: null,
+      });
 
-    setSearchParams(newParamsString);
+      setSearchParams(newParamsString);
 
-    setSearchValue('');
-  }, [searchParams]);
+      setSearchValue('');
+    },
+    [searchParams],
+  );
 
-  const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
 
-    const value = normalizeValue(searchValue);
-    const newParamsString = getNewSearchParams(searchParams, {
-      title: value || null,
-      page: null,
-    });
+      const value = normalizeValue(searchValue);
+      const newParamsString = getNewSearchParams(searchParams, {
+        title: value || null,
+        page: null,
+      });
 
-    setSearchParams(newParamsString);
-    setSearchValue(value);
-  },[searchParams, searchValue]);
+      setSearchParams(newParamsString);
+      setSearchValue(value);
+    },
+    [searchParams, searchValue],
+  );
 
   return (
     <header className={styles.header}>

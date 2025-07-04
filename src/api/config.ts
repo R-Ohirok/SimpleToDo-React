@@ -1,9 +1,10 @@
 import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
+import { BASE_URL } from '../constants/constants';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: BASE_URL,
 });
 
 api.defaults.timeout = 2500;

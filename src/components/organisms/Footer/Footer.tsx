@@ -13,62 +13,67 @@ interface Props {
   onCreateToDo: (newTodo: ToDoType) => void;
 }
 
-const Footer: React.FC<Props> = memo(({ pagesCount, activePage, onCreateToDo }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+const Footer: React.FC<Props> = memo(
+  ({ pagesCount, activePage, onCreateToDo }) => {
+    const [searchParams, setSearchParams] = useSearchParams();
 
-  const isCreationModalVisible = searchParams.has('creationModal');
+    const isCreationModalVisible = searchParams.has('creationModal');
 
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      const newParamsString = getNewSearchParams(searchParams, {
-        page: newPage.toString(),
-      });
+    const handlePageChange = useCallback(
+      (newPage: number) => {
+        const newParamsString = getNewSearchParams(searchParams, {
+          page: newPage.toString(),
+        });
 
-      setSearchParams(newParamsString);
-    },
-    [searchParams],
-  );
+        setSearchParams(newParamsString);
+      },
+      [searchParams],
+    );
 
-  const handleChangeModalVisibility = useCallback(() => {
-    if (isCreationModalVisible) {
-      const newParamsString = getNewSearchParams(searchParams, {
-        creationModal: null,
-      });
+    const handleChangeModalVisibility = useCallback(() => {
+      if (isCreationModalVisible) {
+        const newParamsString = getNewSearchParams(searchParams, {
+          creationModal: null,
+        });
 
-      setSearchParams(newParamsString);
-    } else {
-      const newParamsString = getNewSearchParams(searchParams, {
-        creationModal: 'true',
-      });
+        setSearchParams(newParamsString);
+      } else {
+        const newParamsString = getNewSearchParams(searchParams, {
+          creationModal: 'true',
+        });
 
-      setSearchParams(newParamsString);
-    }
-  }, [searchParams]);
+        setSearchParams(newParamsString);
+      }
+    }, [searchParams]);
 
-  return (
-    <>
-      <div className={styles.footer}>
-        <button className={styles.addBtn} onClick={handleChangeModalVisibility}>
-          ＋
-        </button>
+    return (
+      <>
+        <div className={styles.footer}>
+          <button
+            className={styles.addBtn}
+            onClick={handleChangeModalVisibility}
+          >
+            ＋
+          </button>
 
-        {pagesCount !== 0 && (
-          <Pagination
-            pagesCount={pagesCount}
-            activePage={activePage}
-            onChangePage={handlePageChange}
+          {pagesCount !== 0 && (
+            <Pagination
+              pagesCount={pagesCount}
+              activePage={activePage}
+              onChangePage={handlePageChange}
+            />
+          )}
+        </div>
+
+        {isCreationModalVisible && (
+          <CreateTodoModal
+            onClose={handleChangeModalVisibility}
+            onCreateToDo={onCreateToDo}
           />
         )}
-      </div>
-
-      {isCreationModalVisible && (
-        <CreateTodoModal
-          onClose={handleChangeModalVisibility}
-          onCreateToDo={onCreateToDo}
-        />
-      )}
-    </>
-  );
-});
+      </>
+    );
+  },
+);
 
 export default Footer;

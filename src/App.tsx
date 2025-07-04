@@ -2,43 +2,54 @@ import './index.scss';
 import Footer from './components/organisms/Footer/Footer';
 import Header from './components/organisms/Header/Header';
 import ToDoList from './components/organisms/ToDoList/ToDoList';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from './constants/constants';
 import type { FilterStatusType, ToDoType } from './types';
 import { useSearchParams } from 'react-router-dom';
 import useTodos from './hooks/useTodos';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
-import useAddTodo from './hooks/useAddToDo';
-import { useDeleteTodo } from './hooks/useDeleteToDo';
 import { CircularProgress } from '@mui/material';
+import { useTodoSocket } from './hooks/useTodoSocket';
+import { addTodo, deleteTodo } from './api/todos';
 
 function App() {
   const [searchParams] = useSearchParams();
-  const status = (searchParams.get('status') as FilterStatusType);
-  const title = searchParams.get('title') || undefined;
-  const activePage = searchParams.get('page') || FIRST_PAGE.toString();
+  const [isPending, setIsPending] = useState(false);
+  const status = searchParams.get('status') as FilterStatusType;
+  const title = searchParams.get('title') || '';
+  const activePage = Number(searchParams.get('page') || FIRST_PAGE);
 
-  const { todos, pagesCount, isLoading } = useTodos({
+  const PARAMS = {
     status,
     title,
     limit: ITEMS_PER_PAGE,
-    offset: (+activePage - 1) * ITEMS_PER_PAGE
-  });
-  const addTodoMutation = useAddTodo();
-  const deleteTodoMutation = useDeleteTodo();
+    offset: (activePage - 1) * ITEMS_PER_PAGE,
+  };
+
+  const { todos, pagesCount, isLoading } = useTodos(PARAMS);
+
+  useTodoSocket();
 
   const handleAddTodo = useCallback(
-    (newTodo: ToDoType) => {
-      addTodoMutation.mutate(newTodo);
+    async (newTodo: ToDoType) => {
+      setIsPending(true);
+
+      await addTodo(newTodo);
+
+      setIsPending(false);
     },
-    [addTodoMutation],
+    [todos],
   );
 
   const handleDeleteToDo = useCallback(
-    (todoId: string) => {
-      deleteTodoMutation.mutate(todoId);
+    async (todoId: string) => {
+      setIsPending(true);
+
+      await deleteTodo(todoId);
+
+      setIsPending(false);
     },
-    [deleteTodoMutation, todos],
+    [todos],
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -70,20 +81,17 @@ function App() {
 
       <main>
         <DndContext onDragEnd={handleDragEnd}>
-          <ToDoList
-            todos={todos}
-            onDeleteToDo={handleDeleteToDo}
-          />
+          <ToDoList todos={todos} onDeleteToDo={handleDeleteToDo} />
         </DndContext>
       </main>
 
       <Footer
         pagesCount={pagesCount}
-        activePage={+activePage}
+        activePage={activePage}
         onCreateToDo={handleAddTodo}
       />
 
-      {(addTodoMutation.isPending || deleteTodoMutation.isPending) && (
+      {isPending && (
         <div
           style={{
             position: 'fixed',

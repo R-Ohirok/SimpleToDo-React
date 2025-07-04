@@ -9,3 +9,5 @@ export const FILTER_STATUSES: FilterStatusType[] = [
 export const FIRST_PAGE = 1;
 
 export const ITEMS_PER_PAGE = 5;
+
+export const BASE_URL = 'http://localhost:3000';
