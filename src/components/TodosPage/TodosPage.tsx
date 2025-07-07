@@ -9,7 +9,7 @@ import type { FilterStatusType, ToDoType } from '../../types';
 import { useTodoSocket } from '../../hooks/useTodoSocket';
 import useTodos from '../../hooks/useTodos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from '../../constants/constants';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 const TodosPage = () => {
   const [searchParams] = useSearchParams();
@@ -76,16 +76,6 @@ const TodosPage = () => {
 
   return (
     <>
-      <div 
-        style={{
-          marginTop: '20px',
-          marginInline: 'auto',
-        }}
-      >
-        <Link to="/signup">SignUp</Link>
-        <Link to="/login">LogIn</Link>
-      </div>
-
       <Header />
 
       <main>

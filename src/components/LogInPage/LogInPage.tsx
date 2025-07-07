@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './LogInPage.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { verifyEmail, logIn } from '../../api/auth';
 import useIsAuthorized from '../../state/hooks/useIsAuthorized';
 import { useMutation } from '@tanstack/react-query';
 import AuthForm from './AuthForm/AuthForm';
 
 const LogInPage = () => {
-  const [isAuthorized, setIsAuthorized] = useIsAuthorized();
+  const isAuthorized = useIsAuthorized();
   const [currEmail, setCurrEmail] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+      if (isAuthorized) {
+        navigate('/', { replace: true });
+      }
+    }, []);
 
   const verifyEmailMutation = useMutation({
     mutationFn: verifyEmail,
@@ -21,7 +27,6 @@ const LogInPage = () => {
   const logInMutation = useMutation({
     mutationFn: logIn,
     onSuccess: () => {
-      setIsAuthorized();
       navigate('/', { replace: true });
     },
   });
@@ -60,15 +65,6 @@ const LogInPage = () => {
     verifyEmailMutation.reset();
   };
 
-  if (isAuthorized) {
-    return (
-      <div>
-        Already authorized
-        <Link to="/">Home</Link>
-      </div>
-    );
-  }
-
   return (
     <main className={styles.login}>
       {!currEmail ? (
@@ -84,7 +80,6 @@ const LogInPage = () => {
           onBack={goBack}
           submitBtnText="Continue"
         >
-          <Link to="/signup">SignUp</Link>
         </AuthForm>
       ) : (
         <AuthForm
