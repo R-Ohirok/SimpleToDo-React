@@ -34,3 +34,8 @@ export type RegisterParams = {
   email: string;
   password: string;
 }
+
+export type LogInParams = {
+  email: string;
+  password: string;
+}
