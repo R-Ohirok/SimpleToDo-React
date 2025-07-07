@@ -1,9 +1,9 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import App from './App';
 import TodosPage from './components/TodosPage/TodosPage';
-import RegisterPage from './components/SignUpPage/SignUpPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import LogInPage from './components/LogInPage/LogInPage';
+import SignUpPage from './components/SignUpPage/SignUpPage';
 
 
 const Root = () => (
@@ -14,7 +14,7 @@ const Root = () => (
           <Route index element={<TodosPage />} />
         </Route>
 
-        <Route path="signup" element={<RegisterPage />}/>
+        <Route path="signup" element={<SignUpPage />}/>
         <Route path="login" element={<LogInPage />}/>
       </Route>
     </Routes>
