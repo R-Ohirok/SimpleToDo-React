@@ -16,11 +16,11 @@ export async function registerUser(params: RegisterParams): Promise<string> {
   }
 }
 
-export async function findUser(email: string): Promise<string> {
+export async function verifyEmail(email: string): Promise<string> {
   try {
-    const response = await api.post('/auth/finduser', { email });
+    await api.post('/auth/verifyemail', { email });
 
-    return response.data;
+    return email;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       const message = error.response.data?.message || 'Unknown error';

@@ -1,30 +1,38 @@
 import { useState } from 'react';
 import styles from './LogInPage.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import { findUser, logIn } from '../../api/auth';
+import { verifyEmail, logIn } from '../../api/auth';
 import useIsAuthorized from '../../state/hooks/useIsAuthorized';
+import { useMutation } from '@tanstack/react-query';
+import AuthForm from './AuthForm/AuthForm';
 
 const LogInPage = () => {
   const [isAuthorized, setIsAuthorized] = useIsAuthorized();
-  const [message, setMessage] = useState('');
-  const [isEmailExist, setIsEmailExist] = useState(false);
   const [currEmail, setCurrEmail] = useState('');
   const navigate = useNavigate();
+
+  const verifyEmailMutation = useMutation({
+    mutationFn: verifyEmail,
+    onSuccess: (email: string) => {
+      setCurrEmail(email);
+    },
+  });
+
+  const logInMutation = useMutation({
+    mutationFn: logIn,
+    onSuccess: () => {
+      setIsAuthorized();
+      navigate('/', { replace: true });
+    },
+  });
 
   const handleCheckEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setMessage('');
     const formData = new FormData(event.currentTarget);
     const email = formData.get('emailInput') as string;
 
-    try {
-      await findUser(email);
-      setIsEmailExist(true);
-      setCurrEmail(email);
-    } catch (err) {
-      setMessage(`${err}`);
-    }
+    verifyEmailMutation.mutate(email);
   };
 
   const handleCheckPassword = async (
@@ -40,12 +48,7 @@ const LogInPage = () => {
       password,
     };
 
-    try {
-      await logIn(params);
-      setIsAuthorized();
-    } catch (err) {
-      setMessage(`${err}`);
-    }
+    logInMutation.mutate(params);
   };
 
   const goBack = () => {
@@ -53,9 +56,8 @@ const LogInPage = () => {
   };
 
   const handleBackToEmail = () => {
-    setIsEmailExist(false);
     setCurrEmail('');
-    setMessage('');
+    verifyEmailMutation.reset();
   };
 
   if (isAuthorized) {
@@ -69,74 +71,36 @@ const LogInPage = () => {
 
   return (
     <main className={styles.login}>
-      {!isEmailExist ? (
-        <form className={styles.loginForm} onSubmit={handleCheckEmail}>
-        <div>
-          <h2 className={styles.loginTitle}>LogIn</h2>
-
-          <div className={styles.fields}>
-            <label className={styles.label}>
-              Email:
-              <input
-                className={styles.input}
-                name="emailInput"
-                type="email"
-                placeholder="Enter email"
-                autoFocus
-                required
-              />
-            </label>
-
-            {message && <p className={styles.message}>{message}</p>}
-          </div>
-        </div>
-
-        <div className={styles.control}>
-          <div className={styles.controlBtns}>
-            <button className={styles.controlBtn} type="button" onClick={goBack}>
-              Back
-            </button>
-            <button className={styles.controlBtn} type="submit">
-              Continue
-            </button>
-          </div>
+      {!currEmail ? (
+        <AuthForm
+          title="LogIn"
+          field="email"
+          errorMessage={
+            verifyEmailMutation.isError
+              ? (verifyEmailMutation.error as Error).message
+              : undefined
+          }
+          onSubmit={handleCheckEmail}
+          onBack={goBack}
+          submitBtnText="Continue"
+        >
           <Link to="/signup">SignUp</Link>
-        </div>
-      </form>
+        </AuthForm>
       ) : (
-        <form className={styles.loginForm} onSubmit={handleCheckPassword}>
-        <div>
-          <h2 className={styles.loginTitle}>LogIn</h2>
-          <p>{currEmail}</p>
-
-          <div className={styles.fields}>
-            <label className={styles.label}>
-              Password:
-              <input
-                className={styles.input}
-                name="passwordInput"
-                type="password"
-                placeholder="Enter password"
-                autoFocus
-                required
-              />
-            </label>
-
-            {message && <p className={styles.message}>{message}</p>}
-          </div>
-        </div>
-
-        <div className={styles.controlBtns}>
-            <button className={styles.controlBtn} type="button" onClick={handleBackToEmail}>
-              Back
-            </button>
-            <button className={styles.controlBtn} type="submit">
-              logIn
-            </button>
-          </div>
-      </form>
+        <AuthForm
+          title="LogIn"
+          field="password"
+          errorMessage={
+            logInMutation.isError
+              ? (logInMutation.error as Error).message
+              : undefined
+          }
+          onSubmit={handleCheckPassword}
+          onBack={handleBackToEmail}
+          submitBtnText="LogIn"
+          showEmail={currEmail}
+        />
       )}
-      
     </main>
   );
 };
