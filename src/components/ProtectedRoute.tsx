@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import useIsAutorized from '../state/hooks/useIsAutorized';
+import useIsAuthorized from '../state/hooks/useIsAuthorized';
 
 const ProtectedRoute = () => {
-  const [isAutorized] = useIsAutorized();
+  const [isAuthorized] = useIsAuthorized();
 
-  return isAutorized ? <Outlet /> : <Navigate to="/signup" />;
+  return isAuthorized ? <Outlet /> : <Navigate to="/signup" />;
 };
 
 export default ProtectedRoute;
