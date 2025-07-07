@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import styles from './RegisterPage.module.scss';
+import styles from './SignUpPage.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/auth';
 import useIsAuthorized from '../../state/hooks/useIsAuthorized';
 
-const RegisterPage = () => {
+const SignUpPage = () => {
   const [isAuthorized, setIsAuthorized] = useIsAuthorized();
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const RegisterPage = () => {
   if (isAuthorized) {
     return (
       <div>
-        Already Authorized
+        Already authorized
         <Link to="/">Home</Link>
       </div>
     );
@@ -78,16 +78,19 @@ const RegisterPage = () => {
         </div>
 
         <div className={styles.control}>
-          <button className={styles.controlBtn} onClick={goBack}>
-            Back
-          </button>
-          <button className={styles.controlBtn} type="submit">
-            Register
-          </button>
+          <div className={styles.controlBtns}>
+            <button className={styles.controlBtn} type="button" onClick={goBack}>
+              Back
+            </button>
+            <button className={styles.controlBtn} type="submit">
+              Register
+            </button>
+          </div>
+          <Link to="/login">login</Link>
         </div>
       </form>
     </main>
   );
 };
 
-export default RegisterPage;
+export default SignUpPage;

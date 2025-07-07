@@ -1,35 +1,29 @@
-.register {
+.form {
   display: flex;
-  width: 100dvw;
-  height: 100dvh;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--main-button-color);
+  background-color: var(--element-color);
 
-  &Form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--main-button-color);
-    background-color: var(--element-color);
+  margin: auto;
+  height: 60dvh;
+  min-height: 300px;
+  max-height: 700px;
+  aspect-ratio: 1/2;
 
-    margin: auto;
-    height: 60dvh;
-    min-height: 300px;
-    max-height: 700px;
-    aspect-ratio: 1/2;
+  letter-spacing: 1.5px;
+  box-sizing: border-box;
+  padding-inline: 15px;
+  padding-block: 20px;
+  border: 4px solid var(--element-hover-color);
+  border-radius: var(--standart-border-radius);
+}
 
-    letter-spacing: 1.5px;
-    box-sizing: border-box;
-    padding-inline: 15px;
-    padding-block: 20px;
-    border: 4px solid var(--element-hover-color);
-    border-radius: var(--standart-border-radius);
-  }
-
-  &Title {
-    width: fit-content;
-    margin-inline: auto;
-    margin-bottom: 40px;
-  }
+.title {
+  width: fit-content;
+  margin-inline: auto;
+  margin-bottom: 40px;
 }
 
 .fields {
@@ -60,8 +54,15 @@
 .control {
   display: flex;
   width: 100%;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
+
+  &Btns {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
   &Btn {
     box-sizing: border-box;

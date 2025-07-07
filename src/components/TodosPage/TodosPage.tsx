@@ -83,6 +83,7 @@ const TodosPage = () => {
         }}
       >
         <Link to="/signup">SignUp</Link>
+        <Link to="/login">LogIn</Link>
       </div>
 
       <Header />
