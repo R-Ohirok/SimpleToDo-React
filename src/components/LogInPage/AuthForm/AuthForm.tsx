@@ -30,7 +30,7 @@ const AuthForm: React.FC<Props> = ({
 
         <div className={styles.fields}>
           <label className={styles.label}>
-            {`${field}`}:
+            {field}:
             <input
               className={styles.input}
               name={`${field}Input`}
