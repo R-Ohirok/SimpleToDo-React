@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+import { useEffect, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FilterStatusType, TodosParams, ToDoType } from '../types';
 import { BASE_URL, FIRST_PAGE, ITEMS_PER_PAGE } from '../constants/constants';
@@ -9,8 +9,7 @@ import { snakeToCamel } from '../utils/snakeToCamel';
 
 export const useTodoSocket = () => {
   const [searchParams] = useSearchParams();
-
-  const [socket, setSocket] = useState<any>();
+  const socketRef = useRef<Socket | null>(null);
 
   const status = searchParams.get('status') as FilterStatusType;
   const title = searchParams.get('title') || '';
@@ -26,14 +25,16 @@ export const useTodoSocket = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    setSocket(io(BASE_URL));
-
+    const socket = (io(BASE_URL));
+    socketRef.current = socket;
+    
     return () => {
-      socket.close();
+      socketRef.current?.close();
     };
   }, []);
 
   useEffect(() => {
+    const socket = socketRef.current;
     if (!socket) {
       return;
     }
@@ -72,5 +73,5 @@ export const useTodoSocket = () => {
       socket.off('todo-created', handleAdd);
       socket.off('todo-deleted', handleDelete);
     };
-  }, [socket, queryClient, searchParams]);
+  }, [queryClient, searchParams]);
 };
