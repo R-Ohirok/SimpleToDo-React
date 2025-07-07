@@ -60,8 +60,15 @@
 .control {
   display: flex;
   width: 100%;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
+
+  &Btns {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
   &Btn {
     box-sizing: border-box;

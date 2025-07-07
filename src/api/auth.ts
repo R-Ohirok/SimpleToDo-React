@@ -5,7 +5,6 @@ import api from './config';
 export async function registerUser(params: RegisterParams): Promise<string> {
   try {
     const response = await api.post('/auth/register', params);
-
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
@@ -19,7 +18,7 @@ export async function registerUser(params: RegisterParams): Promise<string> {
 
 export async function findUser(email: string): Promise<string> {
   try {
-    const response = await api.post('/auth/finduser', email);
+    const response = await api.post('/auth/finduser', { email });
 
     return response.data;
   } catch (error: unknown) {

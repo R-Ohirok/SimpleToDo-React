@@ -37,7 +37,7 @@ const SignUpPage = () => {
   if (isAuthorized) {
     return (
       <div>
-        Already Authorized
+        Already authorized
         <Link to="/">Home</Link>
       </div>
     );
@@ -78,12 +78,15 @@ const SignUpPage = () => {
         </div>
 
         <div className={styles.control}>
-          <button className={styles.controlBtn} onClick={goBack}>
-            Back
-          </button>
-          <button className={styles.controlBtn} type="submit">
-            Register
-          </button>
+          <div className={styles.controlBtns}>
+            <button className={styles.controlBtn} type="button" onClick={goBack}>
+              Back
+            </button>
+            <button className={styles.controlBtn} type="submit">
+              Register
+            </button>
+          </div>
+          <Link to="/login">login</Link>
         </div>
       </form>
     </main>

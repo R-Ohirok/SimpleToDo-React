@@ -3,6 +3,7 @@ import App from './App';
 import TodosPage from './components/TodosPage/TodosPage';
 import RegisterPage from './components/SignUpPage/SignUpPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import LogInPage from './components/LogInPage/LogInPage';
 
 
 const Root = () => (
@@ -14,6 +15,7 @@ const Root = () => (
         </Route>
 
         <Route path="signup" element={<RegisterPage />}/>
+        <Route path="login" element={<LogInPage />}/>
       </Route>
     </Routes>
   </Router>
