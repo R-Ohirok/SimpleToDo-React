@@ -34,22 +34,6 @@ api.interceptors.response.use(
   },
   async error => {
     error.response.data = camelcaseKeys(error.response.data, { deep: true });
-    if (error.response.status === 401) {
-      try {
-        const response = await api.get('/auth/refresh', {
-          withCredentials: true,
-        });
-        const newToken = response.data.accessToken;
-        localStorage.setItem('accessToken', newToken);
-        
-        error.config.headers.Authorization = `Bearer ${newToken}`;
-        
-        return api(error.config);
-      } catch {
-        localStorage.removeItem('accessToken');
-      }
-    }
-
     return Promise.reject(error);
   },
 );

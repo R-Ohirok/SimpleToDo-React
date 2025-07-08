@@ -67,7 +67,6 @@ export const logout = async () => {
 
     localStorage.removeItem('accessToken');
     localStorage.removeItem('expiresAt');
-
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       const message = error.response.data?.message || 'Unknown error';

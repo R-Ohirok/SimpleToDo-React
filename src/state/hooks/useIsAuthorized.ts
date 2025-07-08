@@ -7,7 +7,6 @@ const initialState: boolean =
 const AuthorizeAtom = atom<boolean>(initialState);
 
 const useIsAuthorized = (): boolean => {
-
   const [isAuthorized, setIsAuthorized] = useAtom<boolean>(AuthorizeAtom);
 
   useEffect(() => {

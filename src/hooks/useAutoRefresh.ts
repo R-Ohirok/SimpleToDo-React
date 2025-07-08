@@ -18,8 +18,7 @@ export const useAutoRefresh = () => {
         try {
           const newExpiresAt = await refreshToken();
           scheduleRefresh(newExpiresAt);
-        } catch (error) {
-        }
+        } catch (error) {}
       }, msBeforeRefresh);
     } else {
       (async () => {
