@@ -5,11 +5,13 @@ import api from './config';
 export async function registerUser(params: RegisterParams): Promise<string> {
   try {
     const response = await api.post('/auth/register', params, {
-  withCredentials: true,
-});
-    const accessToken = response.data.accessToken;
+      withCredentials: true,
+    });
+    const { accessToken, expiresAt } = response.data;
 
     localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('expiresAt', expiresAt.toString());
+
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
@@ -39,11 +41,13 @@ export async function verifyEmail(email: string): Promise<string> {
 export async function logIn(params: LogInParams): Promise<string> {
   try {
     const response = await api.post('/auth/login', params, {
-  withCredentials: true,
-});
-    const accessToken = response.data.accessToken;
+      withCredentials: true,
+    });
+    const { accessToken, expiresAt } = response.data;
 
     localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('expiresAt', (expiresAt.toString()));
+
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
@@ -54,3 +58,22 @@ export async function logIn(params: LogInParams): Promise<string> {
     throw new Error('Network error or server not responding');
   }
 }
+
+export function logout() {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('expiresAt');
+
+  window.location.href = '/login';
+}
+
+export const refreshToken = async () => {
+  const response = await api.get('/auth/refresh', { withCredentials: true });
+
+  const { accessToken, expiresAt } = response.data;
+
+  localStorage.setItem('accessToken', accessToken);
+  localStorage.setItem('expiresAt', expiresAt.toString());
+
+  return expiresAt;
+};
