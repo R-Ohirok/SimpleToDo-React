@@ -4,10 +4,12 @@ import api from './config';
 
 export async function registerUser(params: RegisterParams): Promise<string> {
   try {
-    const response = await api.post('/auth/register', params);
-    const token = response.data.token;
+    const response = await api.post('/auth/register', params, {
+  withCredentials: true,
+});
+    const accessToken = response.data.accessToken;
 
-    localStorage.setItem('token', token);
+    localStorage.setItem('accessToken', accessToken);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
@@ -36,10 +38,12 @@ export async function verifyEmail(email: string): Promise<string> {
 
 export async function logIn(params: LogInParams): Promise<string> {
   try {
-    const response = await api.post('/auth/login', params);
-    const token = response.data.token;
+    const response = await api.post('/auth/login', params, {
+  withCredentials: true,
+});
+    const accessToken = response.data.accessToken;
 
-    localStorage.setItem('token', token);
+    localStorage.setItem('accessToken', accessToken);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
