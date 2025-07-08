@@ -16,7 +16,7 @@ api.interceptors.request.use(config => {
   }
 
   const token = localStorage.getItem('token');
-  
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -35,6 +35,9 @@ api.interceptors.response.use(
   },
   error => {
     error.response.data = camelcaseKeys(error.response.data, { deep: true });
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+    }
 
     return Promise.reject(error);
   },
