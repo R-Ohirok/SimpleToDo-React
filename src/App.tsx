@@ -1,10 +1,17 @@
 import './index.scss';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import useIsAuthorized from './state/hooks/useIsAuthorized';
 import { logout } from './api/auth';
 
 function App() {
   const isAuthorized = useIsAuthorized();
+    const navigate = useNavigate();
+
+
+  const onLogOut = async () => {
+    await logout();
+    navigate('/login', { replace: true });
+  }
 
   return (
     <div className="app">
@@ -23,7 +30,7 @@ function App() {
           <Link to="/login">LogIn</Link>
         </div>
       ) : (
-        <button onClick={logout}>LogOut</button>
+        <button onClick={onLogOut}>LogOut</button>
       )}
       <Outlet />
     </div>

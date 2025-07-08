@@ -46,7 +46,7 @@ export async function logIn(params: LogInParams): Promise<string> {
     const { accessToken, expiresAt } = response.data;
 
     localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('expiresAt', (expiresAt.toString()));
+    localStorage.setItem('expiresAt', expiresAt.toString());
 
     return response.data;
   } catch (error: unknown) {
@@ -59,13 +59,24 @@ export async function logIn(params: LogInParams): Promise<string> {
   }
 }
 
-export function logout() {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
-  localStorage.removeItem('expiresAt');
+export const logout = async () => {
+  try {
+    await api.post('/auth/logout', null, {
+      withCredentials: true,
+    });
 
-  window.location.href = '/login';
-}
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('expiresAt');
+
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      const message = error.response.data?.message || 'Unknown error';
+      throw new Error(message);
+    }
+
+    throw new Error('Network error or server not responding');
+  }
+};
 
 export const refreshToken = async () => {
   const response = await api.get('/auth/refresh', { withCredentials: true });
