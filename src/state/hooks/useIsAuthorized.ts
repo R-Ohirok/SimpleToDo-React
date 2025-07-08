@@ -1,23 +1,21 @@
 import { atom, useAtom } from 'jotai';
+import { useEffect } from 'react';
 
-type IsAuthorizedType = 'false' | 'true';
+const initialState: boolean =
+  Boolean(localStorage.getItem('isAuthorized')) || false;
 
-const initialState: IsAuthorizedType =
-  (localStorage.getItem('isAuthorized') as IsAuthorizedType) || 'false';
+const AuthorizeAtom = atom<boolean>(initialState);
 
-const AuthorizeAtom = atom<boolean>(initialState ==='true');
+const useIsAuthorized = (): boolean => {
 
-const useIsAuthorized = (): [boolean, () => void] => {
-  const [isAuth, setIsAuth] = useAtom(AuthorizeAtom);
+  const [isAuthorized, setIsAuthorized] = useAtom<boolean>(AuthorizeAtom);
 
-  const setIsAuthorized = () => {
-    const newAuthorize = isAuth ? 'false' : 'true';
-    localStorage.setItem('isAuthorized', newAuthorize);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsAuthorized(!!token);
+  }, []);
 
-    setIsAuth(!isAuth);
-  };
-
-  return [isAuth, setIsAuthorized];
+  return isAuthorized;
 };
 
 export default useIsAuthorized;

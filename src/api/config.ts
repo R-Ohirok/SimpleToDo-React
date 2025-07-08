@@ -8,11 +8,17 @@ const api = axios.create({
 });
 
 api.defaults.timeout = 2500;
-api.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
+// api.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
 
 api.interceptors.request.use(config => {
   if (config.data) {
     config.data = snakecaseKeys(config.data, { deep: true });
+  }
+
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
 
   return config;
@@ -29,6 +35,9 @@ api.interceptors.response.use(
   },
   error => {
     error.response.data = camelcaseKeys(error.response.data, { deep: true });
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+    }
 
     return Promise.reject(error);
   },

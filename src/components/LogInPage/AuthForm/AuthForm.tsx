@@ -9,7 +9,6 @@ type Props = {
   onBack: () => void;
   showEmail?: string;
   errorMessage?: string;
-  children?: React.ReactNode;
 };
 
 const AuthForm: React.FC<Props> = ({
@@ -20,7 +19,6 @@ const AuthForm: React.FC<Props> = ({
   showEmail,
   onSubmit,
   onBack,
-  children,
 }) => {
   return (
     <form className={styles.form} onSubmit={onSubmit}>
@@ -55,8 +53,6 @@ const AuthForm: React.FC<Props> = ({
             {submitBtnText}
           </button>
         </div>
-
-        {children}
       </div>
     </form>
   );
