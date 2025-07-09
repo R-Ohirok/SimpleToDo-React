@@ -137,6 +137,7 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
 
           <div className={styles.todoItemControl}>
             <button
+              aria-label="EditTodo"
               className={cn(
                 styles.todoItemControlBtn,
                 styles.todoItemControlBtnEdit,
@@ -144,6 +145,7 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
               onClick={handleSelectTodo}
             ></button>
             <button
+              aria-label="DeleteTodo"
               className={cn(
                 styles.todoItemControlBtn,
                 styles.todoItemControlBtnDelete,
