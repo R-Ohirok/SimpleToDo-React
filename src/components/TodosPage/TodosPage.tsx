@@ -10,10 +10,10 @@ import { useTodoSocket } from '../../hooks/useTodoSocket';
 import useTodos from '../../hooks/useTodos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from '../../constants/constants';
 import { useSearchParams } from 'react-router-dom';
-import { useAutoRefresh } from '../../hooks/useAutoRefresh';
+import useKeepSession from '../../hooks/useAutoRefresh';
 
 const TodosPage = () => {
-  useAutoRefresh();
+  useKeepSession();
   const [searchParams] = useSearchParams();
   const [isPending, setIsPending] = useState(false);
   const status = searchParams.get('status') as FilterStatusType;

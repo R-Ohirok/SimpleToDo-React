@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { logout, refreshToken } from '../api/auth';
 
-export const useAutoRefresh = () => {
+const useKeepSession = () => {
   const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const scheduleRefresh = (expiresAt: number) => {
@@ -13,24 +13,15 @@ export const useAutoRefresh = () => {
       clearTimeout(refreshTimeoutRef.current);
     }
 
-    if (msBeforeRefresh > 0) {
-      refreshTimeoutRef.current = setTimeout(async () => {
-        try {
-          const newExpiresAt = await refreshToken();
-          scheduleRefresh(newExpiresAt);
-        } catch (error) {}
-      }, msBeforeRefresh);
-    } else {
-      (async () => {
-        try {
-          const newExpiresAt = await refreshToken();
-          scheduleRefresh(newExpiresAt);
-        } catch (error) {
-          console.error('Failed to refresh token', error);
-          logout();
-        }
-      })();
-    }
+    refreshTimeoutRef.current = setTimeout(async () => {
+      try {
+        const newExpiresAt = await refreshToken();
+        scheduleRefresh(newExpiresAt);
+      } catch (error) {
+        console.error('Failed to refresh token', error);
+        logout();
+      }
+    }, msBeforeRefresh);
   };
 
   useEffect(() => {
@@ -49,3 +40,5 @@ export const useAutoRefresh = () => {
     };
   }, []);
 };
+
+export default useKeepSession;
