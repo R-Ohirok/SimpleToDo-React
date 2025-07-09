@@ -11,14 +11,18 @@ describe('Pagination component', () => {
   });
 
   it('render correct number of page buttons', () => {
-    render(<Pagination pagesCount={5} activePage={1} onChangePage={onChangePage} />);
-    
+    render(
+      <Pagination pagesCount={5} activePage={1} onChangePage={onChangePage} />,
+    );
+
     const buttons = screen.getAllByRole('button');
     expect(buttons).toHaveLength(5);
   });
 
   it('call onChangePage with correct page number when button clicked', async () => {
-    render(<Pagination pagesCount={3} activePage={1} onChangePage={onChangePage} />);
+    render(
+      <Pagination pagesCount={3} activePage={1} onChangePage={onChangePage} />,
+    );
 
     const page3Button = screen.getByRole('button', { name: '3' });
     await userEvent.click(page3Button);
