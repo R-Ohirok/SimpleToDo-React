@@ -26,6 +26,8 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
     async (toDoToUpdate: ToDoType) => {
       setIsPending(true);
 
+      console.log('update');
+
       await updateTodo(toDoToUpdate);
 
       setIsPending(false);
@@ -51,10 +53,10 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
 
       if (newTitle === title) {
         setIsEditing(false);
-
+        console.log('not update');
         return;
       }
-
+        console.log('here');
       if (!newTitle) {
         handleDeleteToDo();
         setIsEditing(false);

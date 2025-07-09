@@ -13,6 +13,10 @@ vi.mock('../../../utils/normalizeValue', () => ({
   normalizeValue: (value: string) => value.trim(),
 }));
 
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
 const mockTodo: ToDoType = {
   id: '1',
   title: 'Test todo',
@@ -52,6 +56,22 @@ describe('ToDoItem', () => {
     expect(screen.getByDisplayValue('Test todo')).toBeInTheDocument();
   });
 
+  it('does not update todo if title is not changed', async () => {
+    (updateTodo as any).mockResolvedValue(undefined);
+
+    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
+
+    const editButton = screen.getByLabelText(/editTodo/i);
+    await userEvent.click(editButton);
+
+    const input = screen.getByDisplayValue('Test todo');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'Test todo');
+    await userEvent.keyboard('{Enter}');
+
+    expect(updateTodo).not.toHaveBeenCalled();
+  });
+
   it('update todo title', async () => {
     (updateTodo as any).mockResolvedValue(undefined);
 
@@ -69,6 +89,22 @@ describe('ToDoItem', () => {
       ...mockTodo,
       title: 'Updated todo',
     });
+  });
+
+  it('cancel editing on Escape key press and keeps old title', async () => {
+    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
+
+    const editButton = screen.getByLabelText(/editTodo/i);
+    await userEvent.click(editButton);
+
+    const input = screen.getByDisplayValue('Test todo');
+    await userEvent.clear(input);
+    await userEvent.type(input, 'New text');
+    await userEvent.keyboard('{Escape}');
+
+    expect(screen.queryByDisplayValue('New text')).not.toBeInTheDocument();
+
+    expect(screen.getByText('Test todo')).toBeInTheDocument();
   });
 
   it('delete todo if title is cleared on edit', async () => {

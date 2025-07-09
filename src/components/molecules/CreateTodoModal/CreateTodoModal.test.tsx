@@ -11,6 +11,10 @@ vi.mock('../../../utils/generateId', () => ({
   default: () => 'mock-id',
 }));
 
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
 describe('CreateTodoModal', () => {
   const setup = () => {
     const onClose = vi.fn();
