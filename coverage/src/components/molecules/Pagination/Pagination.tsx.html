@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -97,9 +97,9 @@
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -107,32 +107,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type React from 'react';
-<span class="cstat-no" title="statement not covered" >import styles from './Pagination.module.scss';</span>
-<span class="cstat-no" title="statement not covered" >import PagginationBtn from '../../atoms/PagginationBtn/PagginationBtn';</span>
-<span class="cstat-no" title="statement not covered" >import { memo } from 'react';</span>
+import styles from './Pagination.module.scss';
+import PagginationBtn from '../../atoms/PagginationBtn/PagginationBtn';
+import { memo } from 'react';
 &nbsp;
 interface Props {
   pagesCount: number;
@@ -140,28 +140,28 @@ interface Props {
   onChangePage: (newActivePage: number) =&gt; void;
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >const Pagination: React.FC&lt;Props&gt; = memo(</span>
-<span class="cstat-no" title="statement not covered" >  ({ pagesCount, activePage, onChangePage }) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    const pages = Array.from({ length: pagesCount }, (_, i) =&gt; ++i);</span>
+const Pagination: React.FC&lt;Props&gt; = memo(
+  ({ pagesCount, activePage, onChangePage }) =&gt; {
+    const pages = Array.from({ length: pagesCount }, (_, i) =&gt; ++i);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return (</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className={styles.pagination}&gt;</span>
-<span class="cstat-no" title="statement not covered" >        {pages.map(page =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          return (</span>
-<span class="cstat-no" title="statement not covered" >            &lt;PagginationBtn</span>
-<span class="cstat-no" title="statement not covered" >              key={page}</span>
-<span class="cstat-no" title="statement not covered" >              isActive={page === activePage}</span>
-<span class="cstat-no" title="statement not covered" >              onChangePage={onChangePage}</span>
-<span class="cstat-no" title="statement not covered" >              label={page}</span>
-<span class="cstat-no" title="statement not covered" >            /&gt;</span>
+    return (
+      &lt;div className={styles.pagination}&gt;
+        {pages.map(page =&gt; {
+          return (
+            &lt;PagginationBtn
+              key={page}
+              isActive={page === activePage}
+              onChangePage={onChangePage}
+              label={page}
+            /&gt;
           );
-<span class="cstat-no" title="statement not covered" >        })}</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+        })}
+      &lt;/div&gt;
     );
-<span class="cstat-no" title="statement not covered" >  },</span>
-<span class="cstat-no" title="statement not covered" >);</span>
+  },
+);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export default Pagination;</span>
+export default Pagination;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -169,7 +169,7 @@ interface Props {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-09T13:10:47.332Z
+                at 2025-07-09T14:11:55.210Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
