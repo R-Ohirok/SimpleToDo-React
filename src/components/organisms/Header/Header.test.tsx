@@ -108,5 +108,12 @@ describe('Header', () => {
     expect(screen.getByTestId('location-display').textContent).toContain(
       'status=Active',
     );
+
+    fireEvent.change(dropdown, { target: { value: 'All' } });
+
+    expect(dropdown).toHaveValue('All');
+    expect(screen.getByTestId('location-display').textContent).not.toContain(
+      'status=All',
+    );
   });
 });
