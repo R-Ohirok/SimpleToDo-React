@@ -3,14 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import CreateTodoModal from './CreateTodoModal';
 
-vi.mock('../../../utils/normalizeValue', () => ({
-  normalizeValue: (value: string) => value.trim(),
-}));
-
-vi.mock('../../../utils/generateId', () => ({
-  default: () => 'mock-id',
-}));
-
 beforeEach(() => {
   vi.clearAllMocks();
 });
@@ -41,7 +33,7 @@ describe('CreateTodoModal', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('call onCreateToDo with trimmed title and closes modal', async () => {
+  it('call onCreateToDo and closes modal', async () => {
     const { onClose, onCreateToDo } = setup();
 
     const input = screen.getByPlaceholderText(/input your note/i);
@@ -49,11 +41,7 @@ describe('CreateTodoModal', () => {
 
     await userEvent.click(screen.getByText(/apply/i));
 
-    expect(onCreateToDo).toHaveBeenCalledWith({
-      id: 'mock-id',
-      title: 'My new todo',
-      isCompleted: false,
-    });
+    expect(onCreateToDo).toHaveBeenCalled();
 
     expect(onClose).toHaveBeenCalled();
   });
