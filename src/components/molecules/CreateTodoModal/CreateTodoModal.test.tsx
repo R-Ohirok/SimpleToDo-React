@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import CreateTodoModal from './CreateTodoModal';
+import { postTodoHandler } from '../../../test/handlers';
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -10,7 +11,7 @@ beforeEach(() => {
 describe('CreateTodoModal', () => {
   const setup = () => {
     const onClose = vi.fn();
-    const onCreateToDo = vi.fn();
+    const onCreateToDo = postTodoHandler;
 
     render(<CreateTodoModal onClose={onClose} onCreateToDo={onCreateToDo} />);
     return { onClose, onCreateToDo };

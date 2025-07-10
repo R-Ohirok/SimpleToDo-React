@@ -2,16 +2,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ToDoItem from './ToDoItem';
 import { vi } from 'vitest';
-import { updateTodo } from '../../../api/todos';
 import type { ToDoType } from '../../../types/index';
-
-vi.mock('../../../api/todos', () => ({
-  updateTodo: vi.fn(),
-}));
-
-vi.mock('../../../utils/normalizeValue', () => ({
-  normalizeValue: (value: string) => value.trim(),
-}));
+import { deleteTodoHandler, patchTodoHandler } from '../../../test/handlers';
+import * as todosApi from '../../../api/todos';
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -19,27 +12,29 @@ beforeEach(() => {
 
 const mockTodo: ToDoType = {
   id: '1',
-  title: 'Test todo',
+  title: 'test todo',
   isCompleted: false,
 };
 
-const onDeleteToDo = vi.fn();
+const onDeleteToDo = deleteTodoHandler;
 
 describe('ToDoItem', () => {
   it('render todo', () => {
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
-    expect(screen.getByText('Test todo')).toBeInTheDocument();
+    expect(screen.getByText('test todo')).toBeInTheDocument();
     expect(screen.getByRole('checkbox')).not.toBeChecked();
   });
 
   it('toggle todo status via checkbox', async () => {
-    (updateTodo as any).mockResolvedValue(undefined);
+    const updateTodo = vi.spyOn(todosApi, 'updateTodo');
 
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
     const checkbox = screen.getByRole('checkbox');
     await userEvent.click(checkbox);
+
+    expect(patchTodoHandler).toHaveBeenCalledTimes(1);
 
     expect(updateTodo).toHaveBeenCalledWith({
       ...mockTodo,
@@ -53,41 +48,42 @@ describe('ToDoItem', () => {
     const editButton = screen.getByLabelText(/editTodo/i);
     await userEvent.click(editButton);
 
-    expect(screen.getByDisplayValue('Test todo')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('test todo')).toBeInTheDocument();
   });
 
   it('does not update todo if title is not changed', async () => {
-    (updateTodo as any).mockResolvedValue(undefined);
+    const updateTodo = vi.spyOn(todosApi, 'updateTodo');
 
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
     const editButton = screen.getByLabelText(/editTodo/i);
     await userEvent.click(editButton);
 
-    const input = screen.getByDisplayValue('Test todo');
+    const input = screen.getByDisplayValue('test todo');
     await userEvent.clear(input);
-    await userEvent.type(input, 'Test todo');
+    await userEvent.type(input, 'test todo');
     await userEvent.keyboard('{Enter}');
 
+    expect(patchTodoHandler).toHaveBeenCalledTimes(0);
     expect(updateTodo).not.toHaveBeenCalled();
   });
 
   it('update todo title', async () => {
-    (updateTodo as any).mockResolvedValue(undefined);
-
+    const updateTodo = vi.spyOn(todosApi, 'updateTodo');
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
     const editButton = screen.getByLabelText(/editTodo/i);
     await userEvent.click(editButton);
 
-    const input = screen.getByDisplayValue('Test todo');
+    const input = screen.getByDisplayValue('test todo');
     await userEvent.clear(input);
-    await userEvent.type(input, 'Updated todo');
+    await userEvent.type(input, 'updated todo');
     await userEvent.keyboard('{Enter}');
 
+    expect(patchTodoHandler).toHaveBeenCalledTimes(1);
     expect(updateTodo).toHaveBeenCalledWith({
       ...mockTodo,
-      title: 'Updated todo',
+      title: 'updated todo',
     });
   });
 
@@ -97,28 +93,27 @@ describe('ToDoItem', () => {
     const editButton = screen.getByLabelText(/editTodo/i);
     await userEvent.click(editButton);
 
-    const input = screen.getByDisplayValue('Test todo');
+    const input = screen.getByDisplayValue('test todo');
     await userEvent.clear(input);
-    await userEvent.type(input, 'New text');
+    await userEvent.type(input, 'new text');
     await userEvent.keyboard('{Escape}');
 
-    expect(screen.queryByDisplayValue('New text')).not.toBeInTheDocument();
-
-    expect(screen.getByText('Test todo')).toBeInTheDocument();
+    expect(screen.queryByDisplayValue('new text')).not.toBeInTheDocument();
+    expect(screen.getByText('test todo')).toBeInTheDocument();
+    expect(patchTodoHandler).toHaveBeenCalledTimes(0);
   });
 
   it('delete todo if title is cleared on edit', async () => {
-    (updateTodo as any).mockResolvedValue(undefined);
-
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
     const editButton = screen.getByLabelText(/editTodo/i);
     await userEvent.click(editButton);
 
-    const input = screen.getByDisplayValue('Test todo');
+    const input = screen.getByDisplayValue('test todo');
     await userEvent.clear(input);
     await userEvent.keyboard('{Enter}');
 
+    expect(deleteTodoHandler).toHaveBeenCalledTimes(1);
     expect(onDeleteToDo).toHaveBeenCalledWith(mockTodo.id);
   });
 
@@ -128,6 +123,7 @@ describe('ToDoItem', () => {
     const deleteButton = screen.getByLabelText(/deleteTodo/i);
     await userEvent.click(deleteButton);
 
+    expect(deleteTodoHandler).toHaveBeenCalledTimes(1);
     expect(onDeleteToDo).toHaveBeenCalledWith(mockTodo.id);
   });
 });
