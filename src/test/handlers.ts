@@ -42,22 +42,41 @@ export const postTodoHandler = vi.fn(() => {
 
 export const deleteTodoHandler = vi.fn(() => {
   return new HttpResponse(null, {
-      status: 201,
-    });
+    status: 201,
+  });
 });
 
 export const patchTodoHandler = vi.fn(() => {
+  return new HttpResponse(null, {
+    status: 201,
+  });
+});
+
+export const postAuthHandlerSuccess = vi.fn(() => {
   return new HttpResponse(null, {
       status: 201,
     });
 });
 
+export const postAuthHandlerError = vi.fn(() => {
+  return new HttpResponse(null, {
+      status: 201,
+    });
+});
+
+
 export const handlers = [
   http.get('http://localhost:3000/todos', getTodosHandler),
 
   http.post('http://localhost:3000/todos', postTodoHandler),
-
+  
   http.delete('http://localhost:3000/todos/:id', deleteTodoHandler),
-
+  
   http.patch('http://localhost:3000/todos/:id', patchTodoHandler),
+
+  http.post('http://localhost:3000/auth/register', postAuthHandlerSuccess),
+
+  http.post('http://localhost:3000/auth/verifyemail', postAuthHandlerSuccess),
+
+  http.post('http://localhost:3000/auth/login', postAuthHandlerSuccess),
 ];
