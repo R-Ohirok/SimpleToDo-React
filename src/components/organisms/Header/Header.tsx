@@ -96,8 +96,8 @@ const Header: React.FC = memo(() => {
             onChange={handleChange}
             className={styles.searchInput}
           />
-          <button className={styles.searchBtnSearch} type="submit" />
-          <button className={styles.searchBtnCancel} type="reset" />
+          <button className={styles.searchBtnSearch} aria-label='search' type="submit" />
+          <button className={styles.searchBtnCancel} aria-label='clean' type="reset" />
         </form>
 
         <Dropdown
