@@ -69,6 +69,7 @@ const LogInPage = () => {
     <main className={styles.login}>
       {!currEmail ? (
         <AuthForm
+          key="email"
           title="LogIn"
           field="email"
           errorMessage={
@@ -83,6 +84,7 @@ const LogInPage = () => {
         </AuthForm>
       ) : (
         <AuthForm
+          key="password"
           title="LogIn"
           field="password"
           errorMessage={

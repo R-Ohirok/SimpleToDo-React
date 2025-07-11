@@ -1,10 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import LogInPage from './LogInPage';
 import * as authApi from '../../api/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { postAuthHandlerSuccess } from '../../test/handlers';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('../../state/hooks/useIsAuthorized', () => ({
   default: () => false,
@@ -41,11 +42,9 @@ describe('LogInPage', () => {
   it('submit email and shows password form on success', async () => {
     renderWithClient();
 
-    fireEvent.change(screen.getByPlaceholderText(/enter email/i), {
-      target: { value: 'test@example.com' },
-    });
+    await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com');
 
-    fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+    userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
     await waitFor(() => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(1);
@@ -60,10 +59,8 @@ describe('LogInPage', () => {
   it('submit password on success', async () => {
     renderWithClient();
 
-    fireEvent.change(screen.getByPlaceholderText(/enter email/i), {
-      target: { value: 'test@example.com' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+    await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com');
+    userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
     await waitFor(() => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(1);
@@ -74,10 +71,8 @@ describe('LogInPage', () => {
       expect(screen.getByText('test@example.com')).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/enter password/i), {
-      target: { value: 'testPassword' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    await userEvent.type(screen.getByPlaceholderText(/enter password/i), 'testPassword');
+    userEvent.click(screen.getByRole('button', { name: /login/i }));
 
     await waitFor(() => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(2);
@@ -91,10 +86,8 @@ describe('LogInPage', () => {
   it('goes back to email input when back button pressed on password form', async () => {
     renderWithClient();
 
-    fireEvent.change(screen.getByPlaceholderText(/enter email/i), {
-      target: { value: 'test@example.com' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /continue/i }));
+    await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com' );
+    userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
     await waitFor(() => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(1);
@@ -104,7 +97,7 @@ describe('LogInPage', () => {
       ).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /back/i }));
+    userEvent.click(screen.getByRole('button', { name: /back/i }));
 
     await waitFor(() => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(1);

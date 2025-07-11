@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import TodosPage from './TodosPage';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -55,7 +55,7 @@ describe('TodosPage', () => {
     const search = await screen.findByRole('button', { name: 'search' });
     const input = (await screen.findByRole('textbox')) as HTMLInputElement;
 
-    fireEvent.change(input, { target: { value: 'test' } });
+    await userEvent.type(input, 'test');
     expect(input.value).toBe('test');
 
     await userEvent.click(search);

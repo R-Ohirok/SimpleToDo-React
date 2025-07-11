@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Header from './Header';
@@ -37,12 +37,12 @@ describe('Header', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
-  it('allow typing in the search input', () => {
+  it('allow typing in the search input', async () => {
     renderWithRouter();
 
     const input = screen.getByRole('textbox') as HTMLInputElement;
+    await userEvent.type(input, 'test');
 
-    fireEvent.change(input, { target: { value: 'test' } });
     expect(input.value).toBe('test');
   });
 
@@ -52,7 +52,7 @@ describe('Header', () => {
     const search = screen.getByRole('button', { name: 'search' });
     const input = screen.getByRole('textbox') as HTMLInputElement;
 
-    fireEvent.change(input, { target: { value: 'test' } });
+    await userEvent.type(input, 'test');
     expect(input.value).toBe('test');
 
     await userEvent.click(search);
@@ -68,7 +68,7 @@ describe('Header', () => {
     const clean = screen.getByRole('button', { name: 'clean' });
     const input = screen.getByRole('textbox') as HTMLInputElement;
 
-    fireEvent.change(input, { target: { value: 'test' } });
+    await userEvent.type(input, 'test');
     expect(input.value).toBe('test');
 
     await userEvent.click(search);
@@ -82,34 +82,34 @@ describe('Header', () => {
     );
   });
 
-  it('update dropdown value on selection', () => {
+  it('update dropdown value on selection', async () => {
     renderWithRouter();
 
     const dropdown = screen.getByRole('combobox');
-    fireEvent.change(dropdown, { target: { value: 'Completed' } });
+    await userEvent.selectOptions(dropdown, 'Completed');
 
     expect(dropdown).toHaveValue('Completed');
   });
 
-  it('update URL searchParams when change dropdown value', () => {
+  it('update URL searchParams when change dropdown value', async () => {
     renderWithRouter();
 
     const dropdown = screen.getByRole('combobox');
-    fireEvent.change(dropdown, { target: { value: 'Completed' } });
+    await userEvent.selectOptions(dropdown, 'Completed');
 
     expect(dropdown).toHaveValue('Completed');
     expect(screen.getByTestId('location-display').textContent).toContain(
       'status=Completed',
     );
 
-    fireEvent.change(dropdown, { target: { value: 'Active' } });
+    await userEvent.selectOptions(dropdown, 'Active');
 
     expect(dropdown).toHaveValue('Active');
     expect(screen.getByTestId('location-display').textContent).toContain(
       'status=Active',
     );
 
-    fireEvent.change(dropdown, { target: { value: 'All' } });
+    await userEvent.selectOptions(dropdown, 'All');
 
     expect(dropdown).toHaveValue('All');
     expect(screen.getByTestId('location-display').textContent).not.toContain(

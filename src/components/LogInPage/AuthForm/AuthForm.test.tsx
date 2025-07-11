@@ -18,7 +18,6 @@ describe('AuthForm', () => {
 
     expect(screen.getByRole('heading', { name: /test title/i })).toBeInTheDocument();
 
-    // input з типом "email" і name "emailInput"
     const input = screen.getByPlaceholderText(/enter email/i);
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute('type', 'email');
@@ -42,7 +41,7 @@ describe('AuthForm', () => {
 
   it('calls onSubmit when form is submitted', async () => {
     const user = userEvent.setup();
-    const onSubmit = vi.fn((e) => e.preventDefault());
+    const onSubmit = vi.fn();
     render(<AuthForm {...defaultProps} onSubmit={onSubmit} />);
 
     const input = screen.getByPlaceholderText(/enter email/i);
