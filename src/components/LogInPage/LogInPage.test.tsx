@@ -1,11 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { screen, waitFor } from '@testing-library/react';
 import LogInPage from './LogInPage';
 import * as authApi from '../../api/auth';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { postAuthHandlerSuccess } from '../../test/handlers';
 import userEvent from '@testing-library/user-event';
+import renderWithClient from '../../testingUtils/renderWithClient';
 
 vi.mock('../../state/hooks/useIsAuthorized', () => ({
   default: () => false,
@@ -14,24 +13,13 @@ vi.mock('../../state/hooks/useIsAuthorized', () => ({
 const verifyEmailMock = vi.spyOn(authApi, 'verifyEmail');
 const logInMock = vi.spyOn(authApi, 'logIn');
 
-const renderWithClient = () => {
-  const queryClient = new QueryClient();
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-        <LogInPage />
-      </MemoryRouter>
-    </QueryClientProvider>,
-  );
-};
-
 describe('LogInPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('render email input form initially', () => {
-    renderWithClient();
+    renderWithClient(<LogInPage />);
 
     expect(screen.getByPlaceholderText(/enter email/i)).toBeInTheDocument();
     expect(
@@ -40,7 +28,7 @@ describe('LogInPage', () => {
   });
 
   it('submit email and shows password form on success', async () => {
-    renderWithClient();
+    renderWithClient(<LogInPage />);
 
     await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com');
 
@@ -57,7 +45,7 @@ describe('LogInPage', () => {
   });
 
   it('submit password on success', async () => {
-    renderWithClient();
+    renderWithClient(<LogInPage />);
 
     await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com');
     userEvent.click(screen.getByRole('button', { name: /continue/i }));
@@ -84,7 +72,7 @@ describe('LogInPage', () => {
   });
 
   it('goes back to email input when back button pressed on password form', async () => {
-    renderWithClient();
+    renderWithClient(<LogInPage />);
 
     await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com' );
     userEvent.click(screen.getByRole('button', { name: /continue/i }));

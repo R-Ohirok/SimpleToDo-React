@@ -1,7 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import TodosPage from './TodosPage';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   deleteTodoHandler,
   getTodosHandler,
@@ -9,29 +7,11 @@ import {
 } from '../../test/handlers';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
+import renderWithClient from '../../testingUtils/renderWithClient';
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
-
-function ShowLocation() {
-  const location = useLocation();
-  return <div data-testid="location-display">{location.search}</div>;
-}
-
-const renderWithClient = (ui: React.ReactElement) => {
-  const queryClient = new QueryClient();
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={['/']}>
-        <>
-          {ui}
-          <ShowLocation />
-        </>
-      </MemoryRouter>
-    </QueryClientProvider>,
-  );
-};
 
 describe('TodosPage', () => {
   it('render TodosPage and makes GET request', async () => {
