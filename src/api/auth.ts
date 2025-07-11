@@ -78,12 +78,16 @@ export const logout = async () => {
 };
 
 export const refreshToken = async () => {
-  const response = await api.get('/auth/refresh', { withCredentials: true });
-
-  const { accessToken, expiresAt } = response.data;
-
-  localStorage.setItem('accessToken', accessToken);
-  localStorage.setItem('expiresAt', expiresAt.toString());
-
-  return expiresAt;
+  try {
+    const response = await api.get('/auth/refresh', { withCredentials: true });
+  
+    const { accessToken, expiresAt } = response.data;
+  
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('expiresAt', expiresAt.toString());
+  
+    return expiresAt;
+  } catch {
+    await logout();
+  }
 };
