@@ -10,7 +10,8 @@
   height: 60dvh;
   min-height: 300px;
   max-height: 700px;
-  aspect-ratio: 1/2;
+  width: fit-content;
+  min-width: 150px;
 
   letter-spacing: 1.5px;
   box-sizing: border-box;

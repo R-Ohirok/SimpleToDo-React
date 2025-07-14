@@ -5,17 +5,19 @@ import { verifyEmail, logIn } from '../../api/auth';
 import useIsAuthorized from '../../state/hooks/useIsAuthorized';
 import { useMutation } from '@tanstack/react-query';
 import AuthForm from './AuthForm/AuthForm';
+import { useTranslation } from 'react-i18next';
 
 const LogInPage = () => {
+  const { t } = useTranslation();
   const isAuthorized = useIsAuthorized();
   const [currEmail, setCurrEmail] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-      if (isAuthorized) {
-        navigate('/', { replace: true });
-      }
-    }, []);
+    if (isAuthorized) {
+      navigate('/', { replace: true });
+    }
+  }, []);
 
   const verifyEmailMutation = useMutation({
     mutationFn: verifyEmail,
@@ -70,8 +72,10 @@ const LogInPage = () => {
       {!currEmail ? (
         <AuthForm
           key="email"
-          title="LogIn"
-          field="email"
+          title={t('login')}
+          field={t('email')}
+          placeholder={t('emailInputPlaceholder')}
+          fieldType="email"
           errorMessage={
             verifyEmailMutation.isError
               ? (verifyEmailMutation.error as Error).message
@@ -79,14 +83,15 @@ const LogInPage = () => {
           }
           onSubmit={handleCheckEmail}
           onBack={goBack}
-          submitBtnText="Continue"
-        >
-        </AuthForm>
+          submitBtnText={t('continue')}
+        ></AuthForm>
       ) : (
         <AuthForm
           key="password"
-          title="LogIn"
-          field="password"
+          title={t('login')}
+          fieldType="password"
+          field={t('password')}
+          placeholder={t('passwordInputPlaceholder')}
           errorMessage={
             logInMutation.isError
               ? (logInMutation.error as Error).message
@@ -94,7 +99,7 @@ const LogInPage = () => {
           }
           onSubmit={handleCheckPassword}
           onBack={handleBackToEmail}
-          submitBtnText="LogIn"
+          submitBtnText={t('login')}
           showEmail={currEmail}
         />
       )}

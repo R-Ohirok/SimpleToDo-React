@@ -1,8 +1,10 @@
 import styles from './EmptyList.module.scss';
 import cn from 'classnames';
 import useTheme from '../../../state/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 const EmptyList = () => {
+  const { t } = useTranslation();
   const [activeTheme] = useTheme();
 
   return (
@@ -12,7 +14,7 @@ const EmptyList = () => {
           [styles.emptyImgDark]: activeTheme === 'dark',
         })}
       ></div>
-      <span>Empty...</span>
+      <span>{t('emptyList')}</span>
     </div>
   );
 };

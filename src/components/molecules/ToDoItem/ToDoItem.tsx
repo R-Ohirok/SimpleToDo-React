@@ -7,6 +7,7 @@ import type { ToDoType } from '../../../types';
 import { useDraggable } from '@dnd-kit/core';
 import { Skeleton } from '@mui/material';
 import { updateTodo } from '../../../api/todos';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   todo: ToDoType;
@@ -16,6 +17,7 @@ interface Props {
 const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
   const { id, title, isCompleted } = todo;
 
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -115,10 +117,11 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
           onKeyDown={handleKeyDown}
         >
           <input
+            aria-label="EditTodoInput"
             name="todoItemInput"
             type="text"
             className={styles.todoItemInput}
-            placeholder="Empty todo will be deleted"
+            placeholder={t('todoItemInputPlaceholder')}
             defaultValue={title}
             autoFocus
           />
@@ -137,7 +140,7 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
 
           <div className={styles.todoItemControl}>
             <button
-              aria-label="EditTodo"
+              aria-label="EditTodoBtn"
               className={cn(
                 styles.todoItemControlBtn,
                 styles.todoItemControlBtnEdit,

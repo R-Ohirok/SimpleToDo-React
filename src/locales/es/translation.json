@@ -1,0 +1,24 @@
+{
+  "signUp": "Registrarse",
+  "login": "Iniciar sesión",
+  "logout": "Cerrar sesión",
+  "searchInputPlaceholder": "Buscar...",
+  "modalContentInputPlaceholder": "Escribe tu nota...",
+  "cancel": "Cancelar",
+  "create": "Crear",
+  "emptyList": "Vacío...",
+  "todoItemInputPlaceholder": "Una tarea vacía será eliminada",
+  "register": "Registrarse",
+  "email": "Correo electrónico",
+  "emailInputPlaceholder": "Introduce tu correo electrónico...",
+  "password": "Contraseña",
+  "passwordInputPlaceholder": "Introduce tu contraseña...",
+  "back": "Atrás",
+  "continue": "Continuar",
+  "enter": "Entrar",
+  "filters": {
+    "All": "Todos",
+    "Active": "Activos",
+    "Completed": "Completados"
+  }
+}

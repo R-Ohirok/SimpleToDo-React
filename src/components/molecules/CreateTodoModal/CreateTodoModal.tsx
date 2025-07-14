@@ -5,6 +5,7 @@ import { normalizeValue } from '../../../utils/normalizeValue';
 import { useCallback, useState } from 'react';
 import type { ToDoType } from '../../../types';
 import generateId from '../../../utils/generateId';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   onClose: () => void;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState('');
 
   const getNewToDo = useCallback((title: string): ToDoType => {
@@ -43,7 +45,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
             name="modalContentInput"
             className={styles.modalContentInput}
             type="text"
-            placeholder="Input your note..."
+            placeholder={t('modalContentInputPlaceholder')}
             value={value}
             autoFocus
             onChange={handleChange}
@@ -54,13 +56,13 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
             className={cn(styles.modalControlBtn, styles.modalControlBtnCancel)}
             onClick={onClose}
           >
-            CANCEL
+            {t('cancel')}
           </button>
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnApply)}
             onClick={onCreate}
           >
-            APPLY
+            {t('create')}
           </button>
         </div>
       </div>

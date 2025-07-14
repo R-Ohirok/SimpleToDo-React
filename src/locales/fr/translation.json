@@ -1,0 +1,24 @@
+{
+  "signUp": "S'inscrire",
+  "login": "Connexion",
+  "logout": "Déconnexion",
+  "searchInputPlaceholder": "Rechercher...",
+  "modalContentInputPlaceholder": "Saisissez votre note...",
+  "cancel": "Annuler",
+  "create": "Créer",
+  "emptyList": "Vide...",
+  "todoItemInputPlaceholder": "Une tâche vide sera supprimée",
+  "register": "S'enregistrer",
+  "email": "Email",
+  "emailInputPlaceholder": "Entrez votre email...",
+  "password": "Mot de passe",
+  "passwordInputPlaceholder": "Entrez votre mot de passe...",
+  "back": "Retour",
+  "continue": "Continuer",
+  "enter": "Entrer",
+  "filters": {
+    "All": "Tous",
+    "Active": "Actifs",
+    "Completed": "Terminés"
+  }
+}

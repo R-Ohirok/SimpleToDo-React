@@ -1,0 +1,24 @@
+{
+  "signUp": "SignUp",
+  "login": "Login",
+  "logout": "Logout",
+  "searchInputPlaceholder": "Search...",
+  "modalContentInputPlaceholder": "Input your note...",
+  "cancel": "Cancel",
+  "create": "Create",
+  "emptyList": "Empty...",
+  "todoItemInputPlaceholder": "Empty todo will be deleted",
+  "register": "Register",
+  "email": "Email",
+  "emailInputPlaceholder": "Enter email",
+  "password": "Password",
+  "passwordInputPlaceholder": "Enter password",
+  "back": "Back",
+  "continue": "Continue",
+  "enter": "Enter",
+  "filters": {
+    "All": "All",
+    "Active": "Active",
+    "Completed": "Completed"
+  }
+}
