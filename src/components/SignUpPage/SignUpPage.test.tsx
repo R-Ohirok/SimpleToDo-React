@@ -19,8 +19,8 @@ describe('SignUpPage', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByPlaceholderText(/enter email/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/enter password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/emailInput/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/passwordInput/i)).toBeInTheDocument();
   });
 
   it('submits form and navigates to home on success', async () => {
@@ -31,16 +31,16 @@ describe('SignUpPage', () => {
     );
 
     await userEvent.type(
-      screen.getByPlaceholderText(/enter email/i),
+      screen.getByLabelText(/emailInput/i),
       'test@example.com',
     );
 
     await userEvent.type(
-      screen.getByPlaceholderText(/enter password/i),
+      screen.getByLabelText(/passwordInput/i),
       'test123456',
     );
 
-    userEvent.click(screen.getByRole('button', { name: /register/i }));
+    userEvent.click(screen.getByLabelText(/registerBtn/i));
 
     await waitFor(() => {
       expect(register).toHaveBeenCalledWith({

@@ -10,6 +10,13 @@ vi.mock('../../state/hooks/useIsAuthorized', () => ({
   default: () => false,
 }));
 
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { changeLanguage: () => Promise.resolve() },
+  }),
+}));
+
 const verifyEmailMock = vi.spyOn(authApi, 'verifyEmail');
 const logInMock = vi.spyOn(authApi, 'logIn');
 
@@ -21,16 +28,14 @@ describe('LogInPage', () => {
   it('render email input form initially', () => {
     renderWithClient(<LogInPage />);
 
-    expect(screen.getByPlaceholderText(/enter email/i)).toBeInTheDocument();
-    expect(
-      screen.queryByPlaceholderText(/enter password/i),
-    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText(/emailInput/i)).toBeInTheDocument();
+    expect(screen.queryByLabelText(/passwordInput/i)).not.toBeInTheDocument();
   });
 
   it('submit email and shows password form on success', async () => {
     renderWithClient(<LogInPage />);
 
-    await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com');
+    await userEvent.type(screen.getByLabelText(/emailInput/i), 'test@example.com');
 
     userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
@@ -38,7 +43,7 @@ describe('LogInPage', () => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(1);
       expect(verifyEmailMock).toHaveBeenCalledWith('test@example.com');
       expect(
-        screen.getByPlaceholderText(/enter password/i),
+        screen.getByLabelText(/passwordInput/i),
       ).toBeInTheDocument();
       expect(screen.getByText('test@example.com')).toBeInTheDocument();
     });
@@ -47,19 +52,19 @@ describe('LogInPage', () => {
   it('submit password on success', async () => {
     renderWithClient(<LogInPage />);
 
-    await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com');
+    await userEvent.type(screen.getByLabelText(/emailInput/i), 'test@example.com');
     userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
     await waitFor(() => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(1);
       expect(verifyEmailMock).toHaveBeenCalledWith('test@example.com');
       expect(
-        screen.getByPlaceholderText(/enter password/i),
+        screen.getByLabelText(/passwordInput/i),
       ).toBeInTheDocument();
       expect(screen.getByText('test@example.com')).toBeInTheDocument();
     });
 
-    await userEvent.type(screen.getByPlaceholderText(/enter password/i), 'testPassword');
+    await userEvent.type(screen.getByLabelText(/passwordInput/i), 'testPassword');
     userEvent.click(screen.getByRole('button', { name: /login/i }));
 
     await waitFor(() => {
@@ -74,14 +79,14 @@ describe('LogInPage', () => {
   it('goes back to email input when back button pressed on password form', async () => {
     renderWithClient(<LogInPage />);
 
-    await userEvent.type(screen.getByPlaceholderText(/enter email/i), 'test@example.com' );
+    await userEvent.type(screen.getByLabelText(/emailInput/i), 'test@example.com' );
     userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
     await waitFor(() => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(1);
       expect(verifyEmailMock).toHaveBeenCalledWith('test@example.com');
       expect(
-        screen.getByPlaceholderText(/enter password/i),
+        screen.getByLabelText(/passwordInput/i),
       ).toBeInTheDocument();
     });
 
@@ -89,10 +94,8 @@ describe('LogInPage', () => {
 
     await waitFor(() => {
       expect(postAuthHandlerSuccess).toHaveBeenCalledTimes(1);
-      expect(
-        screen.queryByPlaceholderText(/enter password/i),
-      ).not.toBeInTheDocument();
-      expect(screen.getByPlaceholderText(/enter email/i)).toBeInTheDocument();
+      expect(screen.queryByLabelText(/passwordInput/i)).not.toBeInTheDocument();
+      expect(screen.getByLabelText(/emailInput/i)).toBeInTheDocument();
     });
   });
 });

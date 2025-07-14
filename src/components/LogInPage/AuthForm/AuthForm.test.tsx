@@ -6,7 +6,9 @@ import AuthForm from './AuthForm';
 describe('AuthForm', () => {
   const defaultProps = {
     title: 'Test Title',
-    field: 'email' as 'email',
+    field: 'Email',
+    fieldType: 'email' as 'email',
+    placeholder: 'Enter email',
     errorMessage: '',
     submitBtnText: 'Submit',
     onSubmit: vi.fn(),

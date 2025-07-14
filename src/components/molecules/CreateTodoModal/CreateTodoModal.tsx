@@ -43,6 +43,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
           <h2 className={styles.modalContentTitle}>NEW NOTE</h2>
           <input
             name="modalContentInput"
+            aria-label='modalContentInput'
             className={styles.modalContentInput}
             type="text"
             placeholder={t('modalContentInputPlaceholder')}
@@ -55,12 +56,14 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnCancel)}
             onClick={onClose}
+            aria-label='cancel'
           >
             {t('cancel')}
           </button>
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnApply)}
             onClick={onCreate}
+            aria-label='create'
           >
             {t('create')}
           </button>

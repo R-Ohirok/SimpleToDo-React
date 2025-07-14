@@ -37,6 +37,7 @@ const AuthForm: React.FC<Props> = ({
           <label className={styles.label}>
             {field}:
             <input
+              aria-label={`${fieldType}Input`}
               className={styles.input}
               name={`${fieldType}Input`}
               type={fieldType}

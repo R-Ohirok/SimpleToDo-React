@@ -53,6 +53,7 @@ const SignUpPage = () => {
               <input
                 className={styles.input}
                 name="emailInput"
+                aria-label='emailInput'
                 type="email"
                 placeholder={t('emailInputPlaceholder')}
                 autoFocus
@@ -65,6 +66,7 @@ const SignUpPage = () => {
               <input
                 className={styles.input}
                 name="passwordInput"
+                aria-label='passwordInput'
                 type="password"
                 placeholder={t('passwordInputPlaceholder')}
                 required
@@ -76,10 +78,10 @@ const SignUpPage = () => {
         </div>
 
         <div className={styles.control}>
-          <button className={styles.controlBtn} type="button" onClick={goBack}>
+          <button className={styles.controlBtn} type="button" onClick={goBack} aria-label='backBtn'>
             {t('back')}
           </button>
-          <button className={styles.controlBtn} type="submit">
+          <button className={styles.controlBtn} type="submit" aria-label='registerBtn'>
             {t('register')}
           </button>
         </div>

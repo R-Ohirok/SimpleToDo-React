@@ -45,10 +45,10 @@ describe('ToDoItem', () => {
   it('enter edit mode on "Edit" button click', async () => {
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
-    const editButton = screen.getByLabelText(/editTodo/i);
+    const editButton = screen.getByLabelText(/editTodoBtn/i);
     await userEvent.click(editButton);
 
-    expect(screen.getByDisplayValue('test todo')).toBeInTheDocument();
+    expect(screen.getByLabelText(/editTodoInput/i)).toBeInTheDocument();
   });
 
   it('does not update todo if title is not changed', async () => {
@@ -56,10 +56,10 @@ describe('ToDoItem', () => {
 
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
-    const editButton = screen.getByLabelText(/editTodo/i);
+    const editButton = screen.getByLabelText(/editTodoBtn/i);
     await userEvent.click(editButton);
 
-    const input = screen.getByDisplayValue('test todo');
+    const input = screen.getByLabelText(/editTodoInput/i);
     await userEvent.clear(input);
     await userEvent.type(input, 'test todo');
     await userEvent.keyboard('{Enter}');
@@ -72,10 +72,10 @@ describe('ToDoItem', () => {
     const updateTodo = vi.spyOn(todosApi, 'updateTodo');
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
-    const editButton = screen.getByLabelText(/editTodo/i);
+    const editButton = screen.getByLabelText(/editTodoBtn/i);
     await userEvent.click(editButton);
 
-    const input = screen.getByDisplayValue('test todo');
+    const input = screen.getByLabelText(/editTodoInput/i);
     await userEvent.clear(input);
     await userEvent.type(input, 'updated todo');
     await userEvent.keyboard('{Enter}');
@@ -90,10 +90,10 @@ describe('ToDoItem', () => {
   it('cancel editing on Escape key press and keeps old title', async () => {
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
-    const editButton = screen.getByLabelText(/editTodo/i);
+    const editButton = screen.getByLabelText(/editTodoBtn/i);
     await userEvent.click(editButton);
 
-    const input = screen.getByDisplayValue('test todo');
+    const input = screen.getByLabelText(/editTodoInput/i);
     await userEvent.clear(input);
     await userEvent.type(input, 'new text');
     await userEvent.keyboard('{Escape}');
@@ -106,10 +106,10 @@ describe('ToDoItem', () => {
   it('delete todo if title is cleared on edit', async () => {
     render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
 
-    const editButton = screen.getByLabelText(/editTodo/i);
+    const editButton = screen.getByLabelText(/editTodoBtn/i);
     await userEvent.click(editButton);
 
-    const input = screen.getByDisplayValue('test todo');
+    const input = screen.getByLabelText(/editTodoInput/i);
     await userEvent.clear(input);
     await userEvent.keyboard('{Enter}');
 
