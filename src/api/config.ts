@@ -2,6 +2,7 @@ import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 import { BASE_URL } from '../constants/constants';
+import { logout } from './auth';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -34,6 +35,12 @@ api.interceptors.response.use(
   },
   async error => {
     error.response.data = camelcaseKeys(error.response.data, { deep: true });
+
+    if (error.response.status === 401) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('expiresAt');
+    }
+
     return Promise.reject(error);
   },
 );
