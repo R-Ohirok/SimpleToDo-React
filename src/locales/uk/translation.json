@@ -1,0 +1,24 @@
+{
+  "signUp": "Зареєструватися",
+  "login": "Увійти",
+  "logout": "Вийти",
+  "searchInputPlaceholder": "Пошук...",
+  "modalContentInputPlaceholder": "Введіть вашу нотатку...",
+  "cancel": "Скасувати",
+  "create": "Створити",
+  "emptyList": "Порожньо...",
+  "todoItemInputPlaceholder": "Порожнє завдання буде видалено",
+  "register": "Реєстрація",
+  "email": "Електронна пошта",
+  "emailInputPlaceholder": "Введіть електронну пошту...",
+  "password": "Пароль",
+  "passwordInputPlaceholder": "Введіть пароль...",
+  "back": "Назад",
+  "continue": "Продовжити",
+  "enter": "Увійти",
+  "filters": {
+    "All": "Всі",
+    "Active": "Активні",
+    "Completed": "Завершені"
+  }
+}

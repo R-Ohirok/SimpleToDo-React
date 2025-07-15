@@ -1,8 +1,11 @@
 export type FilterStatusType = 'All' | 'Active' | 'Completed';
 
+export type LanguageType = 'en' | 'uk' | 'fr' | 'es' | 'pl';
+
 export type DropdownOptionType = {
   id: string;
-  label: FilterStatusType;
+  value: string;
+  label: string;
 };
 
 export type ToDoType = {
@@ -33,9 +36,9 @@ export type TodosResponse = {
 export type RegisterParams = {
   email: string;
   password: string;
-}
+};
 
 export type LogInParams = {
   email: string;
   password: string;
-}
+};

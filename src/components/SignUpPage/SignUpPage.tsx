@@ -3,8 +3,10 @@ import styles from './SignUpPage.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/auth';
 import useIsAuthorized from '../../state/hooks/useIsAuthorized';
+import { useTranslation } from 'react-i18next';
 
 const SignUpPage = () => {
+  const { t } = useTranslation();
   const isAuthorized = useIsAuthorized();
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -43,28 +45,30 @@ const SignUpPage = () => {
     <main className={styles.register}>
       <form className={styles.registerForm} onSubmit={handleSubmit}>
         <div>
-          <h2 className={styles.registerTitle}>Register</h2>
+          <h2 className={styles.registerTitle}>{t('register')}</h2>
 
           <div className={styles.fields}>
             <label className={styles.label}>
-              Email:
+              {t('email')}:
               <input
                 className={styles.input}
                 name="emailInput"
+                aria-label='emailInput'
                 type="email"
-                placeholder="Enter email"
+                placeholder={t('emailInputPlaceholder')}
                 autoFocus
                 required
               />
             </label>
 
             <label className={styles.label}>
-              Password:
+              {t('password')}:
               <input
                 className={styles.input}
                 name="passwordInput"
+                aria-label='passwordInput'
                 type="password"
-                placeholder="Enter password"
+                placeholder={t('passwordInputPlaceholder')}
                 required
               />
             </label>
@@ -74,11 +78,11 @@ const SignUpPage = () => {
         </div>
 
         <div className={styles.control}>
-          <button className={styles.controlBtn} type="button" onClick={goBack}>
-            Back
+          <button className={styles.controlBtn} type="button" onClick={goBack} aria-label='backBtn'>
+            {t('back')}
           </button>
-          <button className={styles.controlBtn} type="submit">
-            Register
+          <button className={styles.controlBtn} type="submit" aria-label='registerBtn'>
+            {t('register')}
           </button>
         </div>
       </form>

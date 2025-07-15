@@ -81,16 +81,16 @@ describe('TodosPage', () => {
     });
   });
 
-  it('sends a POST request when a new todo is added', async () => {
+  it('send a POST request when a new todo is added', async () => {
     renderWithClient(<TodosPage />);
 
     const addButton = await screen.findByRole('button', { name: '＋' });
     await userEvent.click(addButton);
 
-    const input = await screen.findByPlaceholderText(/input your note/i);
+    const input = await screen.getByLabelText(/modalContentInput/i);
     await userEvent.type(input, '  My new todo  ');
 
-    const applyButton = await screen.findByText(/apply/i);
+    const applyButton = await screen.getByLabelText(/create/i);
     await userEvent.click(applyButton);
 
     await waitFor(() => {
@@ -98,7 +98,7 @@ describe('TodosPage', () => {
     });
   });
 
-  it('sends a DELETE request when todo deleted', async () => {
+  it('send a DELETE request when todo deleted', async () => {
     renderWithClient(<TodosPage />);
 
     const deleteButtons = await screen.findAllByLabelText(/deleteTodo/i);

@@ -1,18 +1,18 @@
 import type React from 'react';
 import styles from './Dropdown.module.scss';
-import type { DropdownOptionType, FilterStatusType } from '../../../types';
+import type { DropdownOptionType } from '../../../types';
 
 interface Props {
   options: DropdownOptionType[];
   value: string;
-  onChange: (value: FilterStatusType) => void;
+  onChange: (value: string) => void;
 }
 
 const Dropdown: React.FC<Props> = ({ options, value, onChange }) => {
   const handleValueChange = (
     newValue: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    onChange(newValue.target.value as FilterStatusType);
+    onChange(newValue.target.value);
   };
 
   return (
@@ -26,7 +26,7 @@ const Dropdown: React.FC<Props> = ({ options, value, onChange }) => {
         return (
           <option
             key={currValue.id}
-            value={currValue.label}
+            value={currValue.value}
             className={styles.dropdownOption}
           >
             {currValue.label}

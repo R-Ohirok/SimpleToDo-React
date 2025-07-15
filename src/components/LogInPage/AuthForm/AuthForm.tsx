@@ -1,9 +1,12 @@
 import React from 'react';
 import styles from './AuthForm.module.scss';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   title: string;
-  field: 'email' | 'password';
+  fieldType: 'email' | 'password';
+  field: string;
+  placeholder: string;
   submitBtnText: string;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onBack: () => void;
@@ -13,13 +16,17 @@ type Props = {
 
 const AuthForm: React.FC<Props> = ({
   title,
+  fieldType,
   field,
+  placeholder,
   errorMessage,
   submitBtnText,
   showEmail,
   onSubmit,
   onBack,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <form className={styles.form} onSubmit={onSubmit}>
       <div>
@@ -30,10 +37,11 @@ const AuthForm: React.FC<Props> = ({
           <label className={styles.label}>
             {field}:
             <input
+              aria-label={`${fieldType}Input`}
               className={styles.input}
-              name={`${field}Input`}
-              type={field}
-              placeholder={`Enter ${field}`}
+              name={`${fieldType}Input`}
+              type={fieldType}
+              placeholder={placeholder}
               autoFocus
               required
             />
@@ -46,7 +54,7 @@ const AuthForm: React.FC<Props> = ({
       <div className={styles.control}>
         <div className={styles.controlBtns}>
           <button className={styles.controlBtn} type="button" onClick={onBack}>
-            Back
+            {t('back')}
           </button>
 
           <button className={styles.controlBtn} type="submit">
