@@ -34,6 +34,12 @@ api.interceptors.response.use(
   },
   async error => {
     error.response.data = camelcaseKeys(error.response.data, { deep: true });
+
+    if (error.response.status === 401) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('expiresAt');
+    }
+
     return Promise.reject(error);
   },
 );
