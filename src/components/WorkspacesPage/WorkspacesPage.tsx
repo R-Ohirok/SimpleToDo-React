@@ -31,7 +31,7 @@ const WorkspacePage = () => {
     return userWorkspacesIds.includes(workspaceId);
   };
 
-  const handleClick = useCallback(async (workspaceId: number) => {
+  const handleClick = async (workspaceId: number) => {
     setIsPending(true);
     isUserInWorkspace(workspaceId)
       ? await removeUserFromWorkspace(workspaceId)
@@ -39,7 +39,7 @@ const WorkspacePage = () => {
     setIsPending(false);
     refetchUserWorkspaces();
     refetchWorkspaces();
-  }, []);
+  };
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
