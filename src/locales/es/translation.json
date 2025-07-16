@@ -16,6 +16,13 @@
   "back": "Atrás",
   "continue": "Continuar",
   "enter": "Entrar",
+  "groups": "Grupos",
+  "selectGroup": "Selecciona un grupo:",
+  "leave": "Salir",
+  "join": "Unirse",
+  "createGroup": "Crear nuevo grupo",
+  "enterGroupName": "Ingresa el nombre del grupo",
+  "groupNameInputPlaceholder": "Nombre...",
   "filters": {
     "All": "Todos",
     "Active": "Activos",

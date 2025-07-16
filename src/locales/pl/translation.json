@@ -16,6 +16,13 @@
   "back": "Wstecz",
   "continue": "Kontynuuj",
   "enter": "Wejdź",
+  "groups": "Grupy",
+  "selectGroup": "Wybierz grupę:",
+  "leave": "Opuść",
+  "join": "Dołącz",
+  "createGroup": "Utwórz nową grupę",
+  "enterGroupName": "Wpisz nazwę grupy",
+  "groupNameInputPlaceholder": "Nazwa...",
   "filters": {
     "All": "Wszystkie",
     "Active": "Aktywne",

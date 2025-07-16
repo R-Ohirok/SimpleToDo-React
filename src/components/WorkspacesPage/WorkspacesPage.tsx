@@ -80,7 +80,7 @@ const WorkspacePage = () => {
 
   return (
     <>
-      <h1>{t('workspaces')}</h1>
+      <h1>{t('groups')}</h1>
       <main>
         <div>
           <ul>
@@ -96,15 +96,15 @@ const WorkspacePage = () => {
 
           <form onSubmit={handleSubmit}>
             <div>
-              <h2>{t('createWorkspace')}</h2>
+              <h2>{t('createGroup')}</h2>
 
               <div>
                 <label>
-                  {t('enterWorkspaceName')}:
+                  {t('enterGroupName')}:
                   <input
                     name="nameInput"
                     aria-label="nameInput"
-                    placeholder={t('workspaceNameInputPlaceholder')}
+                    placeholder={t('groupNameInputPlaceholder')}
                     autoFocus
                     required
                   />

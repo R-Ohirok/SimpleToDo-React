@@ -79,7 +79,7 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
                 onChange={handleChange}
                 required
               />
-                {t('selecrWorkspace')}
+                {t('selectGroup')}
               <div>
               {userWorkspaces.map(workspace => (
                 <label key={workspace.id}>

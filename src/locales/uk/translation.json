@@ -16,6 +16,13 @@
   "back": "Назад",
   "continue": "Продовжити",
   "enter": "Увійти",
+  "groups": "Групи",
+  "selectGroup": "Оберіть групу:",
+  "leave": "Покинути",
+  "join": "Приєднатися",
+  "createGroup": "Створити нову групу",
+  "enterGroupName": "Введіть назву групи",
+  "groupNameInputPlaceholder": "Назва...",
   "filters": {
     "All": "Всі",
     "Active": "Активні",

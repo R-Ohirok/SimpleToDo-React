@@ -16,6 +16,13 @@
   "back": "Back",
   "continue": "Continue",
   "enter": "Enter",
+  "groups": "Groups",
+  "selectGroup": "Select group:",
+  "leave": "Leave",
+  "join": "Join",
+  "createGroup": "Create new group",
+  "enterGroupName": "Enter group name",
+  "groupNameInputPlaceholder": "Name...",
   "filters": {
     "All": "All",
     "Active": "Active",

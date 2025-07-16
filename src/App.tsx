@@ -53,8 +53,8 @@ function App() {
           </>
         ) : (
           <>
-            <Link to="/">{t('todos')}</Link>
-            <Link to="/workspaces">{t('workspaces')}</Link>
+            <Link to="/">ToDos</Link>
+            <Link to="/workspaces">{t('groups')}</Link>
             <button onClick={onLogOut}>{t('logout')}</button>
           </>
         )}
