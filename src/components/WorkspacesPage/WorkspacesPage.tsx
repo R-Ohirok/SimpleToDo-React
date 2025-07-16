@@ -33,9 +33,11 @@ const WorkspacePage = () => {
 
   const handleClick = async (workspaceId: number) => {
     setIsPending(true);
+    
     isUserInWorkspace(workspaceId)
       ? await removeUserFromWorkspace(workspaceId)
       : await addUserToWorkspace(workspaceId);
+
     setIsPending(false);
     refetchUserWorkspaces();
     refetchWorkspaces();

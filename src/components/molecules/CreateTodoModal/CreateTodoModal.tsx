@@ -33,12 +33,15 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
     [],
   );
 
-  const handleSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
 
-    onCreateToDo(getNewToDo(title, selectedWorkspaceId));
-    onClose();
-  }, []);
+      onCreateToDo(getNewToDo(title, selectedWorkspaceId));
+      onClose();
+    },
+    [],
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -62,9 +65,8 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
 
   return (
     <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <form onSubmit={handleSubmit}>
-          <div>
+        <form className={styles.modalContent} onSubmit={handleSubmit}>
+          <div className={styles.modalContentTop}>
             <h2 className={styles.modalContentTitle}>{t('newNote')}</h2>
 
             <div className={styles.fields}>
@@ -79,21 +81,23 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
                 onChange={handleChange}
                 required
               />
-                {t('selectGroup')}
-              <div>
-              {userWorkspaces.map(workspace => (
-                <label key={workspace.id}>
-                  <input
-                    type="radio"
-                    name="option"
-                    value={workspace.id}
-                    checked={selectedWorkspaceId === workspace.id}
-                    onChange={() => setSelectedWorkspaceId(workspace.id)}
-                    required
-                  />
-                  {workspace.name}
-                </label>
-              ))}
+              <div className={styles.options}>
+              {t('selectGroup')}
+              <div className={styles.option}>
+                {userWorkspaces.map(workspace => (
+                  <label key={workspace.id}>
+                    <input
+                      type="radio"
+                      name="option"
+                      value={workspace.id}
+                      checked={selectedWorkspaceId === workspace.id}
+                      onChange={() => setSelectedWorkspaceId(workspace.id)}
+                      required
+                    />
+                    {workspace.name}
+                  </label>
+                ))}
+              </div>
               </div>
             </div>
           </div>
@@ -122,7 +126,6 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
             </button>
           </div>
         </form>
-      </div>
     </div>
   );
 };
