@@ -8,12 +8,15 @@ import {
   createWorkspace,
   removeUserFromWorkspace,
 } from '../../api/workspace';
-import { t } from 'i18next';
+import styles from './WorkspacesPage.module.scss';
+import { useTranslation } from 'react-i18next';
 
 const WorkspacePage = () => {
   useKeepSession();
+  const { t } = useTranslation();
   const [isPending, setIsPending] = useState(false);
-  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [value, setValue] = useState('');
   const {
     workspaces,
     isLoading: isWorkspacesLoading,
@@ -33,7 +36,7 @@ const WorkspacePage = () => {
 
   const handleClick = async (workspaceId: number) => {
     setIsPending(true);
-    
+
     isUserInWorkspace(workspaceId)
       ? await removeUserFromWorkspace(workspaceId)
       : await addUserToWorkspace(workspaceId);
@@ -53,16 +56,22 @@ const WorkspacePage = () => {
       try {
         setIsPending(true);
         await createWorkspace(name);
+        setValue('');
         refetchUserWorkspaces();
         refetchWorkspaces();
       } catch (err) {
-        setMessage(`${err}`);
+        setErrorMessage(`${err}`);
       } finally {
         setIsPending(false);
       }
     },
     [],
   );
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setErrorMessage('');
+      setValue(event.target.value);
+    };
 
   if (isWorkspacesLoading || isUserWorkspacesLoading) {
     return (
@@ -82,44 +91,52 @@ const WorkspacePage = () => {
 
   return (
     <>
-      <h1>{t('groups')}</h1>
-      <main>
-        <div>
-          <ul>
-            {workspaces.map(workspace => (
-              <div key={workspace.id}>
-                <p> {workspace.name} </p>
-                <button onClick={() => handleClick(workspace.id)}>
-                  {isUserInWorkspace(workspace.id) ? t('leave') : t('join')}
-                </button>
-              </div>
-            ))}
-          </ul>
-
-          <form onSubmit={handleSubmit}>
-            <div>
-              <h2>{t('createGroup')}</h2>
-
-              <div>
-                <label>
-                  {t('enterGroupName')}:
-                  <input
-                    name="nameInput"
-                    aria-label="nameInput"
-                    placeholder={t('groupNameInputPlaceholder')}
-                    autoFocus
-                    required
-                  />
-                </label>
-              </div>
+      <header>
+        <h1 className={styles.headerTitle}>{t('groups')}</h1>
+      </header>
+      <main className={styles.main}>
+        <ul>
+          {workspaces.map(workspace => (
+            <div key={workspace.id} className={styles.workspace}>
+              <h3> {workspace.name} </h3>
+              <button
+                className={styles.workspaceBtn}
+                onClick={() => handleClick(workspace.id)}
+              >
+                {isUserInWorkspace(workspace.id) ? t('leave') : t('join')}
+              </button>
             </div>
+          ))}
+        </ul>
 
-            <button type="submit" aria-label="createBtn">
-              {t('create')}
-            </button>
-          </form>
-          {message && <p>{message}</p>}
-        </div>
+        <form className={styles.createWorkspace} onSubmit={handleSubmit}>
+          <div>
+            <h2>{t('createGroup')}</h2>
+
+            <label className={styles.createWorkspaceForm}>
+              {t('enterGroupName')}:
+              <input
+                name="nameInput"
+                aria-label="nameInput"
+                className={styles.createWorkspaceFormInput}
+                placeholder={t('groupNameInputPlaceholder')}
+                value={value}
+                onChange={handleChange}
+                autoFocus
+                required
+              />
+            </label>
+          </div>
+
+          <button
+            className={styles.createWorkspaceFormBtn}
+            type="submit"
+            aria-label="createBtn"
+          >
+            {t('create')}
+          </button>
+          {errorMessage && <p>{errorMessage}</p>}
+        </form>
       </main>
 
       {isPending && (
