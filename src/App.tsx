@@ -52,7 +52,11 @@ function App() {
             <Link to="/login">{t('login')}</Link>
           </>
         ) : (
-          <button onClick={onLogOut}>{t('logout')}</button>
+          <>
+            <Link to="/">{t('todos')}</Link>
+            <Link to="/workspaces">{t('workspaces')}</Link>
+            <button onClick={onLogOut}>{t('logout')}</button>
+          </>
         )}
       </div>
       <Outlet />

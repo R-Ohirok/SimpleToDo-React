@@ -6,6 +6,8 @@ import { useCallback, useState } from 'react';
 import type { ToDoType } from '../../../types';
 import generateId from '../../../utils/generateId';
 import { useTranslation } from 'react-i18next';
+import useUserWorkspaces from '../../../hooks/useUserWorkspaces';
+import { CircularProgress } from '@mui/material';
 
 interface Props {
   onClose: () => void;
@@ -14,60 +16,112 @@ interface Props {
 
 const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
   const { t } = useTranslation();
-  const [value, setValue] = useState('');
+  const [title, setTitle] = useState('');
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<number>(0);
 
-  const getNewToDo = useCallback((title: string): ToDoType => {
-    return {
-      id: generateId(),
-      title: normalizeValue(title),
-      isCompleted: false,
-    };
+  const { userWorkspaces, isLoading } = useUserWorkspaces();
+
+  const getNewToDo = useCallback(
+    (title: string, workspaceId: number): ToDoType => {
+      return {
+        id: generateId(),
+        title: normalizeValue(title),
+        isCompleted: false,
+        workspaceId,
+      };
+    },
+    [],
+  );
+
+  const handleSubmit = useCallback(async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    onCreateToDo(getNewToDo(title, selectedWorkspaceId));
+    onClose();
   }, []);
 
-  const onCreate = () => {
-    if (value.trim()) {
-      onCreateToDo(getNewToDo(value));
-    }
-
-    onClose();
-  };
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+    setTitle(event.target.value);
   };
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          width: '100%',
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <div className={styles.modalContentTop}>
-          <h2 className={styles.modalContentTitle}>NEW NOTE</h2>
-          <input
-            name="modalContentInput"
-            aria-label='modalContentInput'
-            className={styles.modalContentInput}
-            type="text"
-            placeholder={t('modalContentInputPlaceholder')}
-            value={value}
-            autoFocus
-            onChange={handleChange}
-          />
-        </div>
-        <div className={styles.modalControl}>
-          <button
-            className={cn(styles.modalControlBtn, styles.modalControlBtnCancel)}
-            onClick={onClose}
-            aria-label='cancel'
-          >
-            {t('cancel')}
-          </button>
-          <button
-            className={cn(styles.modalControlBtn, styles.modalControlBtnApply)}
-            onClick={onCreate}
-            aria-label='create'
-          >
-            {t('create')}
-          </button>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <h2 className={styles.modalContentTitle}>{t('newNote')}</h2>
+
+            <div className={styles.fields}>
+              <input
+                name="modalContentInput"
+                aria-label="modalContentInput"
+                className={styles.modalContentInput}
+                type="text"
+                placeholder={t('modalContentInputPlaceholder')}
+                value={title}
+                autoFocus
+                onChange={handleChange}
+                required
+              />
+                {t('selecrWorkspace')}
+              <div>
+              {userWorkspaces.map(workspace => (
+                <label key={workspace.id}>
+                  <input
+                    type="radio"
+                    name="option"
+                    value={workspace.id}
+                    checked={selectedWorkspaceId === workspace.id}
+                    onChange={() => setSelectedWorkspaceId(workspace.id)}
+                    required
+                  />
+                  {workspace.name}
+                </label>
+              ))}
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.modalControl}>
+            <button
+              className={cn(
+                styles.modalControlBtn,
+                styles.modalControlBtnCancel,
+              )}
+              onClick={onClose}
+              type="button"
+              aria-label="cancel"
+            >
+              {t('cancel')}
+            </button>
+            <button
+              className={cn(
+                styles.modalControlBtn,
+                styles.modalControlBtnApply,
+              )}
+              type="submit"
+              aria-label="create"
+            >
+              {t('create')}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
