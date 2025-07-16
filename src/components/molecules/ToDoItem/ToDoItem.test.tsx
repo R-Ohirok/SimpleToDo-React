@@ -14,6 +14,7 @@ const mockTodo: ToDoType = {
   id: '1',
   title: 'test todo',
   isCompleted: false,
+  workspaceId: 1,
 };
 
 const onDeleteToDo = deleteTodoHandler;
