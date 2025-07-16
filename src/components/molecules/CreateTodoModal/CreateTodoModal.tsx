@@ -33,15 +33,16 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
     [],
   );
 
-  const handleSubmit = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+      console.log(title);
+      console.log(selectedWorkspaceId);
       event.preventDefault();
+      try {
+        await onCreateToDo(getNewToDo(title, selectedWorkspaceId));
+        onClose();
 
-      onCreateToDo(getNewToDo(title, selectedWorkspaceId));
-      onClose();
-    },
-    [],
-  );
+      } catch {}
+    };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);

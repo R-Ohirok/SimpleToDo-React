@@ -14,6 +14,7 @@ export async function getTodos(params?: TodosParams): Promise<TodosResponse> {
 
 export async function addTodo(newTodo: ToDoType): Promise<ToDoType[]> {
   try {
+    console.log(newTodo);
     const response = await api.post('/todos', newTodo);
 
     return response.data;
