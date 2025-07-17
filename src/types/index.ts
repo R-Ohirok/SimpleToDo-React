@@ -12,6 +12,7 @@ export type ToDoType = {
   id: string;
   title: string;
   isCompleted: boolean;
+  workspaceId?: number;
 };
 
 export type ThemeType = 'dark' | 'light';
@@ -41,4 +42,9 @@ export type RegisterParams = {
 export type LogInParams = {
   email: string;
   password: string;
+};
+
+export type WorkspaceType = {
+  id: number;
+  name: string;
 };

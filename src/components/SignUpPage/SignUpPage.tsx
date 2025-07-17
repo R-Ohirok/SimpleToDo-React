@@ -31,7 +31,7 @@ const SignUpPage = () => {
 
     try {
       await registerUser(params);
-      navigate('/', { replace: true });
+      navigate('/login', { replace: true });
     } catch (err) {
       setMessage(`${err}`);
     }
@@ -53,7 +53,7 @@ const SignUpPage = () => {
               <input
                 className={styles.input}
                 name="emailInput"
-                aria-label='emailInput'
+                aria-label="emailInput"
                 type="email"
                 placeholder={t('emailInputPlaceholder')}
                 autoFocus
@@ -66,7 +66,7 @@ const SignUpPage = () => {
               <input
                 className={styles.input}
                 name="passwordInput"
-                aria-label='passwordInput'
+                aria-label="passwordInput"
                 type="password"
                 placeholder={t('passwordInputPlaceholder')}
                 required
@@ -78,10 +78,19 @@ const SignUpPage = () => {
         </div>
 
         <div className={styles.control}>
-          <button className={styles.controlBtn} type="button" onClick={goBack} aria-label='backBtn'>
+          <button
+            className={styles.controlBtn}
+            type="button"
+            onClick={goBack}
+            aria-label="backBtn"
+          >
             {t('back')}
           </button>
-          <button className={styles.controlBtn} type="submit" aria-label='registerBtn'>
+          <button
+            className={styles.controlBtn}
+            type="submit"
+            aria-label="registerBtn"
+          >
             {t('register')}
           </button>
         </div>

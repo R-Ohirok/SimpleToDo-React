@@ -1,3 +1,4 @@
+import axios from 'axios';
 import type { TodosParams, TodosResponse, ToDoType } from '../types';
 import api from './config';
 
@@ -6,9 +7,13 @@ export async function getTodos(params?: TodosParams): Promise<TodosResponse> {
     const response = await api.get<TodosResponse>('/todos', { params });
 
     return response.data;
-  } catch (error) {
-    console.error('Failed to download ToDos: ', error);
-    throw error;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      const message = error.response.data?.message || 'Unknown error';
+      throw new Error(message);
+    }
+
+    throw new Error('Network error or server not responding');
   }
 }
 
@@ -17,9 +22,13 @@ export async function addTodo(newTodo: ToDoType): Promise<ToDoType[]> {
     const response = await api.post('/todos', newTodo);
 
     return response.data;
-  } catch (error) {
-    console.error('Failed to create ToDo: ', error);
-    throw error;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      const message = error.response.data?.message || 'Unknown error';
+      throw new Error(message);
+    }
+
+    throw new Error('Network error or server not responding');
   }
 }
 

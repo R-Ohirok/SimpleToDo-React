@@ -73,3 +73,22 @@
     }
   }
 }
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.option {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+}

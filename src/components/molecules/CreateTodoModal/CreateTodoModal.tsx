@@ -14,7 +14,8 @@ interface Props {
 
 const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
   const { t } = useTranslation();
-  const [value, setValue] = useState('');
+  const [title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
 
   const getNewToDo = useCallback((title: string): ToDoType => {
     return {
@@ -24,51 +25,61 @@ const CreateTodoModal: React.FC<Props> = ({ onClose, onCreateToDo }) => {
     };
   }, []);
 
-  const onCreate = () => {
-    if (value.trim()) {
-      onCreateToDo(getNewToDo(value));
-    }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    onClose();
+    try {
+      await onCreateToDo(getNewToDo(title));
+      onClose();
+    } catch (err) {
+      setMessage(`${err}`);
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+    setTitle(event.target.value);
   };
 
   return (
     <div className={styles.modal}>
-      <div className={styles.modalContent}>
+      <form className={styles.modalContent} onSubmit={handleSubmit}>
         <div className={styles.modalContentTop}>
-          <h2 className={styles.modalContentTitle}>NEW NOTE</h2>
-          <input
-            name="modalContentInput"
-            aria-label='modalContentInput'
-            className={styles.modalContentInput}
-            type="text"
-            placeholder={t('modalContentInputPlaceholder')}
-            value={value}
-            autoFocus
-            onChange={handleChange}
-          />
+          <h2 className={styles.modalContentTitle}>{t('newNote')}</h2>
+
+          <div className={styles.fields}>
+            <input
+              name="modalContentInput"
+              aria-label="modalContentInput"
+              className={styles.modalContentInput}
+              type="text"
+              placeholder={t('modalContentInputPlaceholder')}
+              value={title}
+              autoFocus
+              onChange={handleChange}
+              required
+            />
+          </div>
+          {message && <p className={styles.message}>{message}</p>}
         </div>
+
         <div className={styles.modalControl}>
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnCancel)}
             onClick={onClose}
-            aria-label='cancel'
+            type="button"
+            aria-label="cancel"
           >
             {t('cancel')}
           </button>
           <button
             className={cn(styles.modalControlBtn, styles.modalControlBtnApply)}
-            onClick={onCreate}
-            aria-label='create'
+            type="submit"
+            aria-label="create"
           >
             {t('create')}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

@@ -35,10 +35,7 @@ describe('SignUpPage', () => {
       'test@example.com',
     );
 
-    await userEvent.type(
-      screen.getByLabelText(/passwordInput/i),
-      'test123456',
-    );
+    await userEvent.type(screen.getByLabelText(/passwordInput/i), 'test123456');
 
     userEvent.click(screen.getByLabelText(/registerBtn/i));
 

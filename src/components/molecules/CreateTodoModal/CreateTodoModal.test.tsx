@@ -26,12 +26,11 @@ describe('CreateTodoModal', () => {
   });
 
   it('call onClose without creating todo if input is empty', async () => {
-    const { onClose, onCreateToDo } = setup();
+    const { onCreateToDo } = setup();
 
     await userEvent.click(screen.getByLabelText(/create/i));
 
     expect(onCreateToDo).not.toHaveBeenCalled();
-    expect(onClose).toHaveBeenCalled();
   });
 
   it('call onCreateToDo and closes modal', async () => {
