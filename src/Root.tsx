@@ -6,7 +6,6 @@ import LogInPage from './components/LogInPage/LogInPage';
 import SignUpPage from './components/SignUpPage/SignUpPage';
 import WorkspacePage from './components/WorkspacesPage/WorkspacesPage';
 
-
 const Root = () => (
   <Router>
     <Routes>
@@ -16,8 +15,8 @@ const Root = () => (
           <Route path="workspaces" element={<WorkspacePage />} />
         </Route>
 
-        <Route path="signup" element={<SignUpPage />}/>
-        <Route path="login" element={<LogInPage />}/>
+        <Route path="signup" element={<SignUpPage />} />
+        <Route path="login" element={<LogInPage />} />
       </Route>
     </Routes>
   </Router>

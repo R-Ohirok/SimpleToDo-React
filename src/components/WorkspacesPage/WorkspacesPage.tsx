@@ -12,25 +12,26 @@ const WorkspacePage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [value, setValue] = useState('');
   const [isPending, setIsPending] = useState(false);
-  const [userWorkspace, setUserWorkspace] = useState(Number(localStorage.getItem('workspaceId')) || null);
-  const {
-    workspaces,
-    isLoading,
-    refetch,
-  } = useWorkspaces();
+  const [userWorkspace, setUserWorkspace] = useState(
+    Number(localStorage.getItem('workspaceId')) || null,
+  );
+  const { workspaces, isLoading, refetch } = useWorkspaces();
 
-  const handleClick = useCallback(async (workspaceId: number) => {
-    try {
-      setIsPending(true);
-    await joinWorkspace(workspaceId);
-    setUserWorkspace(Number(localStorage.getItem('workspaceId')) || null);
-    refetch();
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setIsPending(false);
-  }
-  }, [refetch]);
+  const handleClick = useCallback(
+    async (workspaceId: number) => {
+      try {
+        setIsPending(true);
+        await joinWorkspace(workspaceId);
+        setUserWorkspace(Number(localStorage.getItem('workspaceId')) || null);
+        refetch();
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsPending(false);
+      }
+    },
+    [refetch],
+  );
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {

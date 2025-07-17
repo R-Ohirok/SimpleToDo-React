@@ -41,7 +41,11 @@ export async function joinWorkspace(workspaceId: number) {
   try {
     const response = await api.post('/workspace/add-user', { workspaceId });
 
-    const { accessToken, expiresAt, workspaceId: newWorkspaceId } = response.data;
+    const {
+      accessToken,
+      expiresAt,
+      workspaceId: newWorkspaceId,
+    } = response.data;
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('expiresAt', expiresAt.toString());
     localStorage.setItem('workspaceId', newWorkspaceId.toString());
