@@ -31,7 +31,7 @@ const SignUpPage = () => {
 
     try {
       await registerUser(params);
-      navigate('/', { replace: true });
+      navigate('/login', { replace: true });
     } catch (err) {
       setMessage(`${err}`);
     }

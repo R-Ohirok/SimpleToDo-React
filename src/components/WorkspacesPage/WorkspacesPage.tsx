@@ -2,49 +2,35 @@ import { CircularProgress } from '@mui/material';
 import { useCallback, useState } from 'react';
 import useKeepSession from '../../hooks/useAutoRefresh';
 import useWorkspaces from '../../hooks/useWorkspaces';
-import useUserWorkspaces from '../../hooks/useUserWorkspaces';
-import {
-  addUserToWorkspace,
-  createWorkspace,
-  removeUserFromWorkspace,
-} from '../../api/workspace';
+import { joinWorkspace, createWorkspace } from '../../api/workspace';
 import styles from './WorkspacesPage.module.scss';
 import { useTranslation } from 'react-i18next';
 
 const WorkspacePage = () => {
   useKeepSession();
   const { t } = useTranslation();
-  const [isPending, setIsPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [value, setValue] = useState('');
+  const [isPending, setIsPending] = useState(false);
+  const [userWorkspace, setUserWorkspace] = useState(Number(localStorage.getItem('workspaceId')) || null);
   const {
     workspaces,
-    isLoading: isWorkspacesLoading,
-    refetch: refetchWorkspaces,
+    isLoading,
+    refetch,
   } = useWorkspaces();
-  const {
-    userWorkspaces,
-    isLoading: isUserWorkspacesLoading,
-    refetch: refetchUserWorkspaces,
-  } = useUserWorkspaces();
 
-  const userWorkspacesIds = userWorkspaces.map(workspace => workspace.id);
-
-  const isUserInWorkspace = (workspaceId: number) => {
-    return userWorkspacesIds.includes(workspaceId);
-  };
-
-  const handleClick = async (workspaceId: number) => {
-    setIsPending(true);
-
-    isUserInWorkspace(workspaceId)
-      ? await removeUserFromWorkspace(workspaceId)
-      : await addUserToWorkspace(workspaceId);
-
+  const handleClick = useCallback(async (workspaceId: number) => {
+    try {
+      setIsPending(true);
+    await joinWorkspace(workspaceId);
+    setUserWorkspace(Number(localStorage.getItem('workspaceId')) || null);
+    refetch();
+  } catch (error) {
+    console.error(error);
+  } finally {
     setIsPending(false);
-    refetchUserWorkspaces();
-    refetchWorkspaces();
-  };
+  }
+  }, [refetch]);
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -56,24 +42,24 @@ const WorkspacePage = () => {
       try {
         setIsPending(true);
         await createWorkspace(name);
+        setUserWorkspace(Number(localStorage.getItem('workspaceId')) || null);
         setValue('');
-        refetchUserWorkspaces();
-        refetchWorkspaces();
+        refetch();
       } catch (err) {
         setErrorMessage(`${err}`);
       } finally {
         setIsPending(false);
       }
     },
-    [],
+    [refetch],
   );
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setErrorMessage('');
-      setValue(event.target.value);
-    };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setErrorMessage('');
+    setValue(event.target.value);
+  };
 
-  if (isWorkspacesLoading || isUserWorkspacesLoading) {
+  if (isLoading) {
     return (
       <div
         style={{
@@ -99,12 +85,16 @@ const WorkspacePage = () => {
           {workspaces.map(workspace => (
             <div key={workspace.id} className={styles.workspace}>
               <h3> {workspace.name} </h3>
-              <button
-                className={styles.workspaceBtn}
-                onClick={() => handleClick(workspace.id)}
-              >
-                {isUserInWorkspace(workspace.id) ? t('leave') : t('join')}
-              </button>
+              {userWorkspace === workspace.id ? (
+                <p>{t('joined')}</p>
+              ) : (
+                <button
+                  className={styles.workspaceBtn}
+                  onClick={() => handleClick(workspace.id)}
+                >
+                  {t('join')}
+                </button>
+              )}
             </div>
           ))}
         </ul>

@@ -12,7 +12,7 @@ export type ToDoType = {
   id: string;
   title: string;
   isCompleted: boolean;
-  workspaceId: number;
+  workspaceId?: number;
 };
 
 export type ThemeType = 'dark' | 'light';

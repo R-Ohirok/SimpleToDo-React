@@ -43,11 +43,17 @@ export async function logIn(params: LogInParams): Promise<string> {
     const response = await api.post('/auth/login', params, {
       withCredentials: true,
     });
-    const { accessToken, expiresAt } = response.data;
-
+    const { accessToken, expiresAt, workspaceId } = response.data;
+    
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('expiresAt', expiresAt.toString());
 
+    if (workspaceId) {
+      localStorage.setItem('workspaceId', workspaceId.toString());
+    } else {
+      localStorage.removeItem('workspaceId');
+    }
+    
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
@@ -81,10 +87,16 @@ export const refreshToken = async () => {
   try {
     const response = await api.get('/auth/refresh', { withCredentials: true });
   
-    const { accessToken, expiresAt } = response.data;
+    const { accessToken, expiresAt, workspaceId } = response.data;
   
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('expiresAt', expiresAt.toString());
+    
+    if (workspaceId) {
+      localStorage.setItem('workspaceId', workspaceId.toString());
+    } else {
+      localStorage.removeItem('workspaceId');
+    }
   
     return expiresAt;
   } catch {

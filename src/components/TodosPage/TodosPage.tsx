@@ -35,9 +35,11 @@ const TodosPage = () => {
     async (newTodo: ToDoType) => {
       setIsPending(true);
 
-      await addTodo(newTodo);
-
-      setIsPending(false);
+      try {
+        await addTodo(newTodo);
+      } finally {
+        setIsPending(false);
+      }
     },
     [todos],
   );

@@ -17,25 +17,15 @@ export async function getAllWorkspaces(): Promise<WorkspaceType[]> {
   }
 }
 
-export async function getUserWorkspaces(): Promise<WorkspaceType[]> {
-  try {
-    const response = await api.get<WorkspaceType[]>('/workspace/user');
-
-    return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response) {
-      const message = error.response.data?.message || 'Unknown error';
-      throw new Error(message);
-    }
-
-    throw new Error('Network error or server not responding');
-  }
-}
-
 export async function createWorkspace(name: string) {
   try {
     const response = await api.post('/workspace/create', { name });
 
+    const { accessToken, expiresAt, workspaceId } = response.data;
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('expiresAt', expiresAt.toString());
+    localStorage.setItem('workspaceId', workspaceId.toString());
+
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
@@ -47,24 +37,14 @@ export async function createWorkspace(name: string) {
   }
 }
 
-export async function addUserToWorkspace(workspaceId: number) {
+export async function joinWorkspace(workspaceId: number) {
   try {
     const response = await api.post('/workspace/add-user', { workspaceId });
 
-    return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response) {
-      const message = error.response.data?.message || 'Unknown error';
-      throw new Error(message);
-    }
-
-    throw new Error('Network error or server not responding');
-  }
-}
-
-export async function removeUserFromWorkspace(workspaceId: number) {
-  try {
-    const response = await api.post('/workspace/remove-user', { workspaceId });
+    const { accessToken, expiresAt, workspaceId: newWorkspaceId } = response.data;
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('expiresAt', expiresAt.toString());
+    localStorage.setItem('workspaceId', newWorkspaceId.toString());
 
     return response.data;
   } catch (error: unknown) {
@@ -76,3 +56,18 @@ export async function removeUserFromWorkspace(workspaceId: number) {
     throw new Error('Network error or server not responding');
   }
 }
+
+// export async function leaveWorkspace(workspaceId: number) {
+//   try {
+//     const response = await api.post('/workspace/remove-user', { workspaceId });
+
+//     return response.data;
+//   } catch (error: unknown) {
+//     if (axios.isAxiosError(error) && error.response) {
+//       const message = error.response.data?.message || 'Unknown error';
+//       throw new Error(message);
+//     }
+
+//     throw new Error('Network error or server not responding');
+//   }
+// }
