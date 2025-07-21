@@ -6,8 +6,9 @@ import { normalizeValue } from '../../../utils/normalizeValue';
 import type { ToDoType } from '../../../types';
 import { useDraggable } from '@dnd-kit/core';
 import { Skeleton } from '@mui/material';
-import { updateTodo } from '../../../api/todos';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
+import { UPDATE_TODO } from '../../../graphql/mutations';
 
 interface Props {
   todo: ToDoType;
@@ -19,31 +20,41 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
 
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
-  const [isPending, setIsPending] = useState(false);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
   });
 
+  const [updateTodoMutation, { loading: isUpdating }] = useMutation(UPDATE_TODO);
+
   const handleUpdateToDo = useCallback(
-    async (toDoToUpdate: ToDoType) => {
-      setIsPending(true);
-
-      await updateTodo(toDoToUpdate);
-
-      setIsPending(false);
+    async (toDoToUpdate: Partial<ToDoType> & { id: string }) => {
+      try {
+        await updateTodoMutation({
+          variables: {
+            id: toDoToUpdate.id,
+            title: toDoToUpdate.title,
+            isCompleted: toDoToUpdate.isCompleted,
+          },
+        });
+      } catch (error) {
+        console.error('Failed to update todo:', error);
+      }
     },
-    [title, isCompleted],
+    [updateTodoMutation],
   );
 
   const handleDeleteToDo = useCallback(() => {
     onDeleteToDo(id);
-  }, []);
+  }, [id, onDeleteToDo]);
+
   const handleChangeStatus = useCallback(() => {
-    handleUpdateToDo({ ...todo, isCompleted: !isCompleted });
-  }, [isCompleted]);
+    handleUpdateToDo({ id, isCompleted: !isCompleted });
+  }, [handleUpdateToDo, id, isCompleted]);
+
   const handleSelectTodo = useCallback(() => {
     setIsEditing(true);
-  }, [title]);
+  }, []);
+
   const handleChangeTitle = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -53,22 +64,19 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
 
       if (newTitle === title) {
         setIsEditing(false);
-
         return;
       }
 
       if (!newTitle) {
         handleDeleteToDo();
         setIsEditing(false);
-
         return;
       }
 
-      handleUpdateToDo({ ...todo, title: newTitle });
-
+      handleUpdateToDo({ id, title: newTitle });
       setIsEditing(false);
     },
-    [title],
+    [handleUpdateToDo, handleDeleteToDo, title, id],
   );
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLFormElement>) => {
@@ -86,7 +94,7 @@ const ToDoItem: React.FC<Props> = memo(({ todo, onDeleteToDo }) => {
       }
     : undefined;
 
-  if (isPending) {
+  if (isUpdating) {
     return (
       <li className={styles.todoItem}>
         <Skeleton

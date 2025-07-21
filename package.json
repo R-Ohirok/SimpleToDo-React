@@ -13,12 +13,14 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.8",
     "@dnd-kit/core": "^6.3.1",
     "@mui/material": "^7.1.2",
     "@tanstack/react-query": "^5.81.2",
     "axios": "^1.10.0",
     "camelcase-keys": "^9.1.3",
     "classnames": "^2.5.1",
+    "graphql": "^16.11.0",
     "i18next": "^25.3.2",
     "jotai": "^2.12.5",
     "react": "^19.1.0",

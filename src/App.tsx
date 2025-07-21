@@ -1,13 +1,15 @@
 import './index.scss';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import useIsAuthorized from './state/hooks/useIsAuthorized';
-import { logout } from './api/auth';
 import { useTranslation } from 'react-i18next';
 import Dropdown from './components/atoms/Dropdown/Dropdown';
 import type { DropdownOptionType, LanguageType } from './types';
 import { LANGUAGES } from './constants/constants';
 import { useCallback, useId } from 'react';
 import useLanguage from './hooks/useLanguage';
+import { useMutation } from '@apollo/client';
+import { LOGOUT } from './graphql/mutations';
+import { clearTokens } from './utils/clearTokens';
 
 function App() {
   const { t } = useTranslation();
@@ -16,9 +18,21 @@ function App() {
   const isAuthorized = useIsAuthorized();
   const navigate = useNavigate();
 
+  const [logoutMutation] = useMutation(LOGOUT, {
+    onCompleted: () => {
+      clearTokens();
+      navigate('/login', { replace: true });
+    },
+    onError: (error) => {
+      console.error('Logout failed:', error);
+    },
+  });
+
   const onLogOut = async () => {
-    await logout();
-    navigate('/login', { replace: true });
+    try {
+      await logoutMutation();
+    } catch {
+    }
   };
 
   const languageOptions: DropdownOptionType[] = LANGUAGES.map(lang => {

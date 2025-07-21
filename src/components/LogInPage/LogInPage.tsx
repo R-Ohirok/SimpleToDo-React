@@ -1,70 +1,60 @@
 import { useEffect, useState } from 'react';
 import styles from './LogInPage.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { verifyEmail, logIn } from '../../api/auth';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import useIsAuthorized from '../../state/hooks/useIsAuthorized';
-import { useMutation } from '@tanstack/react-query';
 import AuthForm from './AuthForm/AuthForm';
 import { useTranslation } from 'react-i18next';
+import { VERIFY_EMAIL } from '../../graphql/queries';
+import { LOGIN } from '../../graphql/mutations';
+import { saveTokens } from '../../utils/saveTokens';
 
 const LogInPage = () => {
   const { t } = useTranslation();
   const isAuthorized = useIsAuthorized();
-  const [currEmail, setCurrEmail] = useState('');
   const navigate = useNavigate();
+  const [currEmail, setCurrEmail] = useState('');
 
   useEffect(() => {
     if (isAuthorized) {
       navigate('/', { replace: true });
     }
-  }, []);
+  }, [isAuthorized, navigate]);
 
-  const verifyEmailMutation = useMutation({
-    mutationFn: verifyEmail,
-    onSuccess: (email: string) => {
-      setCurrEmail(email);
+  const [verifyEmail, { error: verifyEmailError }] = useLazyQuery(VERIFY_EMAIL, {
+    onCompleted: (data) => {
+      setCurrEmail(data.verifyEmail);
     },
+    fetchPolicy: 'network-only',
   });
 
-  const logInMutation = useMutation({
-    mutationFn: logIn,
-    onSuccess: () => {
+  const [login, { error: loginError }] = useMutation(LOGIN, {
+    onCompleted: (data) => {
+      saveTokens(data.login);
       navigate('/', { replace: true });
     },
   });
 
-  const handleCheckEmail = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCheckEmail = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const formData = new FormData(event.currentTarget);
     const email = formData.get('emailInput') as string;
 
-    verifyEmailMutation.mutate(email);
+    verifyEmail({ variables: { email } });
   };
 
-  const handleCheckPassword = async (
-    event: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const handleCheckPassword = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const formData = new FormData(event.currentTarget);
     const password = formData.get('passwordInput') as string;
 
-    const params = {
-      email: currEmail,
-      password,
-    };
-
-    logInMutation.mutate(params);
+    login({ variables: { email: currEmail, password } });
   };
 
-  const goBack = () => {
-    navigate(-1);
-  };
+  const goBack = () => navigate(-1);
 
   const handleBackToEmail = () => {
     setCurrEmail('');
-    verifyEmailMutation.reset();
   };
 
   return (
@@ -76,15 +66,11 @@ const LogInPage = () => {
           field={t('email')}
           placeholder={t('emailInputPlaceholder')}
           fieldType="email"
-          errorMessage={
-            verifyEmailMutation.isError
-              ? (verifyEmailMutation.error as Error).message
-              : undefined
-          }
+          errorMessage={verifyEmailError?.message}
           onSubmit={handleCheckEmail}
           onBack={goBack}
           submitBtnText={t('continue')}
-        ></AuthForm>
+        />
       ) : (
         <AuthForm
           key="password"
@@ -92,11 +78,7 @@ const LogInPage = () => {
           fieldType="password"
           field={t('password')}
           placeholder={t('passwordInputPlaceholder')}
-          errorMessage={
-            logInMutation.isError
-              ? (logInMutation.error as Error).message
-              : undefined
-          }
+          errorMessage={loginError?.message}
           onSubmit={handleCheckPassword}
           onBack={handleBackToEmail}
           submitBtnText={t('login')}
