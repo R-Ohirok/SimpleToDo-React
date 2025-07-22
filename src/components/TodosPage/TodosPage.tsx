@@ -3,14 +3,15 @@ import Footer from '../organisms/Footer/Footer';
 import ToDoList from '../organisms/ToDoList/ToDoList';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import Header from '../organisms/Header/Header';
-import { addTodo, deleteTodo } from '../../api/todos';
 import { useCallback, useState } from 'react';
 import type { FilterStatusType, ToDoType } from '../../types';
 import { useTodoSocket } from '../../hooks/useTodoSocket';
-import useTodos from '../../hooks/useTodos';
 import { FIRST_PAGE, ITEMS_PER_PAGE } from '../../constants/constants';
 import { useSearchParams } from 'react-router-dom';
 import useKeepSession from '../../hooks/useAutoRefresh';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_TODOS } from '../../graphql/queries';
+import { ADD_TODO, DELETE_TODO } from '../../graphql/mutations';
 
 const TodosPage = () => {
   useKeepSession();
@@ -20,14 +21,18 @@ const TodosPage = () => {
   const title = searchParams.get('title') || '';
   const activePage = Number(searchParams.get('page') || FIRST_PAGE);
 
-  const PARAMS = {
-    status,
-    title,
-    limit: ITEMS_PER_PAGE,
-    offset: (activePage - 1) * ITEMS_PER_PAGE,
-  };
+  const { data, loading: isLoading, refetch } = useQuery(GET_TODOS, {
+    variables: {
+      status,
+      title,
+      limit: ITEMS_PER_PAGE,
+      offset: (activePage - 1) * ITEMS_PER_PAGE,
+    },
+    fetchPolicy: 'network-only',
+  });
 
-  const { todos, pagesCount, isLoading } = useTodos(PARAMS);
+  const [addTodoMutation] = useMutation(ADD_TODO);
+  const [deleteTodoMutation] = useMutation(DELETE_TODO);
 
   useTodoSocket();
 
@@ -36,23 +41,37 @@ const TodosPage = () => {
       setIsPending(true);
 
       try {
-        await addTodo(newTodo);
+        await addTodoMutation({
+          variables: {
+            id: newTodo.id,
+            title: newTodo.title,
+            isCompleted: newTodo.isCompleted,
+          },
+        });
+
+        await refetch();
       } finally {
         setIsPending(false);
       }
     },
-    [todos],
+    [addTodoMutation, refetch],
   );
 
   const handleDeleteToDo = useCallback(
     async (todoId: string) => {
       setIsPending(true);
 
-      await deleteTodo(todoId);
+      try {
+        await deleteTodoMutation({
+          variables: { id: todoId },
+        });
 
-      setIsPending(false);
+        await refetch();
+      } finally {
+        setIsPending(false);
+      }
     },
-    [todos],
+    [deleteTodoMutation, refetch],
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -77,6 +96,9 @@ const TodosPage = () => {
       </div>
     );
   }
+
+  const todos = data?.todos?.todos || [];
+  const pagesCount = data?.todos?.pagesCount || 1;
 
   return (
     <>

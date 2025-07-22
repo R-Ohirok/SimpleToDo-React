@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import styles from './SignUpPage.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../api/auth';
 import useIsAuthorized from '../../state/hooks/useIsAuthorized';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from '@apollo/client';
+import { REGISTER_USER } from '../../graphql/mutations';
 
 const SignUpPage = () => {
   const { t } = useTranslation();
@@ -11,29 +12,29 @@ const SignUpPage = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  const [registerUser, { loading: isLoading }] = useMutation(REGISTER_USER);
+
   useEffect(() => {
     if (isAuthorized) {
       navigate('/', { replace: true });
     }
-  }, []);
+  }, [isAuthorized, navigate]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setMessage('');
 
     const formData = new FormData(event.currentTarget);
     const email = formData.get('emailInput') as string;
     const password = formData.get('passwordInput') as string;
 
-    const params = {
-      email,
-      password,
-    };
-
     try {
-      await registerUser(params);
+      await registerUser({
+        variables: { email, password },
+      });
       navigate('/login', { replace: true });
-    } catch (err) {
-      setMessage(`${err}`);
+    } catch (err: any) {
+      setMessage(err.message || 'Unknown error');
     }
   };
 
@@ -58,6 +59,7 @@ const SignUpPage = () => {
                 placeholder={t('emailInputPlaceholder')}
                 autoFocus
                 required
+                disabled={isLoading}
               />
             </label>
 
@@ -70,6 +72,7 @@ const SignUpPage = () => {
                 type="password"
                 placeholder={t('passwordInputPlaceholder')}
                 required
+                disabled={isLoading}
               />
             </label>
 
@@ -83,6 +86,7 @@ const SignUpPage = () => {
             type="button"
             onClick={goBack}
             aria-label="backBtn"
+            disabled={isLoading}
           >
             {t('back')}
           </button>
@@ -90,6 +94,7 @@ const SignUpPage = () => {
             className={styles.controlBtn}
             type="submit"
             aria-label="registerBtn"
+            disabled={isLoading}
           >
             {t('register')}
           </button>

@@ -1,8 +1,24 @@
 import { useEffect, useRef } from 'react';
-import { logout, refreshToken } from '../api/auth';
+import { useApolloClient } from '@apollo/client';
+import { LOGOUT, REFRESH_TOKEN } from '../graphql/mutations';
+import { clearTokens } from '../utils/clearTokens';
+import { useNavigate } from 'react-router-dom';
 
 const useKeepSession = () => {
   const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const client = useApolloClient();
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    try {
+      await client.mutate({ mutation: LOGOUT });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      clearTokens();
+      navigate('/login', { replace: true });
+    }
+  };
 
   const scheduleRefresh = (expiresAt: number) => {
     const now = Date.now();
@@ -13,15 +29,40 @@ const useKeepSession = () => {
       clearTimeout(refreshTimeoutRef.current);
     }
 
-    refreshTimeoutRef.current = setTimeout(async () => {
-      try {
-        const newExpiresAt = await refreshToken();
-        scheduleRefresh(newExpiresAt);
-      } catch (error) {
-        console.error('Failed to refresh token', error);
-        logout();
-      }
+    if (msBeforeRefresh <= 0) {
+      refreshToken();
+      return;
+    }
+
+    refreshTimeoutRef.current = setTimeout(() => {
+      refreshToken();
     }, msBeforeRefresh);
+  };
+
+  const refreshToken = async () => {
+    try {
+      const { data } = await client.query({
+        query: REFRESH_TOKEN,
+        fetchPolicy: 'network-only',
+      });
+
+      if (data?.refresh) {
+        const { accessToken, expiresAt, workspaceId } = data.refresh;
+
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('expiresAt', expiresAt.toString());
+        if (workspaceId !== undefined) {
+          localStorage.setItem('workspaceId', workspaceId.toString());
+        }
+
+        scheduleRefresh(expiresAt);
+      } else {
+        throw new Error('No refresh data');
+      }
+    } catch (error) {
+      console.error('Failed to refresh token:', error);
+      await logout();
+    }
   };
 
   useEffect(() => {

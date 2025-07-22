@@ -1,59 +1,62 @@
 import { CircularProgress } from '@mui/material';
-import { useCallback, useState } from 'react';
-import useKeepSession from '../../hooks/useAutoRefresh';
-import useWorkspaces from '../../hooks/useWorkspaces';
-import { joinWorkspace, createWorkspace } from '../../api/workspace';
-import styles from './WorkspacesPage.module.scss';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import styles from './WorkspacesPage.module.scss';
+import { useQuery, useMutation } from '@apollo/client';
+
+import useKeepSession from '../../hooks/useAutoRefresh';
+import { GET_ALL_WORKSPACES } from '../../graphql/queries';
+import { CREATE_WORKSPACE, JOIN_WORKSPACE } from '../../graphql/mutations';
+import type { WorkspaceType } from '../../types';
+import { saveTokens } from '../../utils/saveTokens';
 
 const WorkspacePage = () => {
   useKeepSession();
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
   const [value, setValue] = useState('');
-  const [isPending, setIsPending] = useState(false);
-  const [userWorkspace, setUserWorkspace] = useState(
+  const [userWorkspace, setUserWorkspace] = useState<number | null>(
     Number(localStorage.getItem('workspaceId')) || null,
   );
-  const { workspaces, isLoading, refetch } = useWorkspaces();
 
-  const handleClick = useCallback(
-    async (workspaceId: number) => {
-      try {
-        setIsPending(true);
-        await joinWorkspace(workspaceId);
-        setUserWorkspace(Number(localStorage.getItem('workspaceId')) || null);
-        refetch();
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsPending(false);
-      }
+  const { data, loading: isLoading, refetch } = useQuery(GET_ALL_WORKSPACES);
+
+  const [joinWorkspace, { loading: joinLoading }] = useMutation(JOIN_WORKSPACE, {
+    onCompleted: data => {
+      saveTokens(data.joinWorkspace);
+      setUserWorkspace(Number(localStorage.getItem('workspaceId')) || null);
+      refetch();
     },
-    [refetch],
+    onError: error => {
+      console.error(error);
+      setErrorMessage(error.message);
+    },
+  });
+
+  const [createWorkspace, { loading: createLoading }] = useMutation(
+    CREATE_WORKSPACE,
+    {
+      onCompleted: data => {
+        saveTokens(data.createWorkspace);
+        setUserWorkspace(Number(localStorage.getItem('workspaceId')) || null);        setValue('');
+        refetch();
+      },
+      onError: error => {
+        setErrorMessage(error.message);
+      },
+    },
   );
 
-  const handleSubmit = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+  const handleJoin = (workspaceId: number) => {
+    setErrorMessage('');
+    joinWorkspace({ variables: { workspaceId } });
+  };
 
-      const formData = new FormData(event.currentTarget);
-      const name = formData.get('nameInput') as string;
-
-      try {
-        setIsPending(true);
-        await createWorkspace(name);
-        setUserWorkspace(Number(localStorage.getItem('workspaceId')) || null);
-        setValue('');
-        refetch();
-      } catch (err) {
-        setErrorMessage(`${err}`);
-      } finally {
-        setIsPending(false);
-      }
-    },
-    [refetch],
-  );
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setErrorMessage('');
+    createWorkspace({ variables: { name: value } });
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setErrorMessage('');
@@ -76,6 +79,10 @@ const WorkspacePage = () => {
     );
   }
 
+  const workspaces = data?.allWorkspaces ?? [];
+
+  const isPending = joinLoading || createLoading;
+
   return (
     <>
       <header>
@@ -83,15 +90,16 @@ const WorkspacePage = () => {
       </header>
       <main className={styles.main}>
         <ul>
-          {workspaces.map(workspace => (
+          {workspaces.map((workspace: WorkspaceType) => (
             <div key={workspace.id} className={styles.workspace}>
               <h3> {workspace.name} </h3>
-              {userWorkspace === workspace.id ? (
+              {userWorkspace === +workspace.id ? (
                 <p>{t('joined')}</p>
               ) : (
                 <button
-                  className={styles.workspaceBtn}
-                  onClick={() => handleClick(workspace.id)}
+                className={styles.workspaceBtn}
+                onClick={() => handleJoin(Number(workspace.id))}
+                disabled={isPending}
                 >
                   {t('join')}
                 </button>
@@ -115,6 +123,7 @@ const WorkspacePage = () => {
                 onChange={handleChange}
                 autoFocus
                 required
+                disabled={isPending}
               />
             </label>
           </div>
@@ -123,6 +132,7 @@ const WorkspacePage = () => {
             className={styles.createWorkspaceFormBtn}
             type="submit"
             aria-label="createBtn"
+            disabled={isPending}
           >
             {t('create')}
           </button>
