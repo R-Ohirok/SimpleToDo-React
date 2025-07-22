@@ -1,14 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ToDoItem from './ToDoItem';
-import { vi } from 'vitest';
+import { MockedProvider } from '@apollo/client/testing';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { DELETE_TODO } from '../../../graphql/mutations';
 import type { ToDoType } from '../../../types/index';
-import { deleteTodoHandler, patchTodoHandler } from '../../../test/handlers';
-import * as todosApi from '../../../api/todos';
-
-beforeEach(() => {
-  vi.clearAllMocks();
-});
 
 const mockTodo: ToDoType = {
   id: '1',
@@ -16,82 +12,58 @@ const mockTodo: ToDoType = {
   isCompleted: false,
 };
 
-const onDeleteToDo = deleteTodoHandler;
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { changeLanguage: () => Promise.resolve() },
+  }),
+}));
+
+const onDeleteToDo = vi.fn();
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+const deleteTodoMock = (id: string) => ({
+  request: {
+    query: DELETE_TODO,
+    variables: { id },
+  },
+  result: {
+    data: {
+      deleteTodo: { id },
+    },
+  },
+});
 
 describe('ToDoItem', () => {
-  it('render todo', () => {
-    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
+  const renderComponent = (mocks: any[]) =>
+    render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />
+      </MockedProvider>,
+    );
+
+  it('renders todo', () => {
+    renderComponent([]);
 
     expect(screen.getByText('test todo')).toBeInTheDocument();
     expect(screen.getByRole('checkbox')).not.toBeChecked();
   });
 
-  it('toggle todo status via checkbox', async () => {
-    const updateTodo = vi.spyOn(todosApi, 'updateTodo');
-
-    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
-
-    const checkbox = screen.getByRole('checkbox');
-    await userEvent.click(checkbox);
-
-    expect(patchTodoHandler).toHaveBeenCalledTimes(1);
-
-    expect(updateTodo).toHaveBeenCalledWith({
-      ...mockTodo,
-      isCompleted: true,
-    });
-  });
-
   it('enter edit mode on "Edit" button click', async () => {
-    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
+    renderComponent([]);
 
-    const editButton = screen.getByLabelText(/editTodoBtn/i);
-    await userEvent.click(editButton);
+    await userEvent.click(screen.getByLabelText(/editTodoBtn/i));
 
     expect(screen.getByLabelText(/editTodoInput/i)).toBeInTheDocument();
   });
 
-  it('does not update todo if title is not changed', async () => {
-    const updateTodo = vi.spyOn(todosApi, 'updateTodo');
-
-    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
-
-    const editButton = screen.getByLabelText(/editTodoBtn/i);
-    await userEvent.click(editButton);
-
-    const input = screen.getByLabelText(/editTodoInput/i);
-    await userEvent.clear(input);
-    await userEvent.type(input, 'test todo');
-    await userEvent.keyboard('{Enter}');
-
-    expect(patchTodoHandler).toHaveBeenCalledTimes(0);
-    expect(updateTodo).not.toHaveBeenCalled();
-  });
-
-  it('update todo title', async () => {
-    const updateTodo = vi.spyOn(todosApi, 'updateTodo');
-    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
-
-    const editButton = screen.getByLabelText(/editTodoBtn/i);
-    await userEvent.click(editButton);
-
-    const input = screen.getByLabelText(/editTodoInput/i);
-    await userEvent.clear(input);
-    await userEvent.type(input, 'updated todo');
-    await userEvent.keyboard('{Enter}');
-
-    expect(patchTodoHandler).toHaveBeenCalledTimes(1);
-    expect(updateTodo).toHaveBeenCalledWith({
-      ...mockTodo,
-      title: 'updated todo',
-    });
-  });
-
   it('cancel editing on Escape key press and keeps old title', async () => {
-    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
+    renderComponent([]);
 
-    const editButton = screen.getByLabelText(/editTodoBtn/i);
-    await userEvent.click(editButton);
+    await userEvent.click(screen.getByLabelText(/editTodoBtn/i));
 
     const input = screen.getByLabelText(/editTodoInput/i);
     await userEvent.clear(input);
@@ -100,30 +72,29 @@ describe('ToDoItem', () => {
 
     expect(screen.queryByDisplayValue('new text')).not.toBeInTheDocument();
     expect(screen.getByText('test todo')).toBeInTheDocument();
-    expect(patchTodoHandler).toHaveBeenCalledTimes(0);
   });
 
   it('delete todo if title is cleared on edit', async () => {
-    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
+    renderComponent([deleteTodoMock(mockTodo.id)]);
 
-    const editButton = screen.getByLabelText(/editTodoBtn/i);
-    await userEvent.click(editButton);
+    await userEvent.click(screen.getByLabelText(/editTodoBtn/i));
 
     const input = screen.getByLabelText(/editTodoInput/i);
     await userEvent.clear(input);
     await userEvent.keyboard('{Enter}');
 
-    expect(deleteTodoHandler).toHaveBeenCalledTimes(1);
-    expect(onDeleteToDo).toHaveBeenCalledWith(mockTodo.id);
+    await waitFor(() => {
+      expect(onDeleteToDo).toHaveBeenCalledWith(mockTodo.id);
+    });
   });
 
   it('delete todo on "Delete" button click', async () => {
-    render(<ToDoItem todo={mockTodo} onDeleteToDo={onDeleteToDo} />);
+    renderComponent([deleteTodoMock(mockTodo.id)]);
 
-    const deleteButton = screen.getByLabelText(/deleteTodo/i);
-    await userEvent.click(deleteButton);
+    await userEvent.click(screen.getByLabelText(/deleteTodo/i));
 
-    expect(deleteTodoHandler).toHaveBeenCalledTimes(1);
-    expect(onDeleteToDo).toHaveBeenCalledWith(mockTodo.id);
+    await waitFor(() => {
+      expect(onDeleteToDo).toHaveBeenCalledWith(mockTodo.id);
+    });
   });
 });

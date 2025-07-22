@@ -104,12 +104,15 @@ describe('LogInPage', () => {
     await userEvent.click(screen.getByRole('button', { name: /login/i }));
 
     await waitFor(() => {
-    expect(mocks.some(mock =>
-      mock.request.query === LOGIN &&
-      mock.request.variables.email === 'test@example.com' &&
-      mock.request.variables.password === 'testPassword'
-    )).toBe(true);
-  });
+      expect(
+        mocks.some(
+          mock =>
+            mock.request.query === LOGIN &&
+            mock.request.variables.email === 'test@example.com' &&
+            mock.request.variables.password === 'testPassword',
+        ),
+      ).toBe(true);
+    });
   });
 
   it('go back to email input when back button is pressed', async () => {
